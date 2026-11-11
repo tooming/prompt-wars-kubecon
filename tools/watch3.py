@@ -24,20 +24,35 @@ def trivia():
 CODES=os.path.join(H,'codes_alerted.json')
 def codes():
     """Booth codes are public boost.redeemed events (250 coins each, one use per bot per code, old codes stay valid).
-    If any other bot has redeemed more codes today than we have, a code exists that we have not used yet."""
+    A new code is out when (a) another bot has redeemed more codes today than we have, or (b) four or more
+    established bots (first redemption today at least 45 minutes earlier) redeem within 12 minutes and we have not
+    redeemed since that wave began. Rule (b) matters while we hold the most codes: on 2026-11-11 the fifth code
+    came out at 20:53 UTC and nobody passed our count of four."""
     d=get('/api/feed?limit=300&type=boost.redeemed')
     if not d: return None
     now=datetime.datetime.now(datetime.timezone.utc); day=now if now.hour>=15 else now-datetime.timedelta(days=1)
     lo=day.strftime('%Y-%m-%dT15:00')
-    n={}
-    for e in d.get('events',[]):
-        if e['ts']>=lo: b=e['payload'].get('bot'); n[b]=n.get(b,0)+1
-    mine=n.get(ME,0); ahead=sorted([(v,b) for b,v in n.items() if b!=ME and v>mine], reverse=True)
-    if not ahead: return None
-    key='%s:%d'%(lo, ahead[0][0]); old=json.load(open(CODES)) if os.path.exists(CODES) else []
-    if key in old: return None
-    json.dump(old+[key], open(CODES,'w'))
-    return dict(ours=mine, most=ahead[0][0], bots=[b for v,b in ahead][:6])
+    T=lambda x: datetime.datetime.fromisoformat(x[:19]).replace(tzinfo=datetime.timezone.utc)
+    ev=sorted([e for e in d.get('events',[]) if e['ts']>=lo], key=lambda e:e['ts'])
+    first={}; n={}; last_mine=None
+    for e in ev:
+        b=e['payload'].get('bot'); first.setdefault(b,T(e['ts'])); n[b]=n.get(b,0)+1
+        if b==ME: last_mine=T(e['ts'])
+    mine=n.get(ME,0)
+    recent=[e for e in ev if (now-T(e['ts'])).total_seconds()<=12*60 and e['payload'].get('bot')!=ME]
+    est=sorted({e['payload'].get('bot') for e in recent if (T(e['ts'])-first[e['payload'].get('bot')]).total_seconds()>=45*60})
+    start=min([T(e['ts']) for e in recent if e['payload'].get('bot') in est], default=None)
+    ahead=sorted(b for b,v in n.items() if b!=ME and v>mine)
+    hit=None
+    if ahead: hit=('another bot has more codes than we do', ahead)
+    elif len(est)>=4 and (last_mine is None or last_mine<start): hit=('a wave of redemptions we are not part of', est)
+    if not hit: return None
+    try: old=json.load(open(CODES))
+    except Exception: old={}
+    if not isinstance(old, dict): old={}
+    if old.get('mine')==mine and now.timestamp()-old.get('at',0)<25*60: return None
+    json.dump({'at':now.timestamp(),'mine':mine}, open(CODES,'w'))
+    return dict(why=hit[0], ours=mine, since=start.strftime('%H:%M') if start else None, bots=hit[1][:8])
 mx=float(sys.argv[1]) if len(sys.argv)>1 else 8
 t0=time.time(); first=None; pm=None; pc=None; lines=[]; why='time'; lastsample=0; hit=None; code=None
 while True:
