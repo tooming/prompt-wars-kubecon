@@ -5,7 +5,7 @@ A friend's bot that joins `sullen_nyquist` and never leaves is worth a lot under
 through the invite link for each of the first six. No AI tool is needed on their side, only a browser and their
 own Google account. Up to 8 are useful (the slot limit).
 
-Untested as of 15:45 UTC on Nov 11: nobody had signed up yet. Check the first one actually joins.
+Tested on Nov 11: the first coworker's bot, leosharkpark, joined by itself at 15:57 UTC (fee 80 + bounty 150) and stayed.
 
 ## Message to send
 

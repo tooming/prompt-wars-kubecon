@@ -9,7 +9,7 @@ dials; an AI session (Claude Code with Claude in Chrome) reads the public API an
 | | |
 |---|---|
 | Day 1 (Nov 10) | finished **#2**, 25,391 coins, **18 points** (LEDGER 28, QUORUM_KEEPER 15, zesty_coldstart 12) |
-| Day 2 (Nov 11) | **#1 at 15:44 UTC** with 3,405 coins, earning ~54 coins/tick vs ~22 for the next three. 11 hours left at that point, nothing decided. |
+| Day 2 (Nov 11) | **#1 at 17:08 UTC** with 8,238 coins; zesty_coldstart 5,418, QUORUM_KEEPER 5,372, LEDGER 4,851. About 10 hours left at that point, nothing decided. |
 | Goal set by the owner | win today (`/goal win today`), then day 3 |
 
 Schedule in MST (UTC−7): days open 08:00. Nov 11: Golden Hour 19:00, freeze 20:00. **Nov 12: Golden Hour 12:00,
@@ -28,7 +28,7 @@ Points per day for the top 10 player bots: 25/18/15/12/10/8/6/4/2/1.
    > twist, econ) and the bot's current cut and members, then paste loop/day2_live.js into the game tab, follow its
    > RESUME block, and keep the bot at #1. Tell me before any change of cut policy. Report real ranks only.
 
-4. Claude pastes `loop/day2_live.js` into the game tab (it defines `window.__ap2`, dry by default), sets
+4. Claude pastes `loop/day2_live.js` and then `loop/day2_live_patch.js` into the game tab (they define `window.__ap2`, dry by default), sets
    `__ap2.twistAck` to the day's twist, matches `__ap2.mode` to the bot's real cut, then `__ap2.dry = false`.
 5. `tools/watch2.py 8 quiet` prints coins/tick and a projection for the top of the board from the public API.
 
@@ -64,13 +64,19 @@ core with an empty `TARGETS:` line.
   3 members remain.** In practice ~25 independents still gain at 40% (12.8 vs 8), so refills rarely need a cut drop;
   members churn within minutes and each new recruit pays ~190 (150 first-pair bounty + fee). Bots that left are
   blocked because their bounty is spent.
+- How day 2 actually plays: members rarely leave the tree; they move under a sibling that offers 10%, freeing a
+  direct slot every few minutes. The loop refills in short bursts at 10% (each NEW bot pays ~190; one burst also
+  paid the 150 "Poach the giant"), then returns to 40%. Rivals copied the 40% cut within the hour.
+- Helper bots work: the first coworker's bot (leosharkpark) joined by itself and stays. See HELPERS.md.
 - Reset to greedy 0 and save a cold-start core right after each freeze, so the next morning opens at 10%.
 - Before the laptop lid closes: park the bot (empty `TARGETS:`), never leave an experiment live.
 - Not done on purpose: setting the hidden Cold/Hot dial through the API, and coin-funnelling by gifts.
 
 ## Contents
 
-- `loop/day2_live.js` — the loop exactly as it ran on day 2 (cap, cut policy, trivia watch, `report()`).
+- `loop/day2_live.js` + `loop/day2_live_patch.js` — the loop as it runs on day 2. The patch adds the expiry on the
+  target list (if the loop dies the bot idles within ~6 ticks), refill bursts at 10%, helper-slot reservation and
+  `cycle()`. Paste both, in that order.
 - `loop/day2_autopilot.js`, `loop/day2_config.js` — the earlier split version.
 - `cores/` — cores used: day-1 v1/v2 and the unattended day-2 fallback.
 - `tools/` — public-API watchers and analysis (`watch2.py`, `world_diff.py`, `spill.py`, `rank_day2.py`, …).

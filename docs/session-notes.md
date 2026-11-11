@@ -29,6 +29,8 @@ Schedule (MST, UTC-7): days open 08:00; Nov 11 Golden Hour 19:00, freeze 20:00; 
 
 **Lesson (cost ~300 coins):** the owner closes the laptop without much warning; a sleeping Mac freezes my loop mid-call. Before any lid close, park the bot on a static core (TARGETS empty -> IDLE, or the static day core). Never leave an experiment live.
 
+**Private repo with the whole kit (runbook, loop, tools, cores, helper message), pushed 2026-11-11 at the owner's request so another laptop can take over: https://github.com/tooming/prompt-wars-kubecon** — re-push after each day's freeze.
+
 **Files** (session scratchpad, may not survive a reboot): `/private/tmp/claude-501/-Users-tooming--claude-spares-spare-Qkme8T/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/pw/` -> `day2_autopilot.js` (opening loop, `window.__ap2`, starts dry; needs `window.__origFetch = window.fetch` first), `day2_config.js` (prio order + block list), `core_day2_static.txt` (saved on the bot 03:19 UTC Nov 11 as the unattended fallback), `refresh.py`/`poll.py`/`watch.py`/`rivals.py` (public-API watchers), `rank_day2.py`. Reverse-engineered game spec: `/Users/tooming/Projects/assistant/prompt-wars-reverse-engineered-prompt.md` (untracked).
 
 **How to apply:** at ~07:50 MST open the game tab, set `__origFetch`, inject both day-2 files, check `__ap2.status()` in dry mode, set `__ap2.dry=false` at the open, read the first wake's pitches in the feed. Report real ranks from the leaderboard, never claim a win it does not show.
