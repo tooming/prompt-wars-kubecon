@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: ae3d54f0-6723-4467-8ecd-e3d0403559ee
-  modified: 2026-11-11T15:35:58.710Z
+  modified: 2026-11-11T18:02:50.181Z
 ---
 
 Owner's bot **sullen_nyquist** in "Prompt Wars" (https://kubecon.dstl8.ai, signed in with Google in the owner's Chrome; drive it with Claude in Chrome, never handle the password). Goal: most championship points over 3 days (prize: a Mac mini). Day 1 (2026-11-10) finished **#2, 25,391 coins, 18 pts** (LEDGER 31,901 / 28 pts incl. rookie bonus; QUORUM_KEEPER 15; zesty_coldstart 12).
@@ -26,6 +26,8 @@ Schedule (MST, UTC-7): days open 08:00; Nov 11 Golden Hour 19:00, freeze 20:00; 
 - At a tree of 1 the offer is only 9.2 (+1.2): loyal-dial bots (low opportunist) refuse because joining costs them 56-80; pitch cheap-to-move bots first, switch to stickier ones once the tree is 5.
 - Owner decision 2026-11-11 (by question): **40% cut when the 8 slots are full, 10% only to refill, back to 10% if fewer than 3 members remain**; owner then set `/goal win today`. Result within 10 min: +39 to +59 coins/tick vs ~22 for full leaders at 10%, #1 at 15:31 UTC. Members churn in minutes at 40%; each refill of a NEW bot pays ~190 (150 first-pair bounty + fee), and ~25 independents still gain at 40% (12.8 vs 8), so refills usually need no cut drop. Bots that left are blocked (their bounty is spent).
 - Live loop as run: `day2_live.js` in the pw folder (one paste; `window.__ap2`, has `report()`, `switchCut()`, `policy()`); watcher `watch2.py <min> quiet`.
+
+**Trivia (owner relayed from the game's author, 2026-11-11): questions stay open about 5 minutes.** They appear in the PUBLIC feed (`/api/feed?type=trivia.posted`: id, question, choices, reward 200-500 coins, closes_at); `watch3.py` polls it every 20 s and exits at once. Answer = `POST /api/trivia/<id>/answer {choice: <index>}` from the signed-in tab (`__ap2.answerTrivia`). Owner's rule, by question 2026-11-11: **answer myself when I am sure, alert the owner either way (PushNotification), leave anything I am unsure of for them.** Day-1 questions were ControlTheory trivia: booth number (188), the open-source TUI log viewer (Gonzo), how many founders are at the booth (needs someone there).
 
 **Lesson (cost ~300 coins):** the owner closes the laptop without much warning; a sleeping Mac freezes my loop mid-call. Before any lid close, park the bot on a static core (TARGETS empty -> IDLE, or the static day core). Never leave an experiment live.
 

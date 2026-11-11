@@ -406,3 +406,260 @@ Live, without the dump: `GET https://kubecon.dstl8.ai/api/feed?limit=5&type=refl
 - What the trivia endpoint pays; it returned nothing whenever polled.
 - Whether the game was built from one prompt at all. The consistent naming in the API (`econ`, `costs`,
   `limits`, bounty `kind` and `params`) reads like a single written spec, but that is a guess.
+
+## Day 2 addendum (2026-11-11)
+
+Day 2 opened at 15:00:09 UTC under the twist `tuesday`; data was pulled at about 17:50 UTC (tick 171, 131
+bots). New sources: the complete front-end source, about 6,800 day-2 public events, the complete day-1 dump
+(3,820 reflections, 498 moves) and the operator's signed-in session. Tags as in section 0. Counts are day 2 up
+to the pull unless marked. A.4 and A.5 were re-derived by a second pass; the rest was read or counted once.
+
+### A.1 Architecture [K: read from the served source; I: the server stack]
+
+- The front end is hand-written, unminified and framework-free, with no build step: three script tags
+  (`icons.js`, a shared library on a global `PW` namespace that the admin portal also loads; `graph.js`, the
+  canvas map; `app.js`, one 985-line IIFE). One state object, a 10-route hash router, HTML built as strings.
+- Refresh is polling plus two SSE streams: `/api/world` and `/api/bot` every 20 s, `/api/map` every 15 s,
+  `/api/bot/insight` at most once per 60 s. The private stream `/api/bot/stream` has 32 named event listeners,
+  reconnects 5 s after an error and feeds a list capped at 300. The public stream `/api/feed/stream` (14
+  types) is open only while the map is on screen and only animates it: who talks to whom, never the content.
+- Server [I]: HTTP/2, no `Server` header, strict same-origin CSP (no third-party script or analytics). A Go
+  backend is inferred from a comment naming `game.ValidateName`, a nanosecond `world.now` and contract keys
+  ending in a UnixNano timestamp; a SQL store from sequential integer event ids and UUID bot ids.
+- White-label: `/api/me` carries the whole deployment config (game name, brand, landing copy and prizes,
+  per-day open/golden/freeze hours, sign-in providers, notification categories, player flags). Hours are empty
+  when an admin drives the phases by hand.
+- Rules reach players as data. Help, legend and guide text hold placeholders filled from `world.costs` and
+  `world.econ` on every poll; the two day-2 rule sentences arrive as server-written HTML inside `econ`. A
+  twist is only a name in the top bar. `rule.changed` is an auto-generated diff of flat tunable keys. The feed
+  legend is static and already stale (pledge 20, break 150, spy 10 against the served 10, 250, 5).
+- Errors: the fetch wrapper throws the server's `error` string on any non-2xx. No branch on any status code,
+  no 401 redirect, no retry, so the 422 and 429 texts below reach the player verbatim as toasts.
+
+### A.2 API surface [K]
+
+The client calls 31 path patterns (28 under `/api`, 3 under `/auth`). 22 are missing from section 1.14:
+
+- Account: `GET /api/me`, `POST /api/me/disclosure`, `PATCH /api/me/notify`,
+  `GET /auth/<google|github|linkedin>/start?ref=`, `POST /auth/dev` (if enabled), `POST /auth/logout`.
+- Create wizard: `POST /api/bot`, `GET /api/bot/starter`, `/api/bot/personas`,
+  `/api/bot/persona/<key>/roll[?avoid=]`, `/api/bot/name-check?name=`.
+- Play: `GET /api/bot/stream` and `/api/feed/stream` (SSE), `POST /api/bot/deprogram`,
+  `GET /api/championship`, `/api/events/<id>`, `POST /api/boost/redeem {code}`,
+  `POST /api/trivia/<id>/answer {choice}`, `GET /api/push/key`, `POST /api/push/subscribe`, `/api/push/test`,
+  `POST /api/activity`.
+- Pages: `/spectate`, `/help`, `/b/<name>`, `/e/<id>`, `/cards/<id>.png` (a server-rendered share card for
+  carded events), `/qr.svg`, `/admin`, `/sw.js`, `/manifest.json`.
+- `/api/feed?limit=&type=&before=` is never called by `app.js`. [G] The spectator script uses it.
+- Operator's session: `PATCH /api/bot` answers 429 with a seconds-to-wait message inside the 120 s edit
+  cooldown; `/api/invite` returns coins 200, bonus_pct 10, wakes_required 10, max 6.
+- Payloads: the client labels 18 coin-flow reasons in the insight payload (the operator saw 10), among them
+  pledges, contracts, banner, ticker, trivia, referral, deprogram and admin. `tree_size` everywhere means all
+  descendants, not the whole tree (131 of 131 map nodes). `carded` is true for conversion, coup, schism,
+  bounty.claimed, streak.milestone and deprogram only.
+
+### A.3 Features the day-1 text had as unknown [K: client code and help text, unless tagged]
+
+- Accounts: three OAuth providers plus a dev email login; one bot per email across providers; a disclosure
+  (result emails and sales follow-up) must be accepted before play.
+- Create wizard: picking a character calls the roll endpoint, which returns a variant of its tagline and core
+  plus dials rolled around its centre; the blank option returns a bot written on the spot.
+- Dial formulas: cut = 10 + round(30 x v/100); output tokens = round(400 - 280 x v/100); temperature = 0.3 +
+  0.8 x v/100. The temperature dial is hidden through `world.dials_hidden`, and a comment calls a hidden dial
+  one the model ignores; its value is still sent on every save.
+- One model [I]: the picker renders only when `world.models` is non-empty; with a primary model configured the
+  list is empty and the server picks. Labels map a choice key to a vendor name on purpose, so the exact model
+  stays hidden. All 131 bots and 1,787 reflections report `openai`, though house definitions name haiku 6,
+  openai 6 and roulette 4.
+- Banners: a `fund_banner(colour)` tool, 8 colours. Members add coins to a colour; at the price the banner
+  lights up in the colour with most coins; no refunds; cleared at day open. Cosmetic only (map colour). 83 of
+  131 nodes fly emerald, across four trees.
+- Ticker: a bot pays to put one line on the big screen, queued and credited by name; the help says each line
+  is moderated before coins move. `world.ticker` was null in every snapshot.
+- Contracts: only a tree leader can post; the stake is escrowed and returned on expiry; the poster cannot
+  collect its own; the target's owner is notified. Day 2 had 3, each 800 coins on the same target, none
+  claimed (with day 1, 4 of 4 were 800); the target logged 208 rejections in the first window.
+- Trivia is for the human: one timed multiple-choice question, one answer per player, graded at once, paid in
+  coins or stamina to the player's bot. None was live in two days.
+- Idle penalty: the bot payload has `idle` and `income_pct`; a bot that has gone quiet earns only that share
+  of base income until it talks, recruits or spies again.
+- The card's "Last hour" pane is a rolling summary written by a cheaper model and fed back to the bot.
+
+### A.4 Engine changes
+
+- [K] The twist: the single `rule.changed` lists pledge 20 -> 10, break-pledge 150 -> 250 and the twist name.
+  The open routine ran inside 32 ms: rule.changed, six system bounties (the day-1 set), world.phase open.
+  Apart from the two caps below, nothing else differs in prompts, payloads or `/api/world`.
+- [I] The cap of 8 direct members and the 500-coin daily gift cap are not part of the twist. Both were in
+  `/api/world` at 14:53 UTC, with day 1 still frozen under Baseline, and absent at 00:26 UTC: an overnight
+  deploy, not a tunable.
+- [K] The reflection prompts are word-for-word unchanged after masking names, pitch and numbers (CONSIDER
+  1,787 against 3,820 complete day-1 prompts; REAFFIRM 356 against 578). The deciding bot is told nothing
+  about the cap, gifts, pledges or the twist.
+- [K] The cap is enforced by refusal, not placement, despite the rule text. A pitch from a full leader ends in
+  an engine-written `allegiance.rejected` that names the leader's first three direct members alphabetically
+  and tells the target to join one of them: 10 refusals, 7 targets, 2 leaders. All 294 moves landed under
+  exactly the bot the reflection named; no leader ever exceeded 8 (four reached it); none of the 7 refused
+  targets later joined a named member.
+- [I] The cap is checked before the model call (9 of 10 refusals have no reflection) and again at commit (one
+  case: change, reaffirm, then the refusal 8 ms later, the eighth slot having filled meanwhile). [I: one
+  event] A second commit check cancels a move, uncharged, if a coup replaces the mover's leader meanwhile.
+- [K] Complete day-1 totals replace the partial ones in section 2: REAFFIRM reversed 79 of 578 (day 2: 59 of
+  356); self-initiated reflections 141 (day 2: 46); external pitches converted 428 of 3,679, 11.6% (day 2: 272
+  of 1,741, 15.6%).
+- [K] Rejection reasons, of 2,082: not considered this wake 600, empty 47, full leader 10, tree changed 1; the
+  other 1,424 are the target's own reasoning.
+- [I] An empty reason is a parse fallback. All 47 match a one-step reflection scored `keep` with empty
+  reasoning; 44 raw answers have no reasoning key (a pitch, a tool-call-shaped object, a single word). Fenced
+  JSON is still read. A core that derails the reflection call thus makes its bot unrecruitable and keeps its
+  core out of the feed; two bots account for 32 of the 47.
+- [I] First-pair 150: paid unless that pair already formed by conversion or coup that day; a schism never
+  records the pair (294 of 294 on day 2, 498 of 498 on complete day 1). A bot moving with members thus pays
+  the same leader 150 on every return: 6 of 6 on day 2, 23 of 23 on day 1; one house bot carrying one member
+  did it on 14 of 15 schisms in two hours.
+- [I] The cost formula is unchanged: fee equals cost in 294 of 294; the base is constant for 108 of 110
+  movers. A self-initiated first join pays the leader the fee plus the 150 as well (17 of 17).
+- [I] Golden Hour, from the 30 moves in complete day 1: the base cost is tripled (ratio 2.97 to 3.04 in 18 of
+  20 conversions), the tripled amount goes to the new leader, the 150 stays 150, and the prompts carry no
+  Golden Hour wording. [G] The 50-per-member surcharge is not tripled (two events, one bot).
+- [K] Pledges last 30 ticks from acceptance (`until_tick` is 30 ahead in 25 and 29 in 9 of 34). 39 proposed,
+  34 accepted, 18 broken, 14 expired, 2 live.
+- [I] A pledge does not block persuasion. Persuading a pledged partner breaks the pledge automatically (11 of
+  11 paired, none unpaired, the break logged 9 to 15 ms before the persuade) and the persuader pays 250 on top
+  of the 15. The pitch is then reflected on as usual; 3 partners converted to the breaker.
+- [K: rule; G: enforcement] The gift cap of 500 received per day is served in `econ`. The data cannot show it
+  working: no receiver passed 500 in 2 h 50 min (77 gifts; top 500, 490, 450), but none did in the same span
+  of day 1.
+- [K] Start coins = 500 + 8 x the tick at creation, the tick counter starting at 1 (10 of 11 new bots exact).
+- [K] New payloads: `streak.milestone` at streak 100; `creed.updated` publishes the whole creed plus the
+  rewritten field names (never allegiance; 20 events); `spy` shows only {from, target, cost 5}; `deprogram`
+  {actor, bot, cost 300, old_leader} leaves the bot independent with its streak restarting.
+- [I] Reputation is not always 0. It moves in half points and carries across days; +0.5 per pledge kept to
+  expiry and -1 per pledge broken fits 15 of 16 house bots. 39 of 118 day-1 final profiles are non-zero.
+
+### A.5 Trees and bounties
+
+- [K] Forest at tick 171: 131 bots in 10 trees plus 12 loners; sizes 30, 25, 24, 13, 9, 5, 5, 4, 2, 2; 67
+  leaves, 42 middle ranks, depth up to 6. Day-1 final: one tree of 75 of 118 bots, leaders with 24 and 22
+  direct members, 24 middle ranks, depth 8. Replaying the 295 pulled events reproduces `map.json` exactly.
+- [K] 82 of 294 changes (28%) stayed inside the same tree. [I] Movers drift toward cheaper leaders: in 69
+  intra-tree moves the new leader's cut was lower in 49, equal in 4 and higher in 16 (median 24% to 16%); a
+  sibling was the destination in only 11.
+- [K] Money: the unlisted 150 was paid 277 times (41,550 coins) against 16,400 for all listed bounties and
+  17,516 in joining fees. One coup paid its usurper 760. Median coins: roots 4,148, leaves 2,121.
+- [I] Coups are wider than section 1.9. The deposed bot can be any ancestor of the usurper (two levels up in 2
+  of 13; 2 to 5 levels in 9 of 32 on day 1). The usurper takes that slot and inherits all of the deposed bot's
+  direct members, its own former leader included. A leader that sets its own allegiance to one of its members
+  also produces a coup, and the member collects Regicide (1 on day 2, 5 on day 1).
+- [I] The streak pauses while a bot leads a tree and goes to 0 only when the bot takes a leader (131 of 131
+  leaderboard values; reset-when-followed misses 15 of the 22 non-zero ones).
+- [I] Recruiter is paid at the claimer's first gain by conversion or coup, never for a schism (88 of 88),
+  including self-joins and intra-tree moves. 11 bots that only ever gained by schism never claimed.
+- [I] Poach the giant: a conversion or coup that moves a player bot out of its place in the largest tree. Size
+  is the whole-tree head count including root and house bots; ties count; the claimer may sit in that tree (14
+  of 22); the mover may have members when it is a coup (5). Schisms never pay (4 cases) and a house-bot mover
+  never pays (5 of 5, one bot). Fits 20 of 22 claims with no false alarm, 22 of 22 if the mover is also
+  counted in its new place. The 5+ threshold rests on one event.
+- [I: two claims] First to three and First to five are checked on the bot that has just received a direct
+  recruit, against its descendants (itself not counted) being at least N.
+- [K] Hold the line: kind `independent_at`, time 15:00 local (22:00 UTC), min_streak 200, min_rejected 3,
+  reward 200; no claims yet at the pull. [I] In a day-1 back-test only the two claimers pass all three tests.
+- [K] `rejected_today` includes not-considered rejections (equal to the feed count for 123 of 131 bots). [I]
+  It excludes full-leader refusals issued before a reflection.
+- [I] The "tree of N" in the reflection arithmetic is the target's whole tree plus the mover's whole current
+  tree (1,713 to 1,755 of 1,784 prompts, depending on replay alignment; 663 of 677 same-tree pitches quote
+  exactly double). It changes the money line only when N is under 5.
+
+### A.6 The bot harness
+
+- [K] House bots are unchanged between days (16 definitions, 0 field differences).
+- [I] Wake cadence: over 2,219 inter-wake gaps for 130 bots the minimum is 122.9 s, none falls between 15 and
+  120 s, and single-wake gaps cluster at 130 to 140 s (median 136.3). The gap grows by about 8 s per
+  reflection handled, which fits a fixed pause of about 120 s after a wake ends, not a 135 s clock. Nothing
+  shows message-triggered wakes: the most-pitched bots never woke faster than 126 s. Idle loners wake less
+  often (the hermit house bot 60 wakes against 72 to 77 for the rest).
+- [K] The operator's wake records: up to 3 rounds, several tool calls per round (4 persuades at once), input
+  9k to 25k tokens, output 230 to 970, fields tools, stop, messages, reflections, fell_back, latency_ms. The
+  bot obeyed a rule keyed to the tick number, [I] so the tick is shown.
+- [I] Seen from outside, 81% of 614 wakes with any public action had one, 19% two, 0.3% three (whispers not
+  pulled, so lower bounds); 116 of 126 intra-wake pairs were under 0.1 s apart, so calls mostly arrive in one
+  parallel round. [K] At most 3 external reflections per wake, plus one self-initiated.
+- [I] The published reflection prompt is only the visible turn. Each step-1 call carries an estimated 835 to
+  1,528 more input tokens (median 1,048): a fixed block of about 750 to 900 plus the core once plus creed and
+  notes. Step 2 continues the same conversation, so the core is in context twice there.
+- [I] Limits seen: notes top out at 600 characters (4 of 74 updates), persuade arguments at 500 on both days.
+- [K] Bots quote rule numbers accurately (x2.00 in 346 of 2,183 message bodies from 81 bots, a cut percentage
+  in 386, the 150 joining bounty, the 800 contract); none mentions the cap of 8, the gift cap or the twist.
+- [K] Public messages give no sign of live tick tracking: 794 of 852 tick mentions are one fossil phrase sent
+  8 to 99 ticks late. 83 of 183 broadcasts are byte-identical copies of another bot's earlier broadcast. [I]
+  Notes carried the day-1 dialect over: back within 5 to 8 minutes of the open, in 138 of 183 broadcasts.
+
+### A.7 Moderation and admin layer
+
+- [K] `PATCH /api/bot` sometimes answers 422 with a natural-language reason that reads like an LLM content
+  check (a coercive pitch aimed at bots; an attempt to inject automated instructions). About 5 in 45 saves;
+  the identical text passed a minute later. [I] So the check is a model call, not a filter list.
+- [K] The client knows `moderation.held`, `system.pause`, `system.kill`, `system.mute`, a generic `admin.*`
+  handler, `world.notice` (a card on phones, a bar on the big screen), a coin-flow reason for adjustments made
+  by the game, a `muted` profile flag, an `inert` flag shown as dormant, `world.counts.paused` and `.killed`,
+  `world.signups_enabled`, and an `/admin` link shown only to `player.is_admin`. None of it fired: 0 paused, 0
+  killed, 0 such events. [G] `moderation.held` is what a held ticker line or a held edit emits.
+- [K] Privacy leak: the public, carded `deprogram` event carries a payload field holding an email address, [I]
+  the owner's sign-in address (1 event). Worth telling the organisers.
+- [K] The leaderboard copy names `seed` bots as a third non-scoring class; none exist (115 player, 16 house).
+
+### A.8 Still open
+
+- Not collected: `/static/spectate.js`, `/sw.js`, `/help`, `/admin`. Not pulled on day 2: whispers,
+  `independent` (one is implied by the replay), banner and ticker events, `bounty.expired`, `moderation.held`.
+- Banner and ticker prices; why four separate trees all fly emerald; the idle threshold and `income_pct`;
+  trivia rewards; what the 422 check runs on; which model sits behind the `openai` label.
+- What a twist can change beyond flat tunables, and whether the two caps can be switched per twist.
+- Whether a self-initiated join to a full leader is refused (no public case), whether a coup can push a
+  usurper past 8 (largest result 7), and whether an over-cap gift is refused whole or clipped.
+- Whether the missing pair record on schisms is deliberate; whether a contract pays for a join directly under
+  the poster or anywhere in its tree, and whether 800 is fixed; whether Poach the giant's two same-tree claims
+  at one bot short of the largest come from the double count or a lagged snapshot.
+- The fixed 750 to 900 token block in every reflection call. It is 60 to 110 tokens larger than on day 1 for
+  the same house bots: new rule text or longer notes, not separable.
+- The exact wake pause and idle interval; a per-wake cap on tool calls above 4; what spy returns (the game's
+  own texts say friends, enemies and broadcasts in one place and the target's notes in another).
+- Day-2 Golden Hour (the pull ends at 17:50 UTC) and the first Hold the line claims under the readable rule.
+
+### A.9 Statements above that are now known to be wrong
+
+- Section 1.2, independence streak: the document says the streak resets as soon as the bot follows anyone or is followed. Right: it only pauses while the bot leads a tree and goes to 0 only when the bot takes a leader (reproduces 131 of 131 day-2 leaderboard streaks; the old rule misses 15 of the 22 non-zero ones).
+- Section 1.2, first-pair 150: the document says the leader is paid 150 the first time a (mover, leader) pair forms that day and repeats pay 0. Right: it is paid unless that pair already formed by conversion or coup that day; a schism never records the pair, so a bot that moves with members pays out 150 again on every return (fits 294 of 294 day-2 and 498 of 498 complete day-1 moves; the document's rule misses 6 and 23).
+- Section 1.2, 'fee equals cost in every record': one day-1 exception exists, a leader going independent with a member (typed schism, no new leader, cost 109, fee 0).
+- Section 1.2 and section 3, Golden Hour 'not observed': complete day-1 data shows it. The base cost is tripled and the tripled amount is what the new leader receives; the 150 is not tripled; the reflection prompts carry no Golden Hour wording. The 50-per-member surcharge appears not to be tripled (two events from one bot, tentative), so 'triple it' applies to the base only.
+- Section 1.2, action prices: pledge 20 and break-pledge 150 were day-1 values, not constants. Day 2 served pledge 10 and break-pledge 250, changed through the twist's tunables.
+- Section 1.2, 'gifts are free-form transfers of any amount': since an overnight deploy before day 2 the served rules cap gifts received at 500 coins per bot per day (enforcement not yet visible in the data), and a leader is capped at 8 direct members.
+- Section 1.2, 'base income 8 per tick for every active bot': the client shows an idle penalty; a bot flagged idle earns only income_pct percent of base income until it talks, recruits or spies again (size and threshold unknown).
+- Sections 1.4, 1.11 and 3, model choice: there is no player-facing provider choice when world.models is empty (both days); the server runs one configured primary model for every bot and the labels deliberately hide the exact model. This, not a 'global override or fallback', is why every live bot reports the same provider.
+- Section 1.5 and section 3, Cold/Hot: the mapping is fully known, temperature = 0.3 + 0.8 x dial/100 (0.3 to 1.1). The dial is hidden on day 2 as well, and a client comment describes a hidden dial as one the model ignores, so it may have no effect while hidden.
+- Section 1.6, wake trigger and floor: nothing supports 'wake whenever it has been messaged'. Over 2,219 inter-wake gaps the minimum is 122.9 s and the mode 130 to 140 s; the pattern fits a fixed pause of about 120 s after a wake ends rather than a 135 s floor, and heavily pitched bots never woke faster.
+- Section 1.7 and section 3, pledge: it is not an enforced non-persuasion pact. Persuading a pledged partner goes through, breaks the pledge automatically and charges the persuader the break fee (11 of 11 cases). A pledge lasts 30 ticks from acceptance.
+- Section 1.7 and section 3, banner: no longer a guess. Bots have a fund_banner tool with 8 colours; members pool coins, the banner is cosmetic (map colour), contributions are not refunded and banners clear at day open. 83 of 131 bots flew one on day 2.
+- Section 1.7, spy 'returns friends, enemies and recent broadcasts': not established. The game's own texts disagree (one says that, another says it reads the target's notes) and the public event shows only spy, target and cost.
+- Sections 1.8, 2.1 and 2.2, day-1 counts: they came from a partial dump. Complete day 1 has 3,820 reflections, REAFFIRM reversed 79 of 578 (not 48 of 444), 141 self-initiated reflections (107 leader-to-leader, 21 from no leader, 13 to independence; not 112 and 8) and 32 coups (not 27).
+- Section 1.9, coup: not only 'a member that recruits its own leader'. Any descendant that recruits an ancestor performs one (two levels up in 2 of 13 on day 2; 2 to 5 levels in 9 of 32 on day 1), and a leader that sets its own allegiance to one of its members also counts. The usurper inherits all of the deposed bot's direct members, its own former leader included.
+- Section 1.10, Recruiter: not 'first bot you convert'. It is paid at the claimer's first gain by conversion or coup; a recruit arriving by schism never pays it (88 of 88 claims).
+- Section 1.10, Poach the giant: the mover need not be member-less (5 claims came from coups where the mover had members). It pays for a conversion or coup, never a schism, that moves a player bot out of the largest tree, measured as whole-tree head count including root and house bots, ties included.
+- Section 1.10, First to three / First to five: 'size N' is not the tree including its leader. The check runs on a bot that has just received a direct recruit and needs at least N descendants, itself not counted (inferred from two claims and their near-misses).
+- Section 1.10 and section 3, Hold the line: the rule is recovered. Kind independent_at with time 15:00 local (22:00 UTC), streak at least 200 and at least 3 rejected persuades that day; reward 200.
+- Section 1.10 and section 3, contracts: how they are posted is known. Only a tree leader can post one; the stake is escrowed and returned on expiry; the poster cannot collect its own; the target's owner is notified.
+- Section 1.13, sign-in: not Google only. Google, GitHub and LinkedIn are supported (plus a dev email login when enabled), with one bot per email across providers and a disclosure that must be accepted first.
+- Section 1.14, API: the list is incomplete. The client calls 31 path patterns, 22 of them missing from the document (me, disclosure, notify, the create-wizard endpoints, two SSE streams, championship, events, boost redeem, trivia answer, deprogram, push, activity, auth). /api/feed is not used by the player app at all.
+- Section 1.12, event types: incomplete. Day 2 also shows pledge.proposed/accepted/broken/expired, spy, deprogram, streak.milestone, bot.created, creed.updated, bounty.posted, rule.changed and world.phase; the client additionally knows independent, banner.*, ticker.*, bounty.expired, moderation.held, system.*, world.notice, trivia.* and daily.* types.
+- Section 1.1, 'a per-day twist label and a ticker line': the ticker is not a twist feature; it is a paid big-screen line that bots buy and that is moderated before coins move. The one twist seen so far is a name plus changed flat tunables.
+- Section 2.1, self-initiated opening line: the paraphrase is off. The engine line says the bot itself proposed changing its allegiance from a quoted old leader (the literal word none when it has no leader) to the new leader; independence as a target is written as independent, follow nobody, and that variant has no arithmetic line.
+- Section 3, reputation '0 for every bot seen': wrong. 39 of 118 day-1 final profiles are non-zero, in half-point steps; +0.5 per pledge kept to expiry and -1 per pledge broken fits 15 of 16 house bots (inferred).
+- Section 2.3, wake observation: it omits a rolling 'Last hour' summary that a cheaper model writes and that is fed back to the bot on every wake (stated in the game's help text).
+
+### A.10 Prizes and eligibility, as served to signed-in players (`/api/me` landing config) [K]
+
+- Tuesday and Wednesday: a Raspberry Pi kit each day for the player whose bot ends the day on top.
+- Thursday: a Mac mini for the overall champion, the player whose bot scores the most points across all three days.
+- Also on Wednesday, no bot needed: a random draw for a Mac mini among people wearing the booth's t-shirt.
+- The winner must come to the booth to pick the prize up. No other eligibility wording was found, and the site has
+  no terms, rules or privacy page.
