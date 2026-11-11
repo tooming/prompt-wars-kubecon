@@ -21,12 +21,31 @@ def trivia():
         if closes and closes>now:
             return dict(id=p.get('id'), question=p.get('question'), choices=p.get('choices'), reward=p.get('reward'), kind=p.get('reward_kind'), closes_at=p.get('closes_at'), seconds_left=int((closes-now).total_seconds()))
     return None
+CODES=os.path.join(H,'codes_alerted.json')
+def codes():
+    """Booth codes are public boost.redeemed events (250 coins each, one use per bot per code, old codes stay valid).
+    If any other bot has redeemed more codes today than we have, a code exists that we have not used yet."""
+    d=get('/api/feed?limit=300&type=boost.redeemed')
+    if not d: return None
+    now=datetime.datetime.now(datetime.timezone.utc); day=now if now.hour>=15 else now-datetime.timedelta(days=1)
+    lo=day.strftime('%Y-%m-%dT15:00')
+    n={}
+    for e in d.get('events',[]):
+        if e['ts']>=lo: b=e['payload'].get('bot'); n[b]=n.get(b,0)+1
+    mine=n.get(ME,0); ahead=sorted([(v,b) for b,v in n.items() if b!=ME and v>mine], reverse=True)
+    if not ahead: return None
+    key='%s:%d'%(lo, ahead[0][0]); old=json.load(open(CODES)) if os.path.exists(CODES) else []
+    if key in old: return None
+    json.dump(old+[key], open(CODES,'w'))
+    return dict(ours=mine, most=ahead[0][0], bots=[b for v,b in ahead][:6])
 mx=float(sys.argv[1]) if len(sys.argv)>1 else 8
-t0=time.time(); first=None; pm=None; pc=None; lines=[]; why='time'; lastsample=0; hit=None
+t0=time.time(); first=None; pm=None; pc=None; lines=[]; why='time'; lastsample=0; hit=None; code=None
 while True:
     hit=trivia()
     if hit: why='TRIVIA'; break
     if time.time()-lastsample>=58:
+        code=codes()
+        if code: why='CODE'; break
         lastsample=time.time(); m=get('/api/bots/'+ME); w=get('/api/world'); lb=get('/api/leaderboard?limit=200')
         if m and w and lb:
             mem=set(x['name'] for x in m['members']); pl=[r for r in lb['rows'] if r.get('scores')]
@@ -42,6 +61,8 @@ while True:
     time.sleep(20)
 if hit:
     print('TRIVIA LIVE:', json.dumps(hit))
+if code:
+    print('CODE OUT:', json.dumps(code))
 print('\n'.join(lines[-5:]))
 if first is not None:
     dt=max(1,last['tick']-first['tick']); left=lastw['day_window'].get('freeze_in_s',0)/60.0; gold=lastw['day_window'].get('golden_in_s',0)/60.0
