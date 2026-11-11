@@ -43,24 +43,31 @@ def codes():
     est=sorted({e['payload'].get('bot') for e in recent if (T(e['ts'])-first[e['payload'].get('bot')]).total_seconds()>=45*60})
     start=min([T(e['ts']) for e in recent if e['payload'].get('bot') in est], default=None)
     ahead=sorted(b for b,v in n.items() if b!=ME and v>mine)
+    # (c) Fast rule, added after a code capped at 10 uses ran out in 11 minutes (22:36-22:47 UTC on 2026-11-11):
+    #     three or more different bots redeeming within 3 minutes is a new code, whoever they are.
+    quick=[e for e in ev if (now-T(e['ts'])).total_seconds()<=180 and e['payload'].get('bot')!=ME]
+    qb=sorted({e['payload'].get('bot') for e in quick})
+    qstart=min([T(e['ts']) for e in quick], default=None)
     hit=None
-    if ahead: hit=('another bot has more codes than we do', ahead)
+    if len(qb)>=3 and (last_mine is None or last_mine<qstart): hit=('three or more bots redeemed within 3 minutes', qb); start=qstart
+    elif ahead: hit=('another bot has more codes than we do', ahead)
     elif len(est)>=4 and (last_mine is None or last_mine<start): hit=('a wave of redemptions we are not part of', est)
     if not hit: return None
     try: old=json.load(open(CODES))
     except Exception: old={}
     if not isinstance(old, dict): old={}
-    if old.get('mine')==mine and now.timestamp()-old.get('at',0)<25*60: return None
+    if old.get('mine')==mine and now.timestamp()-old.get('at',0)<10*60: return None
     json.dump({'at':now.timestamp(),'mine':mine}, open(CODES,'w'))
-    return dict(why=hit[0], ours=mine, since=start.strftime('%H:%M') if start else None, bots=hit[1][:8])
+    last=ev[-1]['payload'].get('reward') if ev else None
+    return dict(why=hit[0], ours=mine, since=start.strftime('%H:%M:%S') if start else None, bots=hit[1][:8], reward=last, redeemed_so_far=len(quick))
 mx=float(sys.argv[1]) if len(sys.argv)>1 else 8
 t0=time.time(); first=None; pm=None; pc=None; lines=[]; why='time'; lastsample=0; hit=None; code=None
 while True:
     hit=trivia()
     if hit: why='TRIVIA'; break
+    code=codes()
+    if code: why='CODE'; break
     if time.time()-lastsample>=58:
-        code=codes()
-        if code: why='CODE'; break
         lastsample=time.time(); m=get('/api/bots/'+ME); w=get('/api/world'); lb=get('/api/leaderboard?limit=200')
         if m and w and lb:
             mem=set(x['name'] for x in m['members']); pl=[r for r in lb['rows'] if r.get('scores')]
