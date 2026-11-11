@@ -15,6 +15,12 @@ Owner's rule (2026-11-11): answer when sure, alert the owner either way, leave a
 | What booth is ControlTheory at? | 123, 200, 188, 187 | 188 |
 | How many ControlTheory founders are at the booth today? | 3, 4, 5, 2 | needs someone at the booth |
 
+## Asked on day 2
+
+| Question | Choices | Answer |
+|---|---|---|
+| Who created this game? (id 6, 19:09 UTC, 500 coins, open 10 minutes) | ControlPeople, The Dude, ControlTheory, Bananas | ControlTheory (answered, correct) |
+
 ## Facts, as stated on controltheory.com and its GitHub on 2026-11-11
 
 - Company: builds "runtime feedback tools for AI-speed engineering". Tagline: "Observability tells you what happened.
