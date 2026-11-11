@@ -49,9 +49,11 @@ def codes():
     qb=sorted({e['payload'].get('bot') for e in quick})
     qstart=min([T(e['ts']) for e in quick], default=None)
     hit=None
-    if len(qb)>=3 and (last_mine is None or last_mine<qstart): hit=('three or more bots redeemed within 3 minutes', qb); start=qstart
+    # Others keep redeeming a code for minutes after we have: a cluster counts as new only if our own last
+    # redemption is more than 8 minutes older than the cluster.
+    if len(qb)>=3 and (last_mine is None or (qstart-last_mine).total_seconds()>480): hit=('three or more bots redeemed within 3 minutes', qb); start=qstart
     elif ahead: hit=('another bot has more codes than we do', ahead)
-    elif len(est)>=4 and (last_mine is None or last_mine<start): hit=('a wave of redemptions we are not part of', est)
+    elif len(est)>=4 and (last_mine is None or (start-last_mine).total_seconds()>480): hit=('a wave of redemptions we are not part of', est)
     if not hit: return None
     try: old=json.load(open(CODES))
     except Exception: old={}
