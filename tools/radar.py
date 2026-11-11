@@ -175,6 +175,8 @@ pe = prev.get('econ')
 if pe is not None and pe != world.get('econ'):
     diff = {k: (pe.get(k), world['econ'].get(k)) for k in set(pe) | set(world.get('econ', {})) if pe.get(k) != world.get('econ', {}).get(k)}
     flags.append('RULES CHANGED: %s' % json.dumps(diff)[:300])
+if world.get('ticker') and world.get('ticker') != prev.get('ticker'):
+    flags.append('TICKER: %s' % json.dumps(world.get('ticker'))[:300])      # organisers' announcements (draws, codes, prizes)
 if prev.get('twist') is not None and prev.get('twist') != world.get('twist'):
     flags.append('TWIST CHANGED: %s -> %s' % (prev.get('twist'), world.get('twist')))
 for t in ('rule.changed', 'world.notice', 'trivia.posted', 'deprogram'):
@@ -210,4 +212,4 @@ if not flags:
     print('  none')
 
 json.dump({'at': now, 'max_id': max_id, 'coins': {r['name']: r['coins'] for r in lb}, 'econ': world.get('econ'), 'twist': world.get('twist'),
-           'bounty_ids': [b.get('id') for b in world.get('bounties', [])], 'per_min': per_min, 'loyal': loyal}, open(STATE, 'w'))
+           'bounty_ids': [b.get('id') for b in world.get('bounties', [])], 'per_min': per_min, 'loyal': loyal, 'ticker': world.get('ticker')}, open(STATE, 'w'))
