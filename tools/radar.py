@@ -126,8 +126,14 @@ if ev['boost.redeemed']:
     who = [e['payload'].get('bot') for e in ev['boost.redeemed']]
     others = sorted(set(w for w in who if w != ME))
     flags.append('BOOTH CODES this window: %d bots redeemed (%s); we %s' % (len(set(who)), ', '.join(others[:8]), 'redeemed too' if ME in who else 'did NOT'))
-    if len(others) >= 3 and ME not in who:
-        flags.append('CODE WAVE WITHOUT US: a new booth code is probably out (250 coins); tell the owner')
+    # Old codes stay valid, so late redeemers are not news. A new code exists only when some bot has redeemed
+    # more codes today than we have.
+    day = time.gmtime(now if time.gmtime(now).tm_hour >= 15 else now - 86400)
+    lo = time.strftime('%Y-%m-%dT15:00', day)
+    cnt = collections.Counter(e['payload'].get('bot') for e in (get('/api/feed?limit=300&type=boost.redeemed') or {}).get('events', []) if e['ts'] >= lo)
+    ahead = sorted(((v, b) for b, v in cnt.items() if b != ME and v > cnt.get(ME, 0)), reverse=True)
+    if ahead:
+        flags.append('NEW BOOTH CODE OUT: %s has redeemed %d today, we have %d (250 coins each); tell the owner' % (ahead[0][1], ahead[0][0], cnt.get(ME, 0)))
 # cut toggling: a proposer quoted at two or more different cuts in pitch decisions in this window
 cuts = collections.defaultdict(set)
 acc = collections.Counter(); tot = collections.Counter()
