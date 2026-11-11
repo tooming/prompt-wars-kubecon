@@ -36,3 +36,23 @@ Schedule (MST, UTC-7): days open 08:00; Nov 11 Golden Hour 19:00, freeze 20:00; 
 **Files** (session scratchpad, may not survive a reboot): `/private/tmp/claude-501/-Users-tooming--claude-spares-spare-Qkme8T/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/pw/` -> `day2_autopilot.js` (opening loop, `window.__ap2`, starts dry; needs `window.__origFetch = window.fetch` first), `day2_config.js` (prio order + block list), `core_day2_static.txt` (saved on the bot 03:19 UTC Nov 11 as the unattended fallback), `refresh.py`/`poll.py`/`watch.py`/`rivals.py` (public-API watchers), `rank_day2.py`. Reverse-engineered game spec: `/Users/tooming/Projects/assistant/prompt-wars-reverse-engineered-prompt.md` (untracked).
 
 **How to apply:** at ~07:50 MST open the game tab, set `__origFetch`, inject both day-2 files, check `__ap2.status()` in dry mode, set `__ap2.dry=false` at the open, read the first wake's pitches in the feed. Report real ranks from the leaderboard, never claim a win it does not show.
+
+## Day 2, 19:00 UTC: why LEDGER looked faster, and what is left to earn
+
+Itemised from the public feed (conversion/schism/coup fee and bounty fields, gift, bounty.claimed):
+
+- 18:00-18:52 UTC LEDGER gained 63 coins a tick against our 53. 550 of its 3,286 were one-offs: 400 in gifts from
+  its helpers (it is now at the 500 daily gift cap, as we are) and the 150 "Poach the giant" mission. Without them
+  both bots ran at about 53 a tick: about 35 net from cuts (16 own income + 3.2 per direct member at 40%, minus
+  pitch spend, burst minutes at 10% and empty slots) plus about 18 a tick from joins (LEDGER 7 joins = 942 coins,
+  we 5 joins = 936).
+- Day totals to 18:52: we 34 joins (fees 1,484, first-pair bounties 4,500), LEDGER 15 joins (fees 954, bounties
+  1,650). LEDGER has used far fewer first pairs than we have, so its pool of 150-coin joins lasts longer.
+- Slots, not conversions, limit us: 11 pitches gave 5 joins. Members recruited at 40% often leave within minutes
+  (amber_cilium joined 18:50 and LEDGER took it at 18:53), which frees the slot for the next first pair. Brand-new
+  arrivals join at 40% with no cut drop (epic_gamer, Peve at 18:55-18:56).
+- Missions: "Regicide" (300) needs a coup against one's own leader, so a root bot cannot claim it. "Hold the line"
+  (200) needs an independence streak of 200 at 15:00 local; our streak is paused while we lead, so no. Contracts
+  ("X pays 800 to whoever persuades T into their tree", 60 ticks) were posted three times today on
+  TheOutdoorProgrammer and never claimed; `cycle()` now lists live contracts.
+- Not worth doing: poaching LEDGER's non-helper members hands LEDGER a free slot for another 150-coin join.
