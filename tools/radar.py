@@ -123,7 +123,11 @@ for n, d in rates.items():
             flags.append('PACE: %s gained %.1f a tick (%.1f without one-offs) against our %.1f (%.1f)' % (n, d, steady, mine, mine_steady))
 # booth codes redeemed today, per bot (each is 250 coins)
 if ev['boost.redeemed']:
-    flags.append('BOOTH CODES this window: ' + ', '.join('%s +%s' % (e['payload'].get('bot'), e['payload'].get('reward')) for e in ev['boost.redeemed'][:8]))
+    who = [e['payload'].get('bot') for e in ev['boost.redeemed']]
+    others = sorted(set(w for w in who if w != ME))
+    flags.append('BOOTH CODES this window: %d bots redeemed (%s); we %s' % (len(set(who)), ', '.join(others[:8]), 'redeemed too' if ME in who else 'did NOT'))
+    if len(others) >= 3 and ME not in who:
+        flags.append('CODE WAVE WITHOUT US: a new booth code is probably out (250 coins); tell the owner')
 # cut toggling: a proposer quoted at two or more different cuts in pitch decisions in this window
 cuts = collections.defaultdict(set)
 acc = collections.Counter(); tot = collections.Counter()
