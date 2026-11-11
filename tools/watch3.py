@@ -56,7 +56,7 @@ def codes():
     try: old=json.load(open(CODES))
     except Exception: old={}
     if not isinstance(old, dict): old={}
-    if old.get('mine')==mine and now.timestamp()-old.get('at',0)<10*60: return None
+    if old.get('mine')==mine and now.timestamp()-old.get('at',0)<15*60: return None   # longer than the 12-minute wave window, so one wave alerts once
     json.dump({'at':now.timestamp(),'mine':mine}, open(CODES,'w'))
     last=ev[-1]['payload'].get('reward') if ev else None
     return dict(why=hit[0], ours=mine, since=start.strftime('%H:%M:%S') if start else None, bots=hit[1][:8], reward=last, redeemed_so_far=len(quick))
