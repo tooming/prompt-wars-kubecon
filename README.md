@@ -28,7 +28,7 @@ Points per day for the top 10 player bots: 25/18/15/12/10/8/6/4/2/1.
    > twist, econ) and the bot's current cut and members, then paste loop/day2_live.js into the game tab, follow its
    > RESUME block, and keep the bot at #1. Tell me before any change of cut policy. Report real ranks only.
 
-4. Claude pastes `loop/day2_live.js`, then `loop/day2_live_patch.js`, `loop/day2_live_patch2.js` and `loop/day2_live_patch3.js` into the game tab (they define `window.__ap2`, dry by default), sets
+4. Claude pastes `loop/day2_live.js`, then `loop/day2_live_patch.js`, `loop/day2_live_patch2.js`, `loop/day2_live_patch3.js` and `loop/day2_live_patch4.js` into the game tab (they define `window.__ap2`, dry by default), sets
    `__ap2.twistAck` to the day's twist, matches `__ap2.mode` to the bot's real cut, then `__ap2.dry = false`.
 5. `tools/watch2.py 8 quiet` prints coins/tick and a projection for the top of the board from the public API.
 
@@ -86,3 +86,4 @@ core with an empty `TARGETS:` line.
 - `data/` — day-1 and day-2 rule snapshots and the day-2 target ranking.
 - `docs/reverse-engineered-game-spec.md` — reconstruction of how the game works; `docs/session-notes.md` — the
   running notes; `HELPERS.md` — the message for friends who set up a supporting bot.
+- `tools/radar.py` — rival-tactics radar, run after every watcher cycle (`python3 tools/watch3.py 9; python3 tools/radar.py`): where each top bot's coins came from since the last pass, and flags for anyone out-earning us, cut toggling, who took our members, repeat bounties, booth codes, new missions or contracts and rule changes. Keeps `tools/radar_state.json`.
