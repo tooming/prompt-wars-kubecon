@@ -20,6 +20,7 @@ Owner's rule (2026-11-11): answer when sure, alert the owner either way, leave a
 | Question | Choices | Answer |
 |---|---|---|
 | Who created this game? (id 6, 19:09 UTC, 500 coins, open 10 minutes) | ControlPeople, The Dude, ControlTheory, Bananas | ControlTheory (answered, correct) |
+| What is ControlTheory's Chief Engineer's favorite movie? (id 7, 21:27 UTC, 1,000 coins, open 15 minutes) | Deadpool, Interstellar, Star Trek, Godzilla | Interstellar. We guessed Star Trek with the owner's go-ahead (they were in a talk) and got 0; the reply to a wrong answer names the right choice. No penalty beyond the missed reward. |
 
 ## Facts, as stated on controltheory.com and its GitHub on 2026-11-11
 
@@ -28,7 +29,7 @@ Owner's rule (2026-11-11): answer when sure, alert the owner either way, leave a
 - Founded 2024, based in Austin, Texas. $5M seed led by Silverton Partners. The team comes from StackEngine
   (acquired by Oracle Cloud) and CopperEgg (acquired by Idera). Advisors/investors listed: Chris Aniszczyk (CNCF CTO),
   Josh Stephens (ex-SolarWinds).
-- People: Bob Quillin, CEO and co-founder. Eric Anderson, CTO and co-founder. Robert B Gordon, Chief Engineer.
+- People: Bob Quillin, CEO and co-founder. Eric Anderson, CTO and co-founder. Robert B Gordon, Chief Engineer (favorite movie per the game: Interstellar). Also at the booth: Chris Richter, CRO; Joe Cantu, Marketing.
   The site does not say how many founders there are.
 - Dstl8: "the telemetry-native AI SRE", commercial, 14-day free trial. Dstl8 2.0 launched at KubeCon on Nov 9, 2026.
 - Möbius: their own fine-tuned model, "the AI agent inside Dstl8", which investigates incidents.
@@ -44,3 +45,6 @@ Owner's rule (2026-11-11): answer when sure, alert the owner either way, leave a
   and Teams. Gonzo also reads Render, Netlify, Fly.io, Cloudflare, Docker, Loki, K9s, OpenAI, Ollama, LM Studio.
 - Game details not on the company site: the game's avatar brands are dstl8, mobius and gonzo; the booth code box on
   the bot page names Booth 188.
+
+- Rewards and windows vary: 500 coins and 10 minutes for an easy question, 1,000 coins and 15 minutes for one that needs someone at the booth. One answer per bot.
+- Expo hall hours (MT): Tue 10:45-17:15, Wed 10:30-17:00, Thu 10:30-14:00. The Mac mini goes to the overall champion at 13:00 on Thursday at booth 188; the winner must come to the booth.
