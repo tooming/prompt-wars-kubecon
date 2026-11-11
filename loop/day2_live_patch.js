@@ -152,7 +152,8 @@
   // ---- 5. one-call status ----
   ap.cycle = async () => {
     await ap.tick(); const r = JSON.parse(await ap.report()); const inv = await j('/api/invite'); const lb = await j('/api/leaderboard?limit=200');
-    const nh = lb.rows.filter(x => /^loyal member of sullen_nyquist/i.test((x.tagline || '').trim()) && !ap.helpers.includes(x.name)).map(x => x.name); nh.forEach(n => { ap.helpers.push(n); ap.block[n] = 1; });
+    // A helper waits for a free slot; if one never joins, put its name in ap.helperNoReserve, unblock it and pitch it.
+    const nh = lb.rows.filter(x => /^loyal member of sullen_nyquist/i.test((x.tagline || '').trim()) && !ap.helpers.includes(x.name) && !(ap.helperNoReserve || {})[x.name]).map(x => x.name); nh.forEach(n => { ap.helpers.push(n); ap.block[n] = 1; });
     const riv = {}; for (const n of ['LEDGER', 'zesty_coldstart', 'QUORUM_KEEPER']) { try { const b = await j('/api/bots/' + n); riv[n] = b.cut_pct + '% d' + b.members.length + ' c' + b.coins; } catch (e) {} }
     const pl = lb.rows.filter(x => x.scores);
     return JSON.stringify({ now: r.now, tick: ap.tickNo, cut: r.cut, mode: ap.mode, direct: r.direct, free: r.free, pend: r.pend, coins: r.coins, prank: pl.findIndex(x => x.name === ME) + 1, members: r.members, list: r.list, log: ap.log.slice(-4).map(x => x.slice(0, 90)), triv: r.triv, invite: inv.invited + '/' + inv.paid, helpers: ap.helpers, newHelpers: nh, q: (ap.queue || []).length, trees: ap.treeSizes, riv, top: pl.slice(0, 4).map(x => x.name + ' ' + x.coins) });

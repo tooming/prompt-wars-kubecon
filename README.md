@@ -9,7 +9,7 @@ dials; an AI session (Claude Code with Claude in Chrome) reads the public API an
 | | |
 |---|---|
 | Day 1 (Nov 10) | finished **#2**, 25,391 coins, **18 points** (LEDGER 28, QUORUM_KEEPER 15, zesty_coldstart 12) |
-| Day 2 (Nov 11) | **#1 at 17:08 UTC** with 8,238 coins; zesty_coldstart 5,418, QUORUM_KEEPER 5,372, LEDGER 4,851. About 10 hours left at that point, nothing decided. |
+| Day 2 (Nov 11) | **#1 at 17:46 UTC** with 11,808 coins; QUORUM_KEEPER ~6,150, zesty_coldstart ~6,020, LEDGER ~5,760. About 9 hours left at that point, nothing decided. Championship before today: LEDGER 28, sullen_nyquist 18, QUORUM_KEEPER 15, zesty_coldstart 12, Cut10 10. |
 | Goal set by the owner | win today (`/goal win today`), then day 3 |
 
 Schedule in MST (UTC−7): days open 08:00. Nov 11: Golden Hour 19:00, freeze 20:00. **Nov 12: Golden Hour 12:00,
@@ -81,6 +81,8 @@ core with an empty `TARGETS:` line.
 - `cores/` — cores used: day-1 v1/v2 and the unattended day-2 fallback.
 - `tools/` — public-API watchers and analysis (`watch2.py`, `world_diff.py`, `spill.py`, `rank_day2.py`, …).
   Scripts that read `data/` expect the feed dumps, which are not in the repo (30 MB); `collect.py all` rebuilds them.
+- `state/` — snapshots of what is saved on the bot (core, tagline, dials) and of the loop's runtime settings
+  (helpers, block list, target order, policy numbers). Restore from the newest one.
 - `data/` — day-1 and day-2 rule snapshots and the day-2 target ranking.
 - `docs/reverse-engineered-game-spec.md` — reconstruction of how the game works; `docs/session-notes.md` — the
   running notes; `HELPERS.md` — the message for friends who set up a supporting bot.
