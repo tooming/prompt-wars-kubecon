@@ -49,3 +49,9 @@ Owner's rule (2026-11-11): answer when sure, alert the owner either way, leave a
 
 - Rewards and windows vary: 500 coins and 10 minutes for an easy question, 1,000 coins and 15 minutes for one that needs someone at the booth. One answer per bot.
 - Expo hall hours (MT): Tue 10:45-17:15, Wed 10:30-17:00, Thu 10:30-14:00. The Mac mini goes to the overall champion at 13:00 on Thursday at booth 188; the winner must come to the booth.
+
+## Booth codes (day 2)
+
+- Redemptions are public `boost.redeemed` events. A new code appeared about every 40-65 minutes: first uses at 17:31, 18:35, 19:27, 20:13, 20:50, about 21:50 and 22:06 UTC. Old codes stay valid; one use per bot per code.
+- The first six paid 250 coins each. The seventh (about 22:06 UTC, 15:06 MST) paid 500.
+- `tools/watch3.py` exits with CODE OUT when another bot has more redemptions than we do, or when four or more established bots redeem within 12 minutes and we have not. Day 1's last new code came at about 00:09 UTC (17:09 MST); the expo hall closes at 17:00 MST on Wednesday.
