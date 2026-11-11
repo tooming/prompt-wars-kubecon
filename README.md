@@ -28,7 +28,7 @@ Points per day for the top 10 player bots: 25/18/15/12/10/8/6/4/2/1.
    > twist, econ) and the bot's current cut and members, then paste loop/day2_live.js into the game tab, follow its
    > RESUME block, and keep the bot at #1. Tell me before any change of cut policy. Report real ranks only.
 
-4. Claude pastes `loop/day2_live.js`, then `loop/day2_live_patch.js`, `loop/day2_live_patch2.js`, `loop/day2_live_patch3.js`, `loop/day2_live_patch4.js`, `loop/day2_live_patch5.js`, `loop/day2_live_patch6.js`, `loop/day2_live_patch7.js`, `loop/day2_live_patch8.js`, `loop/day2_live_patch9.js` and `loop/day2_live_patch10.js` into the game tab (they define `window.__ap2`, dry by default), sets
+4. Claude pastes `loop/day2_live.js`, then `loop/day2_live_patch.js`, `loop/day2_live_patch2.js`, `loop/day2_live_patch3.js`, `loop/day2_live_patch4.js`, `loop/day2_live_patch5.js`, `loop/day2_live_patch6.js`, `loop/day2_live_patch7.js`, `loop/day2_live_patch8.js`, `loop/day2_live_patch9.js`, `loop/day2_live_patch10.js`, `loop/day2_live_patch11.js` and `loop/day2_live_patch12.js` into the game tab (they define `window.__ap2`, dry by default), sets
    `__ap2.twistAck` to the day's twist, matches `__ap2.mode` to the bot's real cut, then `__ap2.dry = false`.
 5. `tools/watch2.py 8 quiet` prints coins/tick and a projection for the top of the board from the public API.
 
