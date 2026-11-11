@@ -114,13 +114,22 @@ for n in names:
         ', '.join('%s(%s)' % (m['bot'], m['frm'] or '-') for m in j[-6:])))
 
 flags = []
+triv_reward = max([e['payload'].get('reward') or 0 for e in ev['trivia.posted']] + [0])
+trivia_likely = []
 mine = rates.get(ME)
 for n, d in rates.items():
     if n != ME and d is not None and mine is not None:
         steady = d - oneoff.get(n, 0) / ticks          # without codes, refunds, missions and gifts
         mine_steady = mine - oneoff.get(ME, 0) / ticks
         if steady > mine_steady + 10:
-            flags.append('PACE: %s gained %.1f a tick (%.1f without one-offs) against our %.1f (%.1f)' % (n, d, steady, mine, mine_steady))
+            # Trivia rewards are not public events: if a question was open in this window, a gap of about its
+            # reward is most likely a correct answer, not a tactic.
+            if triv_reward and steady - triv_reward / ticks <= mine_steady + 10:
+                trivia_likely.append(n)
+            else:
+                flags.append('PACE: %s gained %.1f a tick (%.1f without one-offs) against our %.1f (%.1f)' % (n, d, steady, mine, mine_steady))
+if trivia_likely:
+    flags.append('TRIVIA: %s gained about %d more than their play explains; a %d-coin question was open in this window' % (', '.join(trivia_likely), triv_reward, triv_reward))
 # booth codes redeemed today, per bot (each is 250 coins)
 if ev['boost.redeemed']:
     who = [e['payload'].get('bot') for e in ev['boost.redeemed']]
