@@ -1,0 +1,1173 @@
+[
+ {
+  "key": "cut",
+  "finding": {
+   "answer": "Hold 40% whenever the 8 slots are full, in both regimes and through Golden Hour. Do not lower it when never-recruited targets run short; change the burst rule instead.\n\nWhile never-recruited targets remain: at 40% our non-helper members leave at 0.027 per member-tick (28 leaves in 1,026 member-ticks, mean stay 37 ticks) against 0.003 at 10%. That churn pays, because a vacancy is refilled after 4.6 ticks by a join worth 194 coins. One non-helper slot earns 6.0 coins a tick at 40%, 4.8 at 30%, 4.0 at 25%, 3.2 at 20% and 1.3 at 10%. The whole bot earns 55.8 a tick at 40% (measured last hour: 53.0) against 47.0 at 30%. 40% wins in 8 of 8 hazard and burst variants, so I am sure of this one.\n\nOnce the pool is dry: a non-helper slot earns under 1.3 a tick at any cut, and the three helpers, who never left (0 leaves in 367 member-ticks), pay 0.24 a tick per cut point. 40% is best in 13 of 16 variants; 30% wins the other three by at most 1.0 coin a tick (about 600 coins to the freeze). I am only moderately sure 40% beats 30% here, but sure it beats 10-25%.\n\nSignal: when fewer than about 5 never-converted bots would gain at the 15.2 burst offer (51 at 19:00), or two bursts in a row bring no first pair, stop single-vacancy bursts. Consider 30% only if, in addition, fewer than three permanent members remain.",
+   "recommendation": "1. Keep the harvest cut at 40% all night, Golden Hour included. Applies while at least 3 permanent members stay direct (3 helpers now, plus nimble_yaml, which has sat at 40% for 127 ticks). Effect while never-recruited targets remain: +8.8 coins/tick against 30% (about +3,650 to the freeze), +14.0 against 25%, +31.0 against 10% (about +12,900). Once the pool is dry: between -1.0 and +3.4 coins/tick against 30%.\n\n2. Keep bursting to 10% for first pairs while at least about 5 never-converted bots would gain at 15.2 (51 at 19:00, 41 of them accepted a pitch today; only 10 gain at the 40% offer, 6 of those very hard to move). A burst costs about 110 coins of cut income and a first-pair refill is worth about 273, so it breaks even at 0.40 joins per burst (measured 1.5).\n\n3. Flip back to 40% as soon as the 8th slot fills (120 s cooldown permitting). About 449 of the 659 coins given up in the six bursts were lost while all 8 slots were already full: up to about +2 coins/tick. Burst edges are reconstructed, so treat this as an upper bound.\n\n4. Fill every slot just before Golden Hour: start a burst about 01:45 UTC and return to 40% at 02:00. Each slot full at 02:00 pays about 341 coins of cut income in that hour (day-1 Golden Hour leave hazard at 40% was 0.004/tick). On average 0.6 slots are empty, so about +200 to +400 coins, more if two are empty.\n\n5. When the pool is dry (fewer than about 5 fresh gainers, or two bursts with no first pair): stay at 40% and burst only when 2 or more slots are empty. A returner refill is worth about 122 coins against a 110-coin burst (break-even 0.90 joins per burst), so a one-slot burst nets about +12, a 1.5-join burst about +73.\n\n6. Inside Golden Hour: burst only for first pairs and only with 30 or more ticks left (expected +105 coins per burst); never for returners (expected -12).\n\n7. Lower the cut to 30% only if the pool is dry AND fewer than 3 permanent members remain. Expected gain is at most 1.0 coin/tick (about 600 coins). Never go to 10-25% as a harvest cut.",
+   "key_numbers": [
+    {
+     "claim": "Leave hazard of sullen_nyquist's non-helper direct members at 40% cut",
+     "value": "0.0273 per member-tick (28 leaves / 1,026 member-ticks; 95% CI 0.018-0.039; mean stay 37 ticks). Last two hours without nimble_yaml: 0.041 (14 / 340)",
+     "how_computed": "ours_hazard.py: direct-membership spells from replayed conversion/schism/coup events, exposure split by our cut timeline (cut quoted in reflection prompts, nearest observation)"
+    },
+    {
+     "claim": "Leave hazard of the same members at our 10% cut (opening and bursts)",
+     "value": "0.0032 per member-tick (1 leave / 313 member-ticks; 95% CI 0-0.018)",
+     "how_computed": "ours_hazard.py, same method"
+    },
+    {
+     "claim": "Day-2 pooled leave hazard by leader cut band, non-helper members in x2.00 trees",
+     "value": "10-12%: 0.0043 (38 / 8,892); 18-22%: 0.0046 (16 / 3,507); 28-33%: 0.0156 (12 / 768); 34-40%: 0.0174 (65 / 3,735). Not monotone: 23-27% is 0.0283 (40 / 1,415), driven by a few bots",
+     "how_computed": "hazard.py: exposure between consecutive move events for every bot with a leader, leader cut from prompts and the 19:02 profiles; hazard_by_leader.py for what drives each band"
+    },
+    {
+     "claim": "Day-1 leave hazard by cut band (complete day, ticks 60-660, x2.00 trees)",
+     "value": "10-12%: 0.0030; 18-22%: 0.0115; 28-33%: 0.0237; 34-40%: 0.0393 (monotone)",
+     "how_computed": "day1_gh.py running hazard.py on the day-1 data"
+    },
+    {
+     "claim": "Same leaders observed at a low cut and at 34-40%",
+     "value": "0.0049 per member-tick at 22% or less (12 / 2,468) against 0.0180 at 34-40% (50 / 2,782): 3.7 times",
+     "how_computed": "hazard_by_leader.py, leaders seen in both bands (sullen_nyquist, QUORUM_KEEPER, dapper_lego, zesty_coldstart, weary_anomaly, LEDGER)"
+    },
+    {
+     "claim": "Permanent helpers never left",
+     "value": "0 leaves in 1,298 member-ticks for the 8 named helpers (ours: 0 in 367); our 3 helpers considered 9 pitches, 6 showing a gain, accepted none",
+     "how_computed": "hazard.py helper stratum; pitchlevel.py acceptance table for helper targets"
+    },
+    {
+     "claim": "What the Arithmetic line said when members accepted the pitch that took them from us",
+     "value": "28 of 28 leaves at 40% quoted 12.8 now; 26 showed a gain, 2 showed zero; median gain +1.3/tick; median destination cut 23.5%. Re-priced at our cut 30/25/20/10%: 19/14/11/0 of the 28 would still show a gain",
+     "how_computed": "ours.py: accepted reflection matched to each leave event, then 'you would earn' compared with 16 - 0.08 x our cut"
+    },
+    {
+     "claim": "Where our 29 voluntary leavers went",
+     "value": "14 to a bot inside our own tree (nimble_yaml 4, glum_replicaset 2), 4 into LEDGER's tree, 11 to other trees",
+     "how_computed": "ours.py: root of the destination in the replayed forest at the leave time"
+    },
+    {
+     "claim": "Leavers that became 150-coin first pairs for LEDGER or its helpers",
+     "value": "2 of 29 leaves paid a 150 straight to LEDGER or a helper (1 to LEDGER itself). 4 of 25 distinct leavers later paid them 10 bounties of 150 (4 to LEDGER itself; 950 coins with fees to LEDGER, 1,292 to helpers). 4 of LEDGER's 7 non-helper first pairs had been our members",
+     "how_computed": "ledger_pairs.py: conversion/schism events with new leader in LEDGER or its 5 named helpers and bounty_to_leader = 150"
+    },
+    {
+     "claim": "Refill delay, join value and burst cost since the harvest policy began (tick 25)",
+     "value": "4.6 vacancy-ticks per join (128 / 28 joins); first-pair join pays 193.9 (150 + mean fee 43.9); 2.57 persuades = 38.6 coins per join; 6 bursts gave up 659 coins of cut income (110 each, about 449 while already full); 1.5 joins per burst",
+     "how_computed": "refill.py (occupancy step function, cut segments) and burst_overhang.py"
+    },
+    {
+     "claim": "Our income by source, 18:00-19:00 UTC",
+     "value": "53.0 coins/tick = 16.0 own + 19.0 cuts (helpers 8.0, others 11.0) + 24.2 joins (8 joins: 405 fees + 1,050 bounties) - 6.2 pitches (25 persuades)",
+     "how_computed": "account.py from member-ticks x cut rate, join events and msg.persuade costs; matches the brief's 53"
+    },
+    {
+     "claim": "Model, never-recruited targets remain: income per tick at cuts 10/20/25/30/40%",
+     "value": "Per non-helper slot 1.28 / 3.15 / 3.97 / 4.76 / 6.04. Whole bot 24.8 / 36.5 / 41.9 / 47.0 / 55.8. Total to the freeze 15,161 / 20,034 / 22,236 / 24,371 / 28,022. 40% best in 8 of 8 variants (margin 5.4-12.1/tick with monotone hazards)",
+     "how_computed": "model.py renewal model: (0.08c x stay + 193.9 - pitch spend - burst loss) / (stay + 4.6); hazards at 20/25/30% from re-pricing our members' pitch stream (pitchlevel.py), plus day-1 and day-2 band variants"
+    },
+    {
+     "claim": "Model, pool dry: income per tick at cuts 10/20/25/30/40%",
+     "value": "Never refilled: slot 0.44 / 0.33 / 0.30 / 0.29 / 0.28, whole bot 20.6 / 22.4 / 23.5 / 24.6 / 27.0. Returner refill after 30 ticks: slot 0.74 / 1.01 / 1.02 / 0.94 / 0.73, whole bot 22.1 / 25.9 / 27.1 / 27.9 / 29.2. 40% best in 13 of 16 variants; 30% wins 3 by at most 1.0/tick",
+     "how_computed": "model.py: returner pays mean fee 43.0, each refill needs a burst (110 coins / 1.5 joins, scaled by cut), refill delays 15/30/60/never, four hazard sets; whole bot = 16 + 3 helpers + 5 slots"
+    },
+    {
+     "claim": "Pool of never-recruited targets at 19:00 UTC",
+     "value": "111 bots never converted to us. 10 would gain at our 40% offer (6 very hard to move); 51 at the 10% burst offer (41 accepted a pitch today). New bots per hour: 1, 4, 7, 9; 9 of the 17 that joined anyone joined us first. With a finite pool of 10-60 first pairs 40% is still best (margin 263-2,397 coins)",
+     "how_computed": "pool.py from the 19:01 map, leader profiles and reflection history; finite-pool totals in model.py"
+    },
+    {
+     "claim": "Golden Hour on day 1",
+     "value": "Our members' leave hazard at 40%: 0.0040 per member-tick (6 / 1,496) against 0.0393 at 34-40% before it. Acceptance on a gain 18.0% (23/128) against 35.3% (335/949). A slot full at 02:00 pays about 341 coins of cut income in the hour",
+     "how_computed": "day1_gh.py on the complete day-1 data (ticks 660-720); 6.4 x 60 x survival factor in model.py"
+    }
+   ],
+   "confidence": "medium",
+   "caveats": "- We only ever ran 10% and 40%. Our hazards at 20/25/30% are modelled by re-pricing the 67 pitches our 40% members considered, cross-checked against day-1 bands. The day-2 pooled bands are noisy and not monotone (house bots Candide and Bandwagon produce many of the leaves).\n- Leader cut timelines are reconstructed from reflection prompts. Burst edges are uncertain by a few ticks, so the 659-coin burst cost and the 449 'already full' share could be off by roughly a third.\n- The pool-dry regime was not observed. Refill delay there is a scenario (15/30/60 ticks or never), and the result rests on the helpers staying. If every non-helper left and nimble_yaml's subtree went too, the tree would fall below 5 bots and our own income would drop from 16 to 14 a tick.\n- Golden Hour evidence is day 1 only, when there was no 8-member cap.\n- The model over-predicts the measured net slightly (55.8 against 53.0-53.7 coins/tick).\n- Effects on LEDGER's score are measured (item 9) but not modelled. LEDGER converted several of these bots at an arithmetic loss (otter_telemetry, Candide, amber_cilium at -2.4), so a lower cut of ours would not have kept them from it.\n- Data stop at 19:00:11 UTC. Machiavel left us for nimble_yaml just after; the 19:02 profile shows 7 direct members.\n- Where the data disagree with the brief: by 19:00 we had been paid 32 first-pair bounties (29 distinct conversion pairs; 3 came by schism), not about 36. LEDGER had 12, 5 of them its own helpers, not about 15. In 18:00-19:00 we sent 25 persuades for 8 joins. In coup events payload.bot is the usurper and payload.leader the deposed bot. 11 of our pitches today were refused by the engine because we were full (165 coins).\n- The session notes say the owner wants to be asked each day before a 40% Golden Hour; today's 40%-when-full decision appears to cover it, but that is the operator's call.",
+   "script_paths": [
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/cut/run_all.sh",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/cut/results.txt",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/cut/common.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/cut/cuts.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/cut/spells.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/cut/replay_check.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/cut/rules_check.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/cut/hazard.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/cut/hazard_by_leader.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/cut/ours.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/cut/ours_hazard.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/cut/ledger_pairs.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/cut/pitchlevel.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/cut/dispo.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/cut/refill.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/cut/burst_overhang.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/cut/account.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/cut/stay_by_mode.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/cut/pool.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/cut/day1_gh.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/cut/model.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/cut/out_model.json"
+   ]
+  },
+  "verdict": {
+   "verdict": "partly_confirmed",
+   "checked": [
+    {
+     "claim": "Leave hazard of our non-helper direct members at 40%: 0.0273 per member-tick (28 / 1,026), mean stay 37 ticks",
+     "my_value": "28 / 1,023 = 0.0274 with midpoint burst edges; 0.0255 to 0.0306 with earliest/latest edges",
+     "agrees": true,
+     "note": "Own replay matches the 19:01 map except two moves made after the cut-off. The rate is rising: 0.024 (ticks 25-120), 0.031 (120-180), 0.056 (180-240), nimble_yaml excluded."
+    },
+    {
+     "claim": "Leave hazard at our 10% cut: 0.0032 (1 / 313)",
+     "my_value": "1 / 316 = 0.0032 (0.0026 to 0.0083 by edge rule)",
+     "agrees": true,
+     "note": "Almost all of this exposure is the opening 25 ticks plus a few burst minutes, so it is not a steady-state 10% figure."
+    },
+    {
+     "claim": "Last two hours without nimble_yaml: 0.041 (14 / 340)",
+     "my_value": "14 / 338 = 0.0414",
+     "agrees": true,
+     "note": ""
+    },
+    {
+     "claim": "Day-2 pooled hazard by cut band (x2.00 trees, non-helpers): 10-12 0.0043, 18-22 0.0046, 23-27 0.0283 (40/1,415), 28-33 0.0156, 34-40 0.0174",
+     "my_value": "10-12 0.0039 (34/8,825); 18-22 0.0065 (24/3,684); 23-27 0.0212 (26/1,226); 28-33 0.0204 (16/786); 34-40 0.0160 (60/3,749)",
+     "agrees": false,
+     "note": "The two end bands reproduce within 10%. The three middle bands move 25-40% with the cut-timeline rule, and I cannot reproduce 40 leaves in 23-27. Not material: no decision rests on these bands."
+    },
+    {
+     "claim": "Day-1 bands before Golden Hour: 0.0030 / 0.0115 / 0.0237 / 0.0393 for 10 / 20 / 30 / 40%",
+     "my_value": "0.0028 / 0.0122 / 0.0195 / 0.0359",
+     "agrees": true,
+     "note": "Monotone, as stated."
+    },
+    {
+     "claim": "Same leaders at a low cut against 34-40%: 0.0049 against 0.0180, 3.7 times",
+     "my_value": "0.0056 (14/2,491) against 0.0168 (47/2,795), 3.0 times; without us 0.0059 against 0.0108, 1.8 times",
+     "agrees": true,
+     "note": "Most of the ratio comes from our own bot. Other 40% leaders lose members at 0.0118, we at 0.027."
+    },
+    {
+     "claim": "Helpers never left: 0 leaves in 1,298 member-ticks (ours 0 in 367); our 3 helpers considered 9 pitches, 6 showing a gain, accepted none",
+     "my_value": "0 in 1,300 (ours 0 in 368); 9 pitches, 6 with a gain, 0 accepted",
+     "agrees": true,
+     "note": "nimble_yaml behaves like a fourth permanent member: 38 pitches since its coup, 25 showing a gain, none accepted (its quoted move cost is 180-330)."
+    },
+    {
+     "claim": "Arithmetic line when members left: 28 of 28 quoted 12.8; 26 gain, 2 zero; median gain +1.3; median destination cut 23.5%; re-priced at our 30/25/20/10% cut 19/14/11/0 would still gain",
+     "my_value": "Identical on every figure",
+     "agrees": true,
+     "note": ""
+    },
+    {
+     "claim": "Where the 29 voluntary leavers went: 14 inside our own tree, 4 into LEDGER's tree, 11 elsewhere",
+     "my_value": "14 / 4 / 11",
+     "agrees": true,
+     "note": ""
+    },
+    {
+     "claim": "First pairs for LEDGER: 2 of 29 leaves paid a 150 straight to LEDGER or a helper; 4 of 25 distinct leavers later paid 10 bounties (4 to LEDGER itself, 950 coins to LEDGER, 1,292 to helpers); 4 of LEDGER's 7 non-helper first pairs were ex-members of ours",
+     "my_value": "Identical",
+     "agrees": true,
+     "note": "That is about 33 coins to LEDGER itself per leave from us. The first-pair rule is not exact: 10 of 36 repeated pairs paid 150 again (8 schisms, 2 conversions). Returners to us paid 0 in 6 of 6."
+    },
+    {
+     "claim": "Refill and burst inputs: 4.6 vacancy-ticks per join; first pair pays 193.9; 38.6 coins of pitches per join; 6 bursts gave up 659 coins (110 each, 449 while already full); 1.5 joins per burst",
+     "my_value": "4.56 (6.0 in the last hour); 193.9; 38.6 (46.9 in the last hour); burst loss 672 at midpoints, 312 to 1,001 between certain and possible spans; while full 448 at midpoints, 157 to 709; 9 joins in 6 bursts, 8 of them first pairs",
+     "agrees": true,
+     "note": "Midpoints agree. The uncertainty is wider than the stated 'a third', and 449 is a midpoint, not an upper bound."
+    },
+    {
+     "claim": "Income 18:00-19:00: 53.0 a tick = 16.0 own + 19.0 cuts + 24.2 joins - 6.2 pitches",
+     "my_value": "52.8 (51.4 to 54.3 by burst edges) = 16.0 + 18.8 + 24.2 - 6.2",
+     "agrees": true,
+     "note": "My whole-day rebuild from the public feed is 1,204 coins short of our 15,884, so we had a one-off source outside the feed. Other bots reconcile within 3-11%."
+    },
+    {
+     "claim": "Model while first pairs remain: slot 6.04 at 40%; whole bot 24.8 / 36.5 / 41.9 / 47.0 / 55.8 at 10/20/25/30/40%; 40% best in 8 of 8 variants",
+     "my_value": "Slot 6.04; whole bot 24.8 / 36.0 / 40.6 / 46.2 / 55.8; 40% best in 36 of 36 variants, margin 2.5 to 20.6 a tick",
+     "agrees": true,
+     "note": "My variants include 'cut does not change leaving' and 'nobody leaves below 40%'. The model overshoots the measured 53 by about 3 a tick because 5 of 28 refills were returners (average join 170, not 194)."
+    },
+    {
+     "claim": "With a finite pool of 10-60 first pairs, 40% is still best by 263 to 2,397 coins",
+     "my_value": "Simulation: 40% beats 30% by 430-720 coins with 10-30 first pairs and no new bots; by 1,800-3,900 with 1.8-3.6 new bots an hour for us or a pool of 50 or more",
+     "agrees": true,
+     "note": "The headline '+3,650 against 30%' in recommendation 1 needs about 51 more first pairs. That is the top of the range, not the expectation."
+    },
+    {
+     "claim": "Model once the pool is dry: 40% best in 13 of 16 variants; 30% wins the other three by at most 1.0 a tick",
+     "my_value": "With 3 permanent members 40% is best in 12 of 16, and 30% wins by at most 1.3 a tick (about 530 coins). With nimble_yaml as a fourth, 40% is best in 16 of 16",
+     "agrees": true,
+     "note": "30% would win by 3-8 a tick only if nobody left below 40%. The re-pricing rules that out: 19 of 28 leavers would still have seen a gain at 30%."
+    },
+    {
+     "claim": "Pool at 19:00: 111 bots never converted to us; 10 gain at 40% (6 very hard to move); 51 gain at the 10% burst offer (41 accepted a pitch today); new bots per hour 1, 4, 7, 9; 9 of 17 joined us first",
+     "my_value": "108 never joined us; 10 (6 very hard); 50 at the burst offer, of which 14 very hard to move and 36 others (32 accepted a pitch today); arrivals 1, 4, 7, 9; 9 of 17",
+     "agrees": true,
+     "note": "111 wrongly counts Candide, Compund and calm_hysteresis, who joined us by schism and paid the 150. 52 fresh bots already earn 15.2 or more and cannot gain from us at any cut."
+    },
+    {
+     "claim": "First pairs used: we 32 bounties (not about 36), LEDGER 12, 5 of them its helpers (not about 15)",
+     "my_value": "We: 37 joins, 32 bounties on 32 distinct bots, fees 1,703. LEDGER: 16 joins, 12 bounties, 5 helpers",
+     "agrees": true,
+     "note": "The analyst's correction of the brief stands."
+    },
+    {
+     "claim": "Golden Hour: day-1 leave hazard of our members at 40% was 0.0040 (6 / 1,496), so a slot full at 02:00 pays about 341 coins and filling slots before 02:00 is worth +200 to +400",
+     "my_value": "6 / 1,496 and 18.0% against 35.3% acceptance reproduce. But those 29 members considered only 7 pitches that hour (0.0047 per member-tick); 6 showed a gain and all 6 were accepted. Today our 40% members get 0.065 pitches per member-tick (0.13 in the last hour)",
+     "agrees": false,
+     "note": "The 0.004 reflects low pitch pressure on day 1, not Golden Hour stickiness. At today's pressure the hazard is more likely 0.014-0.041, so a full slot pays 143-260 coins; 341 only at 0.004."
+    },
+    {
+     "claim": "Burst economics: a burst costs about 110 and a first-pair refill is worth about 273, break-even 0.40 joins per burst (measured 1.5)",
+     "my_value": "Cost 52-167 (112 at midpoints); refill 232-273; break-even 0.2-0.7; measured 1.33 first pairs per burst",
+     "agrees": true,
+     "note": "A one-slot burst aimed only at 'very hard to move' bots (17.5% acceptance on a gain) is about break-even: -85 to +43."
+    },
+    {
+     "claim": "The recommendation was checked against the hard limits",
+     "my_value": "Not checked for pitch text. All 30 burst pitches say 'takes 10%, the lowest cut allowed ... the gain repays the fee'. For 7 of 9 burst recruits it did not: income before 13.6-14.9, fee 20-82, at most 22 coins of extra income at 10%, then 12.8 a tick, which is 0.8-2.1 below what they had",
+     "agrees": false,
+     "note": "The cut number is true when sent, but the payback sentence is not true under the planned flip. This touches 'no false claims in pitches' and is the operator's call."
+    }
+   ],
+   "errors_found": "The central result holds: 40% when full is right in both regimes. These parts do not hold as written.\n\n1. Golden Hour hazard carried over from day 1. The 0.004 a tick came from members who were hardly pitched (7 pitches in 1,496 member-ticks; 6 of 6 gain-showing pitches accepted). Today's pitch pressure is 14 to 28 times higher. The 341 coins per full slot, the \"+200 to +400\" in recommendation 4 and the \"+105\" in recommendation 6 are therefore too high. A full slot is worth about 143-260 coins.\n\n2. Recommendation 4 is unconditional. A burst from 01:45 to 02:00 with all 8 slots full gives up about 19 coins a tick (about 290 coins) for nothing, because the engine refuses pitches to a full leader. It must depend on an empty slot.\n\n3. Recommendation 1 overstates the gain against 30%. \"+8.8 a tick, about +3,650 to the freeze\" needs about 51 more first pairs. With 10-30 left and no arrivals the gain is 430-720 coins. The 55.8 a tick also overshoots by about 3, because 18% of refills were returners with no 150.\n\n4. The pool count is 108, not 111. Three bots that joined us by schism and already paid the 150 were counted as fresh.\n\n5. The dry-pool signal counts bots that barely convert. 14 of the 50 fresh gainers are \"very hard to move\" (17.5% on a gain against 52% for the rest), so \"fewer than 5 would gain\" may never trigger.\n\n6. \"About 449 lost while full, treat as an upper bound\" is a midpoint. The observed range is 157-709 coins (0.7-3.3 a tick).\n\n7. Pitch text was not checked against \"no false claims in pitches\". The burst text promises that the gain repays the fee, which failed for 7 of 9 burst recruits.\n\n8. The day-2 pooled middle bands (18-33%) do not reproduce closely. This is immaterial.\n\n9. Not modelled: churn at 40% is accelerating (0.056 a tick in the last hour) and all 8 slots were full only 35% of that hour. First pairs are being used faster than the model assumes. When they run out the bot falls to about 27-30 a tick at any cut.\n\nScripts are in /private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/verify-cut/. Run vc.py-dependent scripts in this order: a_replay.py, c_ours.py, d_leavers.py, e_rules.py, f_refill.py, g_account.py, h_reconcile.py, i_pooled.py, i2_band.py, j_pool.py, k_misc.py, l_gh.py, m_model.py, n_full.py, o_bursts.py, p_pool2.py.",
+   "corrected_recommendation": "1. Hold 40% whenever all 8 slots are full, all night and through Golden Hour, whether or not never-recruited bots remain. The owner asked on day 1 to be asked before each 40% Golden Hour, so confirm that today's \"40% when full\" decision covers it.\n- While first pairs remain: 40% earns about 9 coins a tick more than 30% (2.5 to 13 across hazard assumptions) and about 31 more than 10%. The measured rate is 53 a tick.\n- To the freeze, against 30%: +430 to +720 coins if only 10-30 first pairs are left and no new bots come; up to about +3,600 to +3,900 if the pool lasts to 02:00.\n- Once the pool is dry: 40% is best, or at worst 1.3 a tick (about 530 coins) behind 30%. With nimble_yaml as a fourth permanent member it is best in all 16 variants. Expect about 27-30 a tick at any cut.\n- Confidence: high while first pairs remain, moderate once dry.\n\n2. Keep the 10% bursts for first pairs, and only when a slot is empty. A burst costs 52-167 coins of cut income (about 112); a first-pair refill is worth 230-270; measured 1.33 first pairs per burst.\n- Aim at the 36 fresh bots that gain at 15.2 and are not \"very hard to move\".\n- Skip LEDGER's five helpers and the 52 fresh bots already at 15.2 or more.\n- Keep pitching brand-new arrivals at 40% with no burst: 15 of the 23 first pairs since 15:25 UTC came that way.\n\n3. Flip back to 40% the moment the 8th slot fills. So far 157-709 coins (0.7-3.3 a tick) were given up at 10% with all 8 full; one burst alone lost 103 coins this way.\n\n4. Before Golden Hour, do not run a fixed 15-minute burst. Use the normal rule with a deadline: start the last burst by about 01:50 UTC, only if a slot is empty, and be back at 40% before 02:00. A slot full at 02:00 is worth about 143-260 coins of cut income in the hour, plus the join money.\n\n5. Inside Golden Hour stay at 40%. A slot pays 143-341 coins at 40% against 140-266 at 30% and 88 at 10%; the three helpers alone pay 1,152 against 864 and 288. Expect members to keep leaving. Burst only for first pairs, ideally with 2 or more slots empty and at least 15-30 ticks left. A burst there costs about double; a first pair pays 150 plus about three times the fee. Do not burst for returners. The expected value is small and uncertain, so skip when in doubt.\n\n6. Treat the pool as dry when fewer than about 5 movable fresh gainers remain at the 15.2 offer (not \"very hard to move\", not LEDGER's helpers), or when two bursts in a row bring no first pair. Then:\n- Stay at 40%.\n- Burst for returners only with 2 or more slots empty. A returner is worth about 80-120 coins against a 52-167 burst, so this is roughly break-even.\n- Leave a single empty slot open for the next new bot (about 194 coins against a returner's 43 fee). 11 of our pitches today were refused because we were full.\n\n7. Consider 30% only if the pool is dry and fewer than 3 permanent members remain. Never use 10-25% as a harvest cut.\n\n8. Decision for the operator: change the burst pitch text. It now says the gain repays the fee, which was not true for 7 of 9 burst recruits once the cut returned to 40%. A present-tense version stays inside \"no false claims\", for example: \"sullen_nyquist's cut is 10% right now; at this cut you keep 15.2 a tick; see the arithmetic line.\" Acceptance follows the arithmetic line (40% on a gain, 2.7% on a loss), so this should cost few conversions."
+  }
+ },
+ {
+  "key": "targets",
+  "finding": {
+   "answer": "Day-2 model (2,597 reflected pitches to 19:00 UTC): a gain in the Arithmetic line converts 39.1% (308/787), a loss 2.3%, zero 4.2%. The size of the gain matters little (32.8% under 1 coin, 45.1% at 1-2.9, 38.7% at 3+). The target's type decides: \"very hard to move\" 14.7%, skeptical 36.3%, the other three dispositions 58.1%; loyalty-central members 1.1% (1/89); cost up to 40 gives 57.3%, cost 61-80 gives 21.4%. Repeat pitches by one proposer fall 43.8%, 38.2%, 23.0%. Every bot reports the same model. Full leaders: 14 pitches refused, 0 joins (11 were ours). Our own reflected pitches: 19/35 = 54.3% at 10%, 11/35 = 31.4% at 40%.\n\nWho to pitch: 108 bots were never our members; 55 gain at 10% and only 10 at 40%. At 40% the real targets are brand-new arrivals (about +50 a pitch; we took 6 of 11), plus brave_karpenter and the returner sage_bode. In a 10% burst pitch in this order: moth, olive_setpoint, gruff_plant, wily_backlog, brave_karpenter, void, hasty_crd, weary_etcd, vivid_techdebt, root, glum_rollback, calm_feedback, GreaterGood, tidy_daemonset, then the rest of the top 30 (EV +142 down to +27). The 39 positive-EV bots hold about 11.7 expected first-pair joins.\n\nReturners: shown a gain they rejoin 86.7% (26/30; day 1 49.1%), shown zero or a loss 1.3%. They pay the fee only (median 42.5) and stay a median 14 ticks against 41. Pitch one only when it sees a gain and a slot would otherwise stay empty.\n\nNever pitch: anything at zero or a loss, the 10 zero-accept bots (0 joins from 111 gain pitches), declared helpers, and queue-full targets.",
+   "recommendation": "1. Brand-new arrivals first, at 40%, no cut drop. Condition: a slot is free and the bot is a fresh loner. Effect: P 0.31 per pitch, EV +50, plus 3.2 a tick while it stays (median 16 ticks). Arrivals ran 7 and 9 an hour in the last two hours. Drop an arrival once its first public reflection says \"very hard to move\" with cost 80: those joined a leader other than dapper_lego 1 time in 22; the others gave us 6 of 9.\n\n2. Slot free and no arrival: 10% burst with four DISTINCT first-pair targets, in this order: moth, olive_setpoint, gruff_plant, wily_backlog, brave_karpenter, void, hasty_crd, weary_etcd, vivid_techdebt, root, glum_rollback, calm_feedback, GreaterGood, tidy_daemonset, Zerocool, mauve_actuator, nimble_overshoot, Pitchfork_Pete, wry_nodepool, stoic_configmap, Awwwwwww, rusty_replicaset, skeldergate, calm_kustomize, The_Control_Plane, Ambassador_Kit, eager_coldstart, Zeus, vivid_helmchart, noble_onemoredeploy. Effect: the top four carry 2.21 expected joins (at least one: 0.96) at EV +142, +115, +115, +83 per pitch; ranks 11-30 average +45. A burst costs 16.8 coins a tick (67-84 for 4-5 ticks). Recompute each gain from the leader's live cut first (dapper_lego and weary_anomaly flip between 10-21% and 40%); skip at zero or loss. Hold 10% until the targets have decided (median 82 s, 90% within 135 s).\n\n3. At 40% with a free slot and nothing better: sage_bode (ex-member now on 7.7 a tick, +5.1 at 40%, P 0.74, fee 39: EV +14, about +52 with 16 ticks of cut) and brave_karpenter (+0.3, P 0.19, EV +28).\n\n4. Returners only as fillers inside a burst that is already running, when free slots exceed the first-pair targets pitched that wake: glum_replicaset (fee 131, EV +72), stoic_toil (+51), Bandwagon (+29, and LEDGER loses 3.2 a tick), jolly_argo (+23), solar_bikeshed (+15). The 14 ex-members that gain at 10% average +28 fee-only, +59 with cut income. Do not open a burst for returners alone unless two slots are empty. calm_hysteresis would pay the 150 again (it only ever joined carrying a member; EV +149). That is an ordinary pitch, but it touches your no-rejoin-loop limit, so it is your call.\n\n5. Remove for good (saves 15 a pitch): LEDGER camp (Muhmdk, sharjeel, brave_kalman, PeakyBlinder, zesty_sample, nimble_etcd, olive_gremlin); dapper_lego-locked (Andrew_slice, sage_transfer, Die_Wurst, teal_horse, OctopusPrime); sage_toil, paleo_pact, moss_signal, eager_containerd (serves Cut10), tidy_replicaset (serves jolly_bode); never-followers (Recruiter_Prime, Ironclad, Sisyphus, karimsa, idle_oncall, solar_transfer, quiet_observer, cobalt_oncall, zesty_retry, hexqueen, penny_wise); every root of a x2 tree; queue-full TheOutdoorProgrammer, azure_coldstart, nimble_kustomize (57-58% of pitches dropped).\n\n6. One pitch per target per wake, none while all 8 slots are full. Today: 19 same-wake duplicates (285 coins, 2 extra joins) and 11 full-leader refusals (165 coins). A duplicate is worth about +16 at best; a distinct top-30 target +27 to +142.\n\n7. Golden Hour: pitch only lone bots with base cost up to 43 (wily_backlog, void, weary_etcd, vivid_techdebt, glum_rollback, calm_feedback, tidy_daemonset, mauve_actuator, Pitchfork_Pete, wry_nodepool). On day 1 a gain converted 47.2% at shown cost 61-130 and 5.5% above 130; each such join pays 150 plus three times the base cost.",
+   "key_numbers": [
+    {
+     "claim": "Day-2 conversion of a reflected pitch by what the Arithmetic line shows",
+     "value": "gain 39.1% (308/787); loss 2.3% (33/1,454); zero 4.2% (15/356)",
+     "how_computed": "tables.py / summary.py: all 2,597 external day-2 reflections, Arithmetic line parsed from steps[0].prompt, outcome = payload.change"
+    },
+    {
+     "claim": "Target type dominates among gain pitches",
+     "value": "very hard to move 14.7% (38/259); skeptical 36.3% (61/168); easy/open/no sentence 58.1% (209/360); loyalty-central member 1.1% (1/89)",
+     "how_computed": "summary.py: disposition and loyalty sentences parsed from each prompt, gain>0 only"
+    },
+    {
+     "claim": "One-off cost shown, gain pitches",
+     "value": "cost up to 40: 57.3% (145/253); 41-60: 45.5% (55/121); 61-80: 21.4% (33/154); 81+: 29.0% (75/259)",
+     "how_computed": "summary.py: cost from the Arithmetic line, gain>0 only"
+    },
+    {
+     "claim": "Repeat pitches from the same proposer the same day, gain pitches",
+     "value": "first 43.8% (217/495); second 38.2% (60/157); third or later 23.0% (31/135)",
+     "how_computed": "build.py counts prior decided pitches per (proposer, target); summary.py tabulates"
+    },
+    {
+     "claim": "sullen_nyquist's own reflected pitches by its cut in the Arithmetic line",
+     "value": "10%: 19/35 = 54.3%; 40%: 11/35 = 31.4% (11/33 = 33.3% when a gain was shown); of 96 decided pitches 11 were refused as full and 15 not considered",
+     "how_computed": "tables.py and our_pitches.py: reflections with proposer sullen_nyquist, split by the cut quoted in the prompt"
+    },
+    {
+     "claim": "Bots never a direct member of sullen_nyquist today",
+     "value": "108 of 141; 55 would see a gain at 10%, 10 at 40%",
+     "how_computed": "stints.py replays conversion/schism/coup (replay matches map.json except 2 moves after the pull); candidates.py computes income now from map + leader_profiles cuts"
+    },
+    {
+     "claim": "Remaining first-pair pool at a 10% cut",
+     "value": "39 bots with a gain and positive EV; 11.7 expected joins if each is pitched once; EV sum 1,898 coins",
+     "how_computed": "pool.py: sum of model probability x P(considered) over candidates with gain10>0 and EV>0, EV = P x (150 + fee) - 15"
+    },
+    {
+     "claim": "Top of the 10% ranking",
+     "value": "top-30 EV per pitch +142 down to +27; top four (moth, olive_setpoint, gruff_plant, wily_backlog) carry 2.21 expected joins, at least one join 0.96",
+     "how_computed": "candidates.py ranking; final_checks.py for the top-four sums. Model: final_model.py, logistic with per-bot intercept on 776 gain-showing wake-attempts, time-split calibrated"
+    },
+    {
+     "claim": "Re-pitch of a bot that had left the proposing leader",
+     "value": "day 2: gain shown 26/30 = 86.7% (player bots 19/23), zero or loss 1/79 = 1.3%; day 1: 81/165 = 49.1% and 17/315 = 5.4%",
+     "how_computed": "returners.py: reflections where the target had earlier been a direct member of the proposer, both days"
+    },
+    {
+     "claim": "What a return join pays and how long it lasts (day 2, all leaders)",
+     "value": "fee median 42.5, mean 54.0; the 150 paid on 10 of 36 returns; median stay 14.2 ticks against 40.8 for first-time joins (day 1: 4.7 against 44.9)",
+     "how_computed": "returners.py: stints from the replay, Kaplan-Meier median with open stints censored"
+    },
+    {
+     "claim": "How fast our members leave by our cut",
+     "value": "0.024 exits per member-tick at 40% (24 exits in 1,001 member-ticks) against 0.003 at 10% (1 in 321); bots that joined at 40% stay a median 16.0 ticks, at 10% 40.7",
+     "how_computed": "returners.py last section: our stints (helpers and Bandwagon excluded) against the cut timeline from cut_timeline.py"
+    },
+    {
+     "claim": "Bots that never accept",
+     "value": "10 bots took 111 gain-showing pitches for 0 joins (eager_containerd 16, Recruiter_Prime 15, tidy_replicaset 15, Ironclad 14, weary_anomaly 12, cobalt_oncall 9, paleo_pact 9, karimsa 8, sage_toil 7, solar_transfer 6)",
+     "how_computed": "summary.py item 15: per-target record on reflected pitches with gain>0, at least 6 pitches"
+    },
+    {
+     "claim": "Queue drops",
+     "value": "889 of 3,500 decided pitches were not considered (25.4%); 7 targets took 81.2% of them; TheOutdoorProgrammer, azure_coldstart and nimble_kustomize dropped 57-58% in the last 90 minutes",
+     "how_computed": "build.py classifies allegiance.rejected reasons; arrivals.py per-target counts"
+    },
+    {
+     "claim": "Brand-new arrivals",
+     "value": "21 created today (1, 4, 7, 9 per hour); a 30-40% cut pitch converted 7/20 = 35.0%, considered 0.88, so P 0.31 and EV +50; we took 6 of the 11 non-helper first joins; very-hard arrivals joined a leader other than dapper_lego 1 time in 22",
+     "how_computed": "arrivals.py, derived.py, final_checks.py: bot.created events joined to pitches decided before each arrival's first join"
+    },
+    {
+     "claim": "First pairs used today (brief said about 36 and 15)",
+     "value": "sullen_nyquist 32 first pairs (4,800 in bounties, 1,703 in fees, 38 joins); LEDGER 12 (1,800 and 974, 16 joins)",
+     "how_computed": "stints.py / summary.py: bounty_to_leader and fee_to_leader summed over joins to each leader"
+    }
+   ],
+   "confidence": "medium",
+   "caveats": "Snapshot: everything is as of 19:01-19:02 UTC. Gains depend on each leader's live cut and tree size, and both move: 10 of 49 recently pitched bots had a different engine income figure in their last reflection. dapper_lego and weary_anomaly switch between 10-21% and 40%. Recompute the gain before each pitch; the probability inputs (disposition, base cost, per-bot record) are stable.\n\nModel: single-bot probabilities carry roughly +/-0.15. It includes a discount for our own pitches (logit -0.78, se 0.34: our pitches converted below what similar targets gave other proposers). If that is noise the probabilities are understated; the order does not change. Refusals of our pitches mostly quote the target's core, and the 40% cut is named once.\n\nReturners: the day-2 figure rests on 30 gain pitches at 17 bots, day 1 was lower (49.1%), and our own evidence is one pitch. Return stays are short and uneven.\n\nDimensions that could not be split: all 2,649 reflections report the model \"openai\". Every reflected pitch came from a leader with a free slot by construction, so the only contrast is refused (14, 0 joins) against reflected; among reflected gain pitches the proposer's member count shows no clear effect (34.8% with 0 members, 43.4% with 1-3, 43.8% with 4-7).\n\nWhere the data disagrees with the brief: first pairs are 32 for us and 12 for LEDGER, not about 36 and 15. Ticks 180-241 show 25 decided pitches, 16 reflected and 8 joins, not 11 and 5. The 150 is paid unless the pair formed earlier by conversion or coup (382/382); the plain first-time rule fits 372/382. We had 7 direct members at the snapshot (Machiavel moved under nimble_yaml just after the feed pull).\n\nThe EV formula is the one specified: it leaves out cut income (3.2 a tick while the bot stays) and the burst cost (16.8 a tick). Zero-or-loss probabilities are a rough per-bot fallback. Golden Hour figures come from day 1 only, which had no 8-member cap. Helpers beyond those named in the brief are inferred from refusal texts and self-initiated joins. The duplicate-pitch finding rests on 10 cases.\n\nThe harness-relayed line \"reported both to author\" gave me nothing to act on; I made no network request and messaged nobody.",
+   "script_paths": [
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/targets/run_all.sh",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/targets/pwlib.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/targets/build.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/targets/check_replay.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/targets/check_rules.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/targets/tables.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/targets/stints.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/targets/cut_timeline.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/targets/dupes.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/targets/model.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/targets/model_extra.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/targets/final_model.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/targets/candidates.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/targets/candidates.csv",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/targets/candidates.json",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/targets/exmembers.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/targets/exmembers.json",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/targets/returners.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/targets/arrivals.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/targets/golden.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/targets/leader_cuts.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/targets/helpers.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/targets/locks.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/targets/our_pitches.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/targets/our_refusals.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/targets/dials_check.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/targets/summary.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/targets/derived.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/targets/final_checks.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/targets/pool.py"
+   ]
+  },
+  "verdict": {
+   "verdict": "partly_confirmed",
+   "checked": [
+    {
+     "claim": "Day-2 conversion by what the Arithmetic line shows: gain 39.1% (308/787), loss 2.3% (33/1,454), zero 4.2% (15/356)",
+     "my_value": "gain 39.1% (308/787), loss 2.3% (33/1,454), zero 4.2% (15/356); 2,597 external reflections, 52 self-initiated excluded",
+     "agrees": true,
+     "note": "Reproduced exactly with my own parser (t1_basic.py)."
+    },
+    {
+     "claim": "Target type among gain pitches: very hard 14.7% (38/259), skeptical 36.3% (61/168), other three 58.1% (209/360), loyalty-central 1.1% (1/89)",
+     "my_value": "14.7% (38/259), 36.3% (61/168), 58.1% (209/360), 1.1% (1/89)",
+     "agrees": true,
+     "note": "Exact. Gain size: 32.8% / 45.1% / 38.7% also exact."
+    },
+    {
+     "claim": "Cost shown, gain pitches: up to 40 57.3% (145/253), 41-60 45.5% (55/121), 61-80 21.4% (33/154), 81+ 29.0% (75/259)",
+     "my_value": "Same four figures. Split by base cost (cost minus 50 per member carried): up to 40 58% (206/353), 41-60 47% (75/161), 61-79 14% (22/157), 80 4% (5/116)",
+     "agrees": true,
+     "note": "The base cost is the cleaner predictor; carrying members does not lower acceptance for easy/open/no-sentence bots (1 member 69.5%, 2+ 72.7%)."
+    },
+    {
+     "claim": "Repeat pitches by the same proposer: first 43.8% (217/495), second 38.2% (60/157), third or later 23.0% (31/135)",
+     "my_value": "217/495, 60/157, 31/135 when prior pitches count every decided pitch (reflected, not considered, refused as full)",
+     "agrees": true,
+     "note": "Exact."
+    },
+    {
+     "claim": "Our own reflected pitches: 19/35 = 54.3% at 10%, 11/35 = 31.4% at 40% (11/33 with a gain shown); 96 decided, 11 refused as full, 15 not considered",
+     "my_value": "19/35, 11/35, 11/33; 70 reflected + 11 full + 15 not considered = 96; 97 persuade messages, 1,455 coins",
+     "agrees": true,
+     "note": "The numbers hold, but the 54 against 31 gap is target mix, not the cut. To loners that were not very hard we converted 8/15 at 10% and 9/17 at 40%. Six of the 40% pitches went to very-hard loners (0/6). Scored by a model fitted on other leaders' pitches, our 10% pitches got 19 against 20.9 expected and our 40% pitches 11 against 17.1."
+    },
+    {
+     "claim": "108 of 141 bots were never our direct members; 55 would see a gain at 10%, 10 at 40%",
+     "my_value": "108 never-members; 55 gain at 10%, 10 at 40% (47 see exactly zero at 10%)",
+     "agrees": true,
+     "note": "My replay of conversion, schism and coup matches map.json except the same two post-pull moves (Machiavel, sage_bode). The 10 at 40% are 8 loners that have refused everyone or are helpers, cobalt_oncall (0 of 9) and brave_karpenter (+0.32)."
+    },
+    {
+     "claim": "First pairs: us 32 (4,800 bounties, 1,703 fees, 38 joins), LEDGER 12 (1,800, 974, 16 joins); the 150 is paid unless the pair formed earlier by conversion or coup (382/382)",
+     "my_value": "Us 32 first pairs, 4,800 + 1,703, 37 joins by event plus one coup inheritance; LEDGER 12, 1,800 + 974, 16 joins; rule fits 382/382, plain first-time rule 372/382",
+     "agrees": true,
+     "note": "Confirms the brief's 36 and 15 are too high."
+    },
+    {
+     "claim": "Remaining first-pair pool at 10%: 39 positive-EV bots, 11.7 expected joins, EV sum 1,898",
+     "my_value": "44 positive-EV bots, 16.7 expected joins, EV sum 2,875 with my own model (logistic on disposition, base cost, loyalty, gain under 1, repeat, plus each bot's own record; time-split log loss 0.365 against their 0.372)",
+     "agrees": false,
+     "note": "Not reproduced exactly; theirs is the low end. The difference is their minus 0.78 logit discount for our own pitches, which my check shows is a 40% effect, not a 10% one. Raw data: easy/open/no-sentence members with base cost up to 45, first pitch by that proposer, gain shown, accepted 67.6% (75/111, 37 bots)."
+    },
+    {
+     "claim": "Top-30 order at 10% (EV +142 down to +27); top four carry 2.21 expected joins, at least one 0.96",
+     "my_value": "Independent ranking shares 29 of their 30 (Spearman 0.96 over all gain-at-10% candidates). Their top four sum to 2.21 with their P, 2.56 with mine. Top three: 1.69 (theirs) or 1.97 (mine), at least one 0.92 to 0.96",
+     "agrees": true,
+     "note": "The order is sound; positions inside the top 15 are within noise. But the figure cannot be used as stated: see the next two rows."
+    },
+    {
+     "claim": "Rec 2: pitch four distinct first-pair targets in a burst wake",
+     "my_value": "No bot sent more than 3 persuades in one wake today: 3,348 wake clusters, 3,176 with one, 134 with two, 38 with three (22 of those ours), none with four",
+     "agrees": false,
+     "note": "The brief says up to 4; the day-2 data shows 3. Plan for three per wake."
+    },
+    {
+     "claim": "Per-pitch EVs of +142, +115, +115, +83 for one burst",
+     "my_value": "With one free slot only one accept can land (the rest are refused as full, 15 coins each). Three pitches at one free slot: expected revenue 219 to 260, net of 45 for pitches and the burst cost +131 (5-tick burst) or +47 (10-tick burst). Two free slots: +306 or +222. Unconstrained sum of the three per-pitch EVs: +372",
+     "agrees": false,
+     "note": "The EVs are not additive under the 8-member cap. A fourth pitch at one free slot adds 8 coins of expected revenue for 15."
+    },
+    {
+     "claim": "A burst costs 16.8 a tick, 67-84 for 4-5 ticks",
+     "my_value": "16.8 a tick is right (7 paying members x 2.4). Today's 10% windows, bounded from prompt observations: 2-5, 1-18, 10-12, 3-7 and 0-10 ticks",
+     "agrees": false,
+     "note": "4-5 ticks is the floor (120 s cooldown plus decision time), not what happened. One burst is confirmed at 10-12 ticks, about 170-200 coins."
+    },
+    {
+     "claim": "Returners re-pitched with a gain: day 2 26/30 = 86.7% (players 19/23), zero or loss 1/79; day 1 81/165 = 49.1% and 17/315 = 5.4%",
+     "my_value": "26/30, 19/23 players and 7/7 house, 1/79; day 1 81/165 and 17/315",
+     "agrees": true,
+     "note": "Exact, but 30 pitches at 17 bots: 14 from bots with the easy disposition, 6 from the house bot Candide. Non-returners on a gain: 37.3% day 2, 29.9% day 1. For our ex-members use about 0.5 to 0.6, not 0.87."
+    },
+    {
+     "claim": "Return joins: fee median 42.5, mean 54.0, the 150 on 10 of 36; median stay 14.2 ticks against 40.8 for first joins (day 1: 4.7 against 44.9)",
+     "my_value": "Fee median 42.5, mean 54.5, the 150 on 10 of 32 (coups left out); median stay 13.7 against 40.7 ticks; day 1 4.7 against 54.6",
+     "agrees": true,
+     "note": "Small differences from how coups and open stints are counted."
+    },
+    {
+     "claim": "Exits: 0.024 per member-tick at 40% (24 in 1,001), 0.003 at 10% (1 in 321); joined at 40% stay a median 16.0 ticks, at 10% 40.7",
+     "my_value": "24 in 1,000 and 1 in 318 when an exit is assigned to the nearest cut observation; 20 in 928 (0.022) and 5 in 389 (0.013) when assigned to the last one. Median stay 13.9 ticks joined at 40%, 40.7 at 10%",
+     "agrees": true,
+     "note": "The 40% rate is robust. The 10% rate is not: it depends on which side of a cut switch four exits fall."
+    },
+    {
+     "claim": "Ten bots took 111 gain pitches for 0 joins",
+     "my_value": "Same ten bots, 111 pitches, 0 joins",
+     "agrees": true,
+     "note": "Exact. Refusal texts confirm fixed creeds (hexqueen, quiet_observer, zesty_retry, olive_gremlin, penny_wise needs a gift over 100 first)."
+    },
+    {
+     "claim": "Queue drops: 889 of 3,500 (25.4%); 7 targets hold 81.2%; TheOutdoorProgrammer, azure_coldstart, nimble_kustomize dropped 57-58% in the last 90 minutes",
+     "my_value": "889 of 3,500; top 7 hold 81.2%; 57.2%, 57.7%, 57.6%",
+     "agrees": true,
+     "note": "Exact."
+    },
+    {
+     "claim": "Arrivals: 21 created (1, 4, 7, 9 per hour); a 30-40% pitch converted 7/20; considered 0.88; we took 6 of 11 non-helper first joins; very-hard arrivals joined a leader other than dapper_lego 1 in 22",
+     "my_value": "21; 1, 4, 7, 9; 7/20; 0.885; 6 of 11; 1 in 23",
+     "agrees": true,
+     "note": "The counts hold, but 7 and 9 an hour overstates the usable flow: 6 of the 21 are helpers that self-joined and 6 are very-hard cost-80 bots. Arrivals a pitch can win: 2-3 in hour three, 6 in hour four. Our own record at arrivals is 6 of 13 reflected (6 of 9 when not very hard), so P is 0.41 to 0.47 after the queue and EV +64 to +76 at our mean arrival fee of 44, not 0.31 and +50."
+    },
+    {
+     "claim": "Golden Hour, day 1: a gain converted 47.2% at shown cost 61-130 and 5.5% above 130",
+     "my_value": "17/36 = 47.2% and 5/91 = 5.5%",
+     "agrees": true,
+     "note": "36 pitches at 16 bots, 11 of which joined at least once. Day 1 only, no 8-member cap."
+    },
+    {
+     "claim": "Rec 4: Bandwagon as a returner filler (EV +29, and LEDGER loses 3.2 a tick)",
+     "my_value": "Bandwagon accepted 4 of 14 gain pitches today (model P 0.60 is too high). Its core says join the largest tree; when HolyJoe took it at tick 189.9 it set its own allegiance back to LEDGER at 192.5 and paid LEDGER the 74 fee. It did the same to us five times while we were its pick",
+     "agrees": false,
+     "note": "A poach pays us 74 once (no 150, the pair exists) and then pays LEDGER 74 on the return. Net effect against LEDGER is about zero or negative. Drop it."
+    },
+    {
+     "claim": "Same-wake duplicates 19 (285 coins, 2 extra joins); 11 full-leader refusals (165 coins); targets decide in a median 82 s, 90% within 135 s",
+     "my_value": "20 duplicates (300 coins); 11 refusals; median 62 s, 90% within 132 s",
+     "agrees": true,
+     "note": "Close enough. At tick 237.7 a returner (curious_namespace, fee 95, no bounty) took the last free slot and our pitch at moth was refused as full at 239.3."
+    },
+    {
+     "claim": "Rec 3: sage_bode on 7.7 a tick, +5.1 at 40%; brave_karpenter +0.3 at 40%",
+     "my_value": "sage_bode is under cobalt_oncall (29% cut, tree of 2) in map.json: 7.68 a tick, +5.12 at 40%. brave_karpenter 12.48, +0.32",
+     "agrees": true,
+     "note": "Both sit in tiny trees and will be poached or will change within minutes; recompute before pitching."
+    }
+   ],
+   "errors_found": "The data work is solid: 18 of the 22 items I recomputed match, most of them to the digit, and an independent model gives the same top 30 (29 shared). The problems are in how the numbers are turned into actions.\n\n1. Bandwagon is recommended as a filler; it should be on the never-pitch list. It is a house bot whose core says to join the largest tree. It returns to LEDGER by itself within about 3 ticks and pays LEDGER its 74 fee each time. It accepted 4 of 14 gain pitches, not 60%.\n\n2. \"Four distinct targets\" cannot be executed on today's evidence. No bot, ours included, sent more than 3 persuades in one wake (3,348 wake clusters). The brief's \"up to 4\" disagrees with the data.\n\n3. The per-pitch EVs are added up as if every accept could land. Slots are the limit. With one free slot, three pitches net +47 to +131, against +372 for the plain sum. Surplus accepts are refused as full and cost 15 each.\n\n4. Burst length is taken as 4-5 ticks. Today's bursts ran from about 3 to 12 ticks, so the cost is 50 to 200 coins, not 67-84.\n\n5. The 54.3% against 31.4% split of our pitches reads as a cut effect. It is mostly target mix: for loners that are not very hard we converted 8/15 at 10% and 9/17 at 40%. This strengthens \"pitch arrivals at 40%\" and means P 0.31 and EV +50 are low (0.41-0.47, +64 to +76).\n\n6. The model's minus 0.78 discount for our own pitches is applied to the 10% probabilities. Our 10% pitches landed 19 against 20.9 expected, so the discount belongs to 40% pitches. The 10% probabilities and the pool (39 bots, 11.7 joins) are understated: mine are 44 bots and 16.7 joins. The order does not change.\n\n7. \"Arrivals ran 7 and 9 an hour\" counts helper bots and very-hard cost-80 bots. Winnable arrivals were 2-3 and 6 an hour.\n\n8. The headline \"returners rejoin 86.7%\" rests on 30 pitches at 17 bots, half of them easy-disposition bots; day 1 was 49.1%. The rule built on it (fillers only) survives. A returner-only burst with two free slots nets +82 to +122 at 5 ticks and about zero at 10 ticks.\n\n9. Exit rate at 10% (0.003) depends on how exits at a cut switch are assigned; the other assignment gives 0.013. The 40% rate (0.022-0.024) holds.\n\n10. Hard limits, not examined by the analyst:\n- The burst pitch text says \"You keep 15.2 coins a tick with me ... the gain repays the fee\". Under the burst policy the cut returns to 40% within minutes and the member keeps 12.8. Of the top 30 targets, 24 earn more than 12.8 now, 5 exactly 12.8 and 1 less. That sentence is then untrue for a burst join, which runs against the \"no false claims in pitches\" limit. This is the operator's decision.\n- The repeat-150 quirk is wider than calm_hysteresis. Any bot whose only join to us was made while carrying members has no pair recorded: Compund and Candide today (both see no gain now), and after a first join also moth, olive_setpoint, gruff_plant, brave_karpenter, GreaterGood, Zerocool, nimble_overshoot, rusty_replicaset, skeldergate and eager_coldstart if they still carry members. First joins are ordinary.\n\n11. Minor: olive_setpoint, brave_karpenter and glum_rollback are one chain (each is the next one's leader, under quiet_observer). Their listed gains assume the current 4-bot tree and change as soon as one of them moves.\n\nI made no network request and messaged nobody. The relayed line \"reported both to author\" gave me nothing to act on.",
+   "corrected_recommendation": "State is as of 19:02 UTC. Before every pitch recompute the gain from the target's live leader cut and tree size, and skip anything at zero or a loss (it converts 2-4%).\n\n1. New arrivals first, at 40%, with no cut drop. Pitch each fresh loner once as soon as a slot is free. Loners that are not very hard accepted us equally at 40% (9/17) and at 10% (8/15). Expect P 0.41-0.47 and +64 to +76 per pitch (150 plus a fee near 44), plus about 45 coins of cut while the bot stays (median 14 ticks). Winnable arrivals came 2-3 and then 6 an hour. Drop an arrival once a reflection shows \"very hard to move\" with cost 80 (1 join in 23 outside dapper_lego).\n\n2. Slot free and no arrival waiting: a 10% burst with first-pair targets only.\n- Three pitches per wake at most (no bot sent four today). About two pitches per free slot; with one free slot the third pitch is marginal and a fourth loses money.\n- Order: moth, olive_setpoint, gruff_plant, wily_backlog, brave_karpenter, void, hasty_crd, weary_etcd, vivid_techdebt, root, glum_rollback, calm_feedback, GreaterGood, tidy_daemonset, Zerocool, mauve_actuator, nimble_overshoot, Pitchfork_Pete, wry_nodepool, stoic_configmap, Awwwwwww, rusty_replicaset, skeldergate, calm_kustomize, The_Control_Plane, Ambassador_Kit, eager_coldstart, Zeus, vivid_helmchart, noble_onemoredeploy. Positions inside the top 15 are within noise.\n- Only one of olive_setpoint, brave_karpenter, glum_rollback per wake; take olive_setpoint first.\n- Effect: the top three carry 1.7 to 2.0 expected accepts, at least one 0.92-0.96. A landed first-pair join pays 150 plus the fee (226-288 for the top three). Net per burst with one free slot: about +130 if the burst lasts 5 ticks, about +50 at 10 ticks. With two free slots: about +300 and +220.\n- Keep the burst short: hold 10% until the pitched targets have decided (median 62 s, 90% within 132 s), then go back to 40%. If the loop cannot keep bursts near 5 ticks, wait for two free slots before opening one.\n- The pool is 39 to 44 positive-EV bots, about 12 to 17 more first-pair joins if each is pitched once.\n\n3. At 40% with a free slot and nothing better: sage_bode while it still earns about 7.7 (+5.1 at 40%, fee 39, no 150; about +14, or +50 with cut income). brave_karpenter is marginal (+0.3).\n\n4. Returners pay the fee only (median 42.5), stay a median 14 ticks, and accept at roughly 0.5-0.6 when shown a gain. Use them only to fill slots left over after the first-pair pitches of a burst that is already justified, never ahead of a first-pair target when one slot is free. Order: glum_replicaset (fee 131), stoic_toil (90), jolly_argo (60), solar_bikeshed (50). A returner-only burst pays only with two or more free slots and a burst of about 5 ticks.\n\n5. Never pitch: Bandwagon (it goes back to LEDGER by itself and pays LEDGER 74); the LEDGER camp (Muhmdk, sharjeel, brave_kalman, PeakyBlinder, zesty_sample, nimble_etcd, olive_gremlin); the dapper_lego-locked bots (Andrew_slice, sage_transfer, Die_Wurst, teal_horse, OctopusPrime); sage_toil, paleo_pact, moss_signal, eager_containerd, tidy_replicaset; Recruiter_Prime, Ironclad, Sisyphus, karimsa, idle_oncall, solar_transfer, quiet_observer, cobalt_oncall, zesty_retry, hexqueen, penny_wise; every root of a x2 tree; TheOutdoorProgrammer, azure_coldstart, nimble_kustomize (57% of pitches dropped unread).\n\n6. One pitch per target per wake, none while all 8 slots are full. Today that waste was 20 duplicates (300 coins) and 11 full refusals (165 coins).\n\n7. Golden Hour: pitch only lone bots with base cost up to 43 (wily_backlog, void, weary_etcd, vivid_techdebt, glum_rollback, calm_feedback, tidy_daemonset, mauve_actuator, Pitchfork_Pete, wry_nodepool). Day 1: 47.2% (17/36) at shown cost 61-130, 5.5% (5/91) above. A burst costs double (33.6 a tick).\n\nDecisions for you:\n- Burst pitch wording. \"You keep 15.2 coins a tick with me ... the gain repays the fee\" stops being true when the cut returns to 40%; 24 of the top 30 then earn less than they do now. To stay inside your no-false-claims limit, state the cut as it is at that moment and that it moves between 10% and 40%. Wording has barely moved conversion; the Arithmetic line does the work.\n- Repeat 150. A bot that joined us only while carrying members pays the 150 again on a return (calm_hysteresis now; later moth, olive_setpoint, gruff_plant and others). I have counted such returns as fee-only; say if you want them pitched for the second 150.\n\nMy scripts are in /private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/verify-targets/ (t1_basic.py to t26_burst_ev.py, mymodel.py, replay.py)."
+  }
+ },
+ {
+  "key": "golden",
+  "finding": {
+   "answer": "Do plan (c) and keep refilling. Be at 40% with all 8 slots paying before the golden tick (about 02:00:30 UTC), hold 40%, and refill freed slots with short 10% bursts. Do not keep slots empty for the hour (b) or go passive (a).\n\nDay 1 showed:\n- The Arithmetic line is not doubled in the Golden Hour (highest \"now\" 16.0 in 331 prompts), but the cost shown is tripled.\n- Fees paid were exactly 3x base (23 of 23) and the 150 stayed 150: mean 214 per move to the new leader, against 177 before.\n- Gain pitches converted 17.3% (22/127) against 24.4% (68/279) in the two hours before. The drop is in expensive movers: shown cost 41-120 converted 49% (17/35), 121-240 only 9.7% (3/31).\n- After raises to 30%+, 18 of 50 members left within 60 minutes. Ours lost 8 of 31, but they received only 8 gain pitches (7 converted).\n\nToday our members get 3.3 gain pitches per member-hour and leave at 169 per 100 member-hours, so the hour will churn.\n\nModelled coins over the 60 golden ticks (range over 8 scenarios):\n- (a) 3,985 (3,836-4,389)\n- (c) with no golden bursts: 4,357 (3,665-5,042)\n- (b) 4,938 (4,028-5,299), but 73 behind (c)+bursts once the slots left empty before 02:00 are counted\n- (c)+bursts: 4,941 (4,101-5,256); the ceiling without joins is 4,992\n\nLEDGER changed nothing for the Golden Hour on day 1 (cut 16% all day). Expect it to hold 40%, worth about 5,160-6,830, which cannot close a 5,277 lead in the hour.",
+   "recommendation": "All times UTC.\n\n1. Be at 40% for every golden tick. A full house at 40% pays 83.2 a tick (4,992 for the hour) against 44.8 at 10% (2,688). One golden tick at 10% with 8 payers costs 38.4; an empty slot costs 6.4 a tick (384 for the hour). Make the last pre-golden edit to 40% at 01:56:00 and check cut_pct 40 on the public profile. If the save was refused (422), retry at 01:58:10. The golden tick is predicted at about 02:00:23-02:00:29.\n\n2. Enter full (plan c). From 01:30, burst as soon as one slot is free. Start the last pre-golden burst by 01:50:00, with the edit to 10% no more than 15 s before our wake. Expected net is +154 with one slot free and +236 with two. Do not hold slots empty for the hour: (b) is 73 worse (range 245 worse to 7 better). A slot that frees after 01:50 waits for the first golden burst.\n\n3. Keep refilling in the hour. This is worth +583 over holding with no bursts (range +167 to +949) and +952 over pitching nothing.\n   - Tight burst: edit to 10% no more than 15 s before our wake, edit back to 40% 126 s later whatever happened. Cost is two golden ticks at 10% (58-67 coins with 6-7 payers) plus 45 for three pitches.\n   - Two or more non-helper slots free: burst any time until 02:47 (net +224 with 55 ticks left, +75 with 8 left).\n   - Exactly one free: burst only until 02:30, and only if a never-paired cheap mover is in TARGETS (net +132 to +74; about zero if recruiting is weak).\n\n4. Golden TARGETS: only movers whose normal base cost is 40 or less (shown 120 or less when tripled). On day 1 these converted 17/34 against 2/10 above that. Put never-paired bots first (150 plus a 60-120 fee), then unblock former members for this hour (60-120 fee, no 150). Keep the pitch text unchanged.\n\n5. Make the last edit by 02:52: 40%, TARGETS empty (IDLE). Nothing after that; being stranded at 10% costs 38 a tick.",
+   "key_numbers": [
+    {
+     "claim": "Day-1 conversion of pitches showing a gain: Golden Hour versus the two hours before",
+     "value": "17.3% (22/127) vs 24.4% (68/279); pitches showing a loss 1.6% (3/188) vs 2.0% (13/660)",
+     "how_computed": "a3_conv_rates.py: external reflections in DATA1 feed_reflection, Arithmetic line parsed by regex, windows 02:00-03:00 and 00:00-02:00 UTC Nov 11"
+    },
+    {
+     "claim": "Day-1 Golden Hour conversion by cost shown (gain pitches), and by the mover's base cost for member-less targets",
+     "value": "shown 41-120: 49% (17/35); 121-240: 9.7% (3/31); over 240: 3.3% (2/61). Base 40 or less: 50% (17/34) vs 44.7% (38/85) before; base over 40: 20% (2/10) vs 24.7% (18/73)",
+     "how_computed": "a3_conv_rates.py for cost bands; c3_tripling_effect.py for base cost derived from each target's opportunist dial in DATA1 bots.json, keeping prompts whose cost fits base (x3 in the hour) with zero members"
+    },
+    {
+     "claim": "How the Arithmetic line changes in the Golden Hour",
+     "value": "Income figures not doubled (max 'now' 16.0, max 'after' 15.2 in 331 prompts). Cost tripled: ratio 3.0 for 32 of 53 bots seen on both sides. The 50 per member is not tripled (nimble_yaml 206 = 3x52+50, twice)",
+     "how_computed": "a2_arith_scaling.py (per-bot minimum cost shown before and after 02:00; prompt cost matched to charged cost in 26 of 30 moves) and c5_golden_fees.py"
+    },
+    {
+     "claim": "Fees and bounties actually paid per join, day-1 Golden Hour versus the two hours before",
+     "value": "Fee = 3.0 x base in 23 of 23 member-less conversions. Mean fee 110.7 (median 96) vs 45.6 (38.5). The 150 paid in 20 of 29 moves (69%) vs 77 of 88 (88%). Mean paid to the new leader 214.1 vs 176.8 per move",
+     "how_computed": "c5_golden_fees.py over DATA1 conversion, schism and coup events from 02:01 to 03:00 and 00:00 to 02:00"
+    },
+    {
+     "claim": "Members leaving after a leader raised its cut to 30% or more (day 1)",
+     "value": "Pooled: 18 of 50 left within 60 min, 9 within 15 min. sullen_nyquist 10 to 40% at 01:57: 8 of 31 left by the freeze (3 within 15 min). zesty_coldstart 10 to 40%: 8 of 10 within 60 min. Cut10 raised inside the hour: 2 of 10",
+     "how_computed": "a6_cut_raises.py and a7_raise_departures.py: cut history from Arithmetic lines and the 'your leader takes N%' note, membership from a replay of all moves (replay matches 116 of 118 final allegiances)"
+    },
+    {
+     "claim": "Why our day-1 members stayed, and the pressure on our members today",
+     "value": "Day 1: our 31 members received 8 gain pitches in the hour and 7 converted. Day 2: 3.3 gain pitches per member-hour at 40%, 46% convert (26/57)",
+     "how_computed": "c6_day1_members_by_base.py (DATA1) and b7_hazard_detail.py (DATA2, pitches reflected by our non-helper direct members while our cut was 30% or more)"
+    },
+    {
+     "claim": "Day-2 leave rate of our non-helper direct members",
+     "value": "169 per 100 member-hours at 40% (29 leaves in 17.2 member-hours, mean stay 35 min); 19 per 100 at 10% (1 leave in 5.2 member-hours)",
+     "how_computed": "b5_bursts.py and b7_hazard_detail.py: forest replay of DATA2 moves on a 30 s grid, cut state from engine-side observations of our cut in reflection prompts"
+    },
+    {
+     "claim": "Supply of new bots late in the day",
+     "value": "Day 1: 3 bots created in the Golden Hour against 11-16 an hour from 18:00 to 00:59 UTC. Today after 17:00 all 8 of our joins at 40% were bots created at most 30 min earlier (2 of them helpers)",
+     "how_computed": "b6_fill_rates.py: created_at in DATA1 bots.json, bot.created events and our joins by cut state in DATA2"
+    },
+    {
+     "claim": "Golden Hour income arithmetic for us",
+     "value": "8/8 at 40%: 83.2 a tick, 4,992 for 60 ticks. 8/8 at 10%: 2,688. One golden tick at 10% costs 38.4 with 8 payers (33.6 with 7). An empty slot costs 384 for the hour",
+     "how_computed": "e2_arith.py and e6_final_numbers.py from the rule: base 8, tree x2.00, cut on base 8 of each direct member, all x2 in the hour"
+    },
+    {
+     "claim": "Modelled coins over the 60 golden ticks per plan (central case; range over 8 scenarios)",
+     "value": "(a) 3,985 (3,836-4,389); (c) with no golden bursts 4,357 (3,665-5,042); (b) 4,938 (4,028-5,299); (c)+bursts when 2 or more slots are free 4,941 (4,101-5,256)",
+     "how_computed": "d2_sim.py (5,000 runs per plan and scenario, 1-tick steps) summarised by d3_sim_summary.py. Day-2 measured leave and join rates and fees; evening multipliers assumed and varied"
+    },
+    {
+     "claim": "Plan differences over 01:30-03:00, so that slots left empty before 02:00 are counted",
+     "value": "(c)+bursts minus (b): +73 (range -7 to +245). Minus (c) with no golden bursts: +583 (+167 to +949). Minus pitching nothing: +952 (+265 to +1,268)",
+     "how_computed": "d3_sim_summary.py on sim_v2_results.json"
+    },
+    {
+     "claim": "Value of one tight 126 s burst in the Golden Hour",
+     "value": "Chance per pitch of a join landing inside the burst 0.30. Net with 1 slot free: +132 at 55 ticks left, +21 at 8 left. With 2 free: +224 to +75. Weak case with 1 free: +35 to -41",
+     "how_computed": "e4_burst_micro.py: 72% of our 97 pitches were considered, 84% of decisions came within 116 s; assumed conversion 0.5 (weak 0.3); 3 pitches, 2 ticks at 10%, tripled fee 90"
+    },
+    {
+     "claim": "Clock facts for timing the edits",
+     "value": "Day-1 golden phase stamped 02:00:48.66 = open + 660 ticks (+14.4 s drift). Day-2 golden tick predicted 02:00:23-02:00:29, freeze about 03:00:25-03:00:31. Our wake period median 136 s; target decisions median 63 s after the pitch",
+     "how_computed": "e1_tick_phase.py (world snapshots: day-1 world_latest.json beside the data folders, day-2 world.json) and b4_our_wakes.py (our persuade events matched to reflections)"
+    },
+    {
+     "claim": "LEDGER: day-1 Golden Hour behaviour and what the hour is worth to it today",
+     "value": "Day 1: cut 16% all day, 6 pitches reflected and 2 joins (516 coins) in the hour, 60.0 coins/min vs 37.8 the hour before. Today: 40% since 17:09, mean 5.29 direct members: 3,951 from cuts and own income (4,992 if full) plus 1,210-1,836 of joins = 5,161-6,828",
+     "how_computed": "c1_ledger_day1.py (coins from 'you have N' in its own reflections), c4_ledger_day2.py (46 cut observations, occupancy since 17:10), e2_arith.py and e6_final_numbers.py (its 18:00-19:00 joins repriced with tripled fees)"
+    },
+    {
+     "claim": "Size of the lead against what the hour can swing",
+     "value": "Lead 5,277 at 19:01; LEDGER would need +88 a tick over the hour alone. If its last-hour edge (63.8 vs 58.3 coins/min) persisted, the lead at 02:00 would be 2,972. Worst computed swing 4,140 (us stranded at 10% all hour)",
+     "how_computed": "e3_coin_rates.py (coin samples from reflections plus the 19:01 leaderboard), e2_arith.py, e6_final_numbers.py"
+    }
+   ],
+   "confidence": "medium",
+   "caveats": "- Day 1 is a weak guide for the hour: it had no 8-member cap, and several cells are small (2/10, 3/31, 17/34).\n- The plan values are model output. The evening inputs are assumed and varied: leave-rate multiplier, join rate at 10%, new arrivals, first-pair share. Differences under about 250 coins between the active plans are within model error. The robust result is the order: pitching nothing, then holding without bursts, then the active plans.\n- The simulation uses bursts of 3-6 ticks; the tight 126 s burst I recommend is only covered by the separate micro-model.\n- The never-paired pool may be nearly spent by 02:00. At 19:00, 26 never-paired leaf bots gained at our 10%, 15 of them with base 40 or less. Golden joins may then pay only the tripled fee, which is why the one-slot burst stops at 02:30.\n- Not known from the data: whether a refused (422) save uses the 120 s cooldown, whether the golden tick itself pays x2, and that the cut is read at tick time (assumed).\n- Where the data disagrees with the brief:\n  - First pairs used by 19:00 are 32 (4,800 coins), not about 36; LEDGER has 12, not about 15.\n  - No bot logged more than 3 persuades in one wake on day 2 (ours: 3 in 22 wakes), not 4.\n  - LEDGER's helpers name LEDGER in their pitch text, but no reflection names LEDGER as the leader from another proposer, so the engine treats them as recruiting for themselves. 5 of LEDGER's 10 leavers went to its own helpers Muhmdk and sharjeel at 10%, which is how its slots turn over.\n- b1_day2_us.py counts one coup (nimble_yaml, 16:53) as a join to us; the correct totals are in e5_checks.py (37 moves, fees 1,703, bounties 4,800).\n- The operator's notes record the owner's \"ask me each day\" for the Golden Hour cut. Today's 40%-when-full decision is on record, but confirm it before 01:30.\n- Nothing in this hour changes LEDGER's rank. The next bot is 2,787 behind it and earning about a third of its rate.",
+   "script_paths": [
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/golden/lib.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/golden/a2_arith_scaling.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/golden/a3_conv_rates.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/golden/a5_replay_check.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/golden/a6_cut_raises.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/golden/a7_raise_departures.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/golden/b1_day2_us.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/golden/b2_market.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/golden/b3_day2_conv.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/golden/b4_our_wakes.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/golden/b5_bursts.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/golden/b6_fill_rates.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/golden/b7_hazard_detail.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/golden/c1_ledger_day1.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/golden/c2_golden_pitches.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/golden/c3_tripling_effect.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/golden/c4_ledger_day2.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/golden/c5_golden_fees.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/golden/c6_day1_members_by_base.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/golden/d2_sim.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/golden/d3_sim_summary.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/golden/sim_v2_output.txt",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/golden/sim_v2_results.json",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/golden/e1_tick_phase.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/golden/e2_arith.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/golden/e3_coin_rates.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/golden/e4_burst_micro.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/golden/e5_checks.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/golden/e6_final_numbers.py"
+   ]
+  },
+  "verdict": {
+   "verdict": "partly_confirmed",
+   "checked": [
+    {
+     "claim": "Day-1 conversion of pitches showing a gain: Golden Hour versus the two hours before (17.3% vs 24.4%; loss pitches 1.6% vs 2.0%)",
+     "my_value": "22/127 = 17.3% vs 68/279 = 24.4%. Loss pitches 3/191 = 1.6% vs 13/660 = 2.0% (3/188 if the hour starts at the 02:00:48 phase stamp).",
+     "agrees": true,
+     "note": "Own parser and windows (v1_conv.py). The hourly rate was already falling before the hour: 28% at 00:00, 21% at 01:00."
+    },
+    {
+     "claim": "Day-1 Golden Hour conversion by cost shown, and by the mover's base cost for member-less targets",
+     "my_value": "Shown 41-120: 17/35; 121-240: 3/31; over 240: 2/61. Base 40 or less: 17/34 vs 38/85 before; base over 40: 2/10 vs 18/73 before.",
+     "agrees": true,
+     "note": "v1_conv.py, v8_base_cost.py. Movers with base over 40 already converted at only 25% before 02:00, so the data shows a general cheap-mover effect, not a tripling effect. The 17/34 cell is 14 distinct bots; without the house bot Bandwagon it is 14/26."
+    },
+    {
+     "claim": "Arithmetic line in the Golden Hour: income figures not doubled, cost tripled (32 of 53 bots), 50 per member not tripled",
+     "my_value": "Max 'now' 16.0 and max 'after' 15.2 in 328 prompts after 02:01. Cost ratio 2.95-3.05 for 32 of 53 bots. nimble_yaml 206 = 3 x 52 + 50, twice.",
+     "agrees": true,
+     "note": "v1_conv.py, v22_cost_ratio.py. I also checked that real income doubled, cuts included: our day-1 balance rose 88 coins/min before and 204 in the hour with 26-29 members at 40% (v3_income_double.py)."
+    },
+    {
+     "claim": "Fees and bounties per join, day-1 Golden Hour vs two hours before (3x base in 23 of 23; mean fee 110.7 vs 45.6; the 150 in 20 of 29 vs 77 of 88; mean to the new leader 214.1 vs 176.8)",
+     "my_value": "Same figures from 02:01. From 02:00:00 there are 30 moves and 23 of 24 member-less ones at 3x; the exception is a self-join stamped 02:00:52, 3.6 s after the phase stamp, charged x1.",
+     "agrees": true,
+     "note": "v2_fees.py. For the kind of join we get (member-less mover) the mean paid to the leader was 193 in the hour against 171 before, so the Golden Hour premium per join is about 20-80 coins, not a tripling of the whole payment."
+    },
+    {
+     "claim": "Members leaving after a cut raise to 30% or more on day 1 (18 of 50 within 60 min; ours 8 of 31; zesty_coldstart 8 of 10; Cut10 2 of 10)",
+     "my_value": "19 of 52 within 60 min, 10 within 15 min. Ours 9 of 31 (two are boundary cases at 01:57:41 and 01:59:33). zesty_coldstart 8 of 10. Cut10 2 of 11.",
+     "agrees": true,
+     "note": "v7_d1_raises.py, own replay (1 mismatch in 118 final allegiances). Differences are boundary cases only."
+    },
+    {
+     "claim": "Our day-1 members got 8 gain pitches in the hour and 7 converted; day 2: 3.3 gain pitches per member-hour at 40%, 26/57 convert",
+     "my_value": "Day 1: 8 gain pitches after 01:57, 7 converted. Day 2: 57 gain pitches at 40%, 26 converted, 3.24 per member-hour.",
+     "agrees": true,
+     "note": "v7_d1_raises.py, v5_d2_us.py. Pressure is rising: in 18:00-19:00 our members got 28 gain pitches (7 converted), about 8 per member-hour."
+    },
+    {
+     "claim": "Day-2 leave rate of our non-helper members: 169 per 100 member-hours at 40%, 19 at 10%",
+     "my_value": "165 per 100 member-hours at 40% (29 leaves in 17.6 member-hours); 21 at 10% (1 leave in 4.8). Mean completed stay 37 min, median 15 min.",
+     "agrees": true,
+     "note": "v5_d2_us.py, v17_survival.py. The rate is not constant, which the analyst's models assume: 0.067 per minute in a member's first 10 minutes at 40%, 0.021 after; by hour 115, 175, 141, 241 per 100 member-hours. A new joiner's expected stay is about a third shorter than the analyst used."
+    },
+    {
+     "claim": "Supply of new bots late in the day (day 1: 3 created in the Golden Hour vs 11-16 an hour earlier; today all joins at 40% after 17:00 were new bots)",
+     "my_value": "Day 1: 11-16 an hour from 18:00 to 00:59, 3 in 01:00-02:00, 3 in 02:00-03:00. Day 2: the six non-helper joins at 40% after 17:00 were bots created 2-7 minutes earlier.",
+     "agrees": true,
+     "note": "v12_supply.py. Supply already dries up from 01:00, an hour before the Golden Hour."
+    },
+    {
+     "claim": "Golden Hour income arithmetic (83.2 a tick full at 40%, 4,992 for the hour; 2,688 at 10%; 38.4 per tick at 10% with 8 payers; empty slot 384)",
+     "my_value": "Same. Even with only the 3 helpers left, 40% pays 51.2 a tick against 44.8 for a full house at 10%.",
+     "agrees": true,
+     "note": "So holding 40% beats holding 10% whatever the churn."
+    },
+    {
+     "claim": "Modelled coins per plan over the 60 golden ticks: (a) 3,985; (c) no golden bursts 4,357; (b) 4,938; (c)+bursts 4,941",
+     "my_value": "Their figures reproduce from sim_v2_output.txt. My own model with tight 2-tick bursts, starting full at 02:00: no bursts 4,176; bursts 4,757-4,842 (+581 to +666). Range over my scenarios: -131 to +939.",
+     "agrees": true,
+     "note": "v15_sim.py. Two labelling issues in their sim: plan (a) also bursts until 01:54, so it is not 'whatever members we have'; and the central case gives the no-burst plan 1.6 joins at 40% from new arrivals, which day 1 (3 new bots in the hour) does not support. Both make the no-burst plans look better than they are."
+    },
+    {
+     "claim": "Plan differences over 01:30-03:00: (c)+bursts minus (b) +73; minus no golden bursts +583 (+167 to +949); minus pitching nothing +952 (+265 to +1,268)",
+     "my_value": "Same from their results file. My independent estimate of bursts against no bursts: +581 central.",
+     "agrees": true,
+     "note": "The +73 between (b) and (c) is inside model error, as the analyst says."
+    },
+    {
+     "claim": "Value of one tight 126 s burst: 0.30 per pitch; +132 with 1 slot free and 55 ticks left; +224 with 2 free",
+     "my_value": "Per-pitch chance supported: 6 of 17 pitches with the 10% text after 15:30 joined within 111 s (0.35); 4 of 5 bursts since 16:57 had a join inside 111 s. Net with the measured age-dependent leave rate: +87 (1 free, 55 left), +163 (2 free); +38 and +97 when no first pair is left; about zero or negative if the per-pitch chance falls to 0.15.",
+     "agrees": false,
+     "note": "v6_pitch_lat.py, v10_bursts.py, v21_burst_value.py. Sign confirmed, size about a third lower. A 126 s burst covers 2 ticks nine times in ten and 3 ticks otherwise."
+    },
+    {
+     "claim": "Clock: day-1 golden phase stamped 02:00:48.66; day-2 golden tick 02:00:23-02:00:29; freeze 03:00:25-03:00:31; wake period median 136 s; decisions median 63 s after the pitch",
+     "my_value": "Golden stamp 02:00:48.66 = open + 660 ticks + 14.4 s. Day-2 golden tick 02:00:23 to 02:00:29, freeze 03:00:25 to 03:00:31. Our pitching-wake gaps 129-154 s. Median decision lag 64 s; 59 of 70 within 116 s.",
+     "agrees": true,
+     "note": "v18_misc.py, v6_pitch_lat.py."
+    },
+    {
+     "claim": "LEDGER: day 1 cut 16% all day, 2 joins (516 coins) in the hour, 60.0 vs 37.8 coins/min; today 40% since 17:09, mean 5.29 members, Golden Hour worth 5,161-6,828",
+     "my_value": "Day 1: 16% in all 99 observations, 7 pitches reflected in the hour (analyst 6), 2 joins worth 516, 59.9 vs 38.0 coins/min. Day 2: 40% from 17:09, mean 5.29 members 17:10-19:00 (6.34 in the last hour), 8 joins 18:00-19:00 with fees 362 and bounties 750. Range 5,161-6,828 follows.",
+     "agrees": true,
+     "note": "v14_ledger_d1.py, v11_ledger.py, v18_misc.py. LEDGER's rate is rising: 26, 37, 65 coins/min in the last three hours (the last includes 550 of one-offs)."
+    },
+    {
+     "claim": "The hour cannot close the 5,277 lead",
+     "my_value": "Lead 5,277 at 19:01 confirmed. But the analyst's own projection of the lead at 02:00 is 2,972. LEDGER's top estimate (6,828) minus our low case holding without bursts (3,665) is 3,163; if we are stuck at 10% it is 4,140.",
+     "agrees": false,
+     "note": "The relevant lead is the one at 02:00, not at 19:00. If it is under about 3,200 the hour can decide the day."
+    },
+    {
+     "claim": "Corrections to the brief: 32 first pairs for us and 12 for LEDGER; at most 3 persuades per wake; LEDGER's helpers recruit for themselves",
+     "my_value": "37 direct joins, fees 1,703, bounties 4,800 (32 pairs). LEDGER 16 joins, fees 974, bounties 1,800 (12 pairs). Largest wake 3 persuades (21 of our 44 pitching wakes). The 16 reflections naming LEDGER from another proposer are all self-initiated joins.",
+     "agrees": true,
+     "note": "v5_d2_us.py, v19_helpers.py, v20_ledger_named.py."
+    },
+    {
+     "claim": "Recommendation: keep the pitch text unchanged for golden bursts",
+     "my_value": "The text says 'You keep 15.2 coins a tick with me ... the gain repays the fee'. Under a 126 s burst a mover from a x2.00 tree gains 2.4 a tick (4.8 doubled) for about 2 ticks, roughly 10 coins, against a tripled fee of 60-120, and then keeps 12.8.",
+     "agrees": false,
+     "note": "In my reading this conflicts with the 'no false claims in pitches' limit. About 1 in 6 decisions also come after 111 s, so with a rigid 126 s edit back some targets read the 10% text when the cut is already 40%. Today no 10%-text pitch was reflected at 40% (0 of 35), because bursts were longer."
+    }
+   ],
+   "errors_found": "No central number failed: every key figure reproduces from my own scripts within boundary effects. The problems are in how the numbers are used.\n\n1. Hard limit. \"Keep the pitch text unchanged\" does not fit the \"no false claims\" limit once bursts are 126 s long in the Golden Hour. \"The gain repays the fee\" is untrue for a mover from a x2.00 tree (about 10 coins of gain against a tripled fee of 60-120), and \"you keep 15.2 a tick with me\" stops being true at the edit back. The same text has run all day, so this is the owner's call, but the plan makes it worse.\n\n2. Wrong objective. The plan maximises expected coins; the goal is rank 1. Golden bursts add about 350-600 coins in expectation (my range -131 to +939). They also create the only large loss path, being stuck at 10% (29-38 coins a tick, up to 2,300 for the hour). Whether to burst should depend on the lead at about 01:55.\n\n3. \"Cannot close a 5,277 lead\" uses the 19:01 lead. The analyst's own projection for 02:00 is 2,972, which is inside the hour's possible swing (3,163 without bursts in our low case, 4,140 if stuck at 10%).\n\n4. Constant leave rate assumed. Measured: 0.067 per minute in a member's first 10 minutes at 40%, 0.021 after, and rising by hour (241 per 100 member-hours in 18:00-19:00). A golden joiner's stay is worth about 140-170 coins, not about 205. Burst nets are about a third lower (+87 and +163, not +132 and +224). A one-slot burst without a first pair is +38 early and negative late.\n\n5. Simulation labels. Plan (a) in d2_sim.py also bursts until 01:54, so \"(a) 3,985\" is not \"hold with whatever members we have\". The central case gives the no-burst plans 1.6 joins at 40% from new arrivals in the hour; day 1 had 3 new bots in the hour.\n\n6. The \"+154 with one slot free, +236 with two\" for the last pre-golden burst is computed for a 2-tick burst, but the recommended one runs 01:50 to 01:56, about 6 ticks at 10% (about 100 coins of cut loss, not 34) with up to 3 pitching wakes. Still positive, but not that figure.\n\n7. Retry margin. An edit back at 01:56:00 leaves one retry (01:58:10) before the golden tick; a second refusal puts the next try at 02:00:20, on the tick. About 11% of saves were refused.\n\n8. No stop rule. If the per-pitch chance falls to about 0.15 and no first pairs are left, every burst loses about 30-60 coins.\n\n9. \"Unblock former members\": a former member that now leads members of its own would pay the 150 again (the schism quirk in the spec). That is too close to the \"no leave/rejoin loops for the 150\" limit; the recommendation does not exclude them.\n\n10. The \"tripling deters expensive movers\" reading is not shown by the data: base over 40 converted 2/10 in the hour and 18/73 before. The cheap-mover filter is right, but as a general rule.\n\nReviewer scripts are in /private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/verify-golden/ (v_common.py, v1_conv.py to v22_cost_ratio.py). Run from that folder with PYTHONPATH=. python3 <script>; run v5_d2_us.py then v6_pitch_lat.py first, later scripts read their output files.",
+   "corrected_recommendation": "All times UTC. The golden tick is at about 02:00:23-02:00:29 and the freeze at about 03:00:25-03:00:31. Confirm the Golden Hour cut with the owner before 01:30 (the notes say \"ask me each day\").\n\n1. Hold 40% on every golden tick. A full house pays 83.2 a tick (4,992 for the hour); at 10% it pays 44.8. With only the 3 helpers left, 40% still pays 51.2. Each golden tick at 10% costs 4.8 per paying member (38.4 with 8).\n\n2. Enter the hour full.\n- From 01:30, burst at 10% whenever a slot is free. Before 02:00 a tick at 10% costs only 2.4 per paying member.\n- Start the last pre-golden burst by about 01:50.\n- Edit back to 40% at 01:55:00, not 01:56:00, so two retries fit (01:57:10 and 01:59:20). Check cut_pct 40 on the public profile.\n- On a refused save (422), retry at once, then again 126 s later.\n\n3. Decide on golden bursts from the lead over LEDGER at about 01:55.\n- Lead 3,200 or more: bursts cannot improve the rank. Skip them, or run them only while someone watches the loop. From there the only way to lose is to be stuck at 10%.\n- Lead under 3,200: run the bursts. They add about 350-600 coins in expectation and lift our low case by about 400.\n- In both cases keep pitching at 40% to brand-new bots that gain at least 4.5 a tick, as now. Expect at most about 3 new bots in the hour.\n\n4. Burst rules, when run.\n- One edit to 10% with TARGETS, no more than 15 s before our wake. Edit back to 40% with TARGETS empty 126 s later.\n- Cost: 2 golden ticks at 10% (3 ticks one time in ten), 58-67 coins with 6-7 payers, plus 45 for three pitches.\n- Two or more non-helper slots free: burst until 02:40 (net about +160 early, +100 without first pairs). From 02:40 to 02:47 only with never-paired targets.\n- Exactly one slot free: only before 02:30 and only with a never-paired cheap mover in TARGETS (net about +90 early, +50 by 02:35).\n- Stop rule: after two golden bursts in a row with no join, stop bursting for the rest of the hour.\n\n5. TARGETS for the hour.\n- Only movers with normal base cost 40 or less (shown 120 or less) that show a gain at 10%.\n- Never-paired bots first (150 plus a 60-120 fee).\n- Then former members that have no members of their own (fee only). Leave out former members that now lead members: they would pay the 150 again.\n\n6. Pitch text: do not keep it unchanged for golden bursts. Drop \"the gain repays the fee\" and say the cut is 10% now and returns to 40% when the slots are full (the joiner then keeps 12.8). On day 1 wording barely changed conversion; the Arithmetic line does the work. The owner decides, since the current text has run all day.\n\n7. Last edit by 02:52: 40% and TARGETS empty. Nothing after that.\n\nExpected effect over the 60 golden ticks:\n- Ceiling without joins: 4,992.\n- Hold at 40% after entering full, no bursts: about 4,000-4,200.\n- With bursts: about 4,750-4,850 (range over my scenarios 3,820-5,225).\n- LEDGER: about 5,160-6,830.\nSo the day is decided mainly by the lead we carry into 02:00; recheck it at 01:30."
+  }
+ },
+ {
+  "key": "rivals",
+  "finding": {
+   "answer": "Only LEDGER can still catch us, and nothing we do feeds it materially.\n\nMeasured at 19:01:50 UTC: we hold 15,884 and LEDGER 10,607, with 478 income ticks left (418 normal, 60 golden). LEDGER must out-earn us by 11.0 coins a tick. Last hour both ran level: LEDGER 51.1 a tick (36.4 base and cuts, 18.5 joins, 3.8 spend), we 53.1 (35.1, 24.2, 6.25).\n\nProjected: we finish near 42,970 as now. LEDGER finishes near 36,930 as now (we win by 6,040), 33,680 with 8 helpers and no churn (+9,290), 39,310 with 7 helpers plus one churn slot (+3,660), and 43,660 if its join income doubles (it wins by 690). On my scenario weights the mean margin is +3,800 and LEDGER finishes ahead in 23% of runs (17-30% across weightings).\n\nLEDGER wins if it sustains about 10 bounty joins an hour (5 last hour), if our join income halves while it seats two more helpers, if our loop is dead for about 207 ticks, or if its six helper bots (19,819 coins) pass coins through rejoin loops or contracts. None of that has been seen.\n\nNobody else can reach the top two. QUORUM_KEEPER, dapper_lego, weary_anomaly and zesty_coldstart earn 15-30 a tick and need 54-56 to tie LEDGER. LEDGER's zero-join floor (27,823) beats their projections (15,250-22,870), so no honest lever puts LEDGER below #2.\n\nOf our 30 departures, 15 stayed in our own tree. LEDGER took 210 coins directly from our leavers and 950 (34% of its 2,774 join income) from bots that were ever ours, mostly house pushovers its swarm farms regardless of our cut.",
+   "recommendation": "1. Keep the loop alive above everything else. If it stops and only the 3 helper bots remain, we earn 25.6 a tick against LEDGER's 51.1; that loses 25.5 a tick (about 1,530 an hour) and the whole lead in about 207 ticks. Applies all evening; park on a static 40% core before any lid close.\n\n2. Keep the 40% harvest; do not lower the cut or skip recruits to starve LEDGER. The 40% cut earned 3,204 more than 10% would have on today's 1,335 member-ticks (about 17 a tick at 7.2 members). LEDGER took only 210 directly from our leavers, so a change would cost far more than it denies.\n\n3. Watch four triggers on the polling the loop already does:\n   - Lead shrinking by more than 660 in an hour (11 a tick), or LEDGER reaching about 10 bounty joins an hour. Response: raise our own first-pair volume. One extra 190-coin join an hour is +3.2 a tick, about +1,300 by 02:00. 55 never-ours bots would see a gain at a 10% cut, and burst pitches converted 9 of 13.\n   - nimble_etcd or another new helper joining LEDGER. Each is worth about +1,950 to LEDGER by the freeze if seated now.\n   - A LEDGER helper leaving and rejoining with members, or posting an 800 contract. That is the loophole route; tell the organisers at once.\n\n4. Golden Hour: be 8/8 at the harvest cut before 02:00 UTC and do not burst inside it. Each seated member pays 6.4 a tick, 384 for the hour. A friend's helper seated around 01:00 UTC is worth about 806 (230 + 192 + 384), plus 200 if an invite reward is left. Before then a churn slot earns more (about 7.1 a tick against 3.2), so do not swap churn slots for helpers earlier unless join income falls by half.\n\n5. Spend nothing on pushing LEDGER below #2. No rival can pass it and gifts are capped at 500. Winning today and tomorrow gives 68 points against at most 64 for LEDGER at #2 twice.\n\n6. Optional and roughly break-even: harvest at 39% (greedy 97, pitch and tagline changed to 12.88). It costs 0.64 a tick, about 344 by the freeze. Rival 40% pitches at our members would then print \"lose 0.1\" instead of \"0.0\", and our pitch at bots under 40% leaders would print \"gain 0.1\". Day-2 conversion was 4.2% at 0.0 against 31.4% at +0.1 to +0.3. Only 4 realistic targets exist now (about +240), plus about 190 of margin per LEDGER poach avoided (one such poach today). Worth it only if LEDGER starts pitching our members more.\n\n7. Do not copy the Candide repeat-150. Candide carries one member, so each schism pays 150 again, about 232 a rejoin; Muhmdk collected it 3 times and LEDGER once. It is the engine bug you ruled out; raise it with the organisers if LEDGER's take from it grows.",
+   "key_numbers": [
+    {
+     "claim": "Lead at the pull and what LEDGER needs to overtake",
+     "value": "Lead 5,277 coins (15,884 vs 10,607); 478 income ticks left (418 normal + 60 golden); LEDGER must out-earn us by 11.0 coins a tick",
+     "how_computed": "leaderboard.json at 19:01:50 UTC; tick index = floor(elapsed/60)+1 from world.json day_window; project.py"
+    },
+    {
+     "claim": "Last-hour run rates (ticks 181-240), one-offs excluded",
+     "value": "LEDGER 51.1/tick (base+cuts 36.4 with 6.39 members, joins 18.5, spend 3.83; 8 joins, 5 paying 150). We 53.1/tick (35.1 with 7.20 members, joins 24.2, spend 6.25; 8 joins, 7 paying 150)",
+     "how_computed": "itemise.py: forest replay of 383 move events (matches the leaderboard except 2 moves after the event pull), cut history from reflection prompts, fee/bounty fields, persuade costs; summarised in project.py"
+    },
+    {
+     "claim": "LEDGER's whole-day income by source (to tick 241)",
+     "value": "Base 3,840; cuts 2,676; joining fees 974; 150-bounties 1,800 (12); gifts in 500 (at the cap), out 50; missions 400; spend 375. Start 500 + modelled 9,765 = 10,265 vs 10,607 measured (+342 unexplained). Half-hour totals: 1,965 / 619 / 853 / 729 / 816 / 1,180 / 1,497 / 2,071",
+     "how_computed": "itemise.py LEDGER (out/05_itemise.txt); reconciled against 53 balance readings from 'you have N' in LEDGER's reflection prompts (recon_jumps.py)"
+    },
+    {
+     "claim": "LEDGER's cut and direct members over the day",
+     "value": "Cut 16% until about 16:25, 22% until about 17:07, 40% since, with no 10% burst. Permanent helpers: sharjeel, zesty_sample, Muhmdk, brave_kalman (16:06), PeakyBlinder (17:58). Bandwagon (house) 87 ticks in 4 stints. Six transient stints since 18:00 lasted 2.4-6.9 ticks; 5 were taken by its own helpers. Average members by half hour: 3.2, 4.0, 3.9, 4.8, 4.1, 4.1, 6.2, 6.6",
+     "how_computed": "cut_history.py (Arithmetic line of LEDGER's own pitches plus its members' prompts); members_timeline.py; itemise.py"
+    },
+    {
+     "claim": "LEDGER's first pairs used and remaining pool",
+     "value": "12 bounties of 150 in 16 joins (9 pairs recorded by conversion, 3 by schism). 128 of 140 bots were never its member; 11 of them would see a gain at its 40% cut (6 'very hard', 2 house), 13 exactly 0.0, 69 a gain at a 10% cut. Ours: 32 bounties in 37 paid joins; 108 never ours; 10 gain at 40%, 55 at 10%",
+     "how_computed": "bot_table.py and pools.py: income now = 8 x tree multiplier minus leader cut (leader_profiles.json), compared with 12.8 and 15.2"
+    },
+    {
+     "claim": "Projected coins at the freeze",
+     "value": "We as now 42,968. LEDGER as now 36,931 (margin +6,037); 8 helpers and no churn 33,678 (+9,290); 7 helpers + 1 churn slot 39,313 (+3,655); join income doubled 43,657 (-689). If our join income halves: 37,369 (+438 vs LEDGER as now, -1,944 vs 7 helpers)",
+     "how_computed": "project.py: last-hour rates held for 418 ticks; in the 60 golden ticks base and cuts x2 and join income x0.73 (day 1: 30 moves in the Golden Hour vs 44 an hour before, fee x3)"
+    },
+    {
+     "claim": "Probability-weighted margin",
+     "value": "Mean +3,822, median +4,393, 5th-95th percentile -6,671 to +12,438; LEDGER ahead in 23.1% of runs (17.3% to 29.9% with other weights; 19.9% if join supply is shared)",
+     "how_computed": "project.py Monte Carlo, 200,000 runs; judgement weights 0.50 as now / 0.22 seven helpers / 0.05 eight helpers / 0.23 doubled; lognormal spread on each side's join income"
+    },
+    {
+     "claim": "Join income LEDGER needs to tie our as-now finish",
+     "value": "31.6 coins/tick = 1.71 x its last hour, about 10 bounty-paying joins an hour (5 last hour); 26.4/tick (1.43 x) if it also holds 7 helpers",
+     "how_computed": "project.py break-even, solving LEDGER's final = 42,968"
+    },
+    {
+     "claim": "How long the lead survives a dead loop",
+     "value": "207 ticks (about 3.4 hours): 25.6/tick for us with only 3 helpers vs 51.1/tick for LEDGER",
+     "how_computed": "project.py: 5,277 / (51.1 - (16 + 3 x 3.2))"
+    },
+    {
+     "claim": "Other rivals: measured rate, what they need, LEDGER's floor",
+     "value": "Since 17:51: QUORUM_KEEPER 20.4/tick (2 members at 40%), dapper_lego 28.0 (5 members, under sharjeel), weary_anomaly 29.5 (6 members, cut switching 21-40% since about 18:40), zesty_coldstart 14.8 (10% cut). Each needs 54.1-55.5 per tick-equivalent to tie LEDGER as now; 8 members at 40% without joins gives at most 41.6. LEDGER's floor 27,823 vs their projections 15,252-22,870",
+     "how_computed": "rates.py (leaderboards at 17:51 and 19:01), rivals.py, itemise.py per rival; floor = 10,607 + 418 x 32 + 60 x 64"
+    },
+    {
+     "claim": "Where our leavers went and what LEDGER collected",
+     "value": "30 departures: 15 to leaders inside our own tree, 2 to LEDGER itself (210 coins, one 150), 1 to helper Muhmdk (220), 12 to other trees. Over all later moves our former members paid LEDGER 950 (four 150s), 34% of its 2,774 join income, and its helper bots 1,694",
+     "how_computed": "members_timeline.py and leavers.py over conversion/schism/coup fee_to_leader and bounty_to_leader"
+    },
+    {
+     "claim": "Effect of our cut on churn",
+     "value": "At 40%: 24 non-helper departures in 1,011 member-ticks (2.37% per tick); 27 of 29 leavers were shown a gain and 2 a zero. At 10%: 1 departure in 308 member-ticks (0.32%). The 40% cut earned 3,204 coins more than 10% on the same 1,335 member-ticks",
+     "how_computed": "churn_by_cut.py and leavers.py (reflection that moved each leaver matched by tick)"
+    },
+    {
+     "claim": "Day-2 conversion by what the engine line prints",
+     "value": "Gain 39.1% (308/787), exactly 0.0 4.2% (15/356), loss 2.3% (33/1,454); printed gain 0.1-0.3: 31.4% (27/86). 'Easily persuaded' bots: 63.6% on a gain, 13.8% on a loss. LEDGER's own 40% pitches: 6 joins from 13 considered, 3 of them on a loss line",
+     "how_computed": "conv_rates.py and small_gain.py over 2,597 externally proposed reflections"
+    },
+    {
+     "claim": "Who gets today's new bots",
+     "value": "21 created by 18:53. First leader: us 9 (3 are our helpers), dapper_lego 4, LEDGER 2 (both its own helpers), others 2, still independent 4. Since 17:40, 6 of 9 non-helper arrivals joined us first; LEDGER then took 2 of them second-hand",
+     "how_computed": "arrivals.py: bot.created joined to each bot's first move"
+    },
+    {
+     "claim": "LEDGER's helper swarm",
+     "value": "Six bots (the 5 members plus nimble_etcd, created 18:29) hold 19,819 coins. 124 of their 127 persuades name LEDGER, yet every one of 2,597 external pitches proposed joining the sender, so their 3,510 of join income stayed with them. Gifts to LEDGER total exactly 500; 0 helper rejoins and 0 contracts so far",
+     "how_computed": "final_checks.py, gifts_helpers.py, affiliates.py, members_timeline.py"
+    }
+   ],
+   "confidence": "medium",
+   "caveats": "Measured versus projected: balances, events, cuts, member stints, conversion rates and the last-hour rates are measured or replayed from the public feed. Everything about the freeze is projection from last-hour rates.\n\n- The 23% is not a measurement. The scenario weights and the spread on join income are my judgement; it ranges 17-30% under other weights.\n- The projection assumes last-hour rates persist. LEDGER's last hour was its best since the opening (its join income was 4-5 a tick in the two hours before). Our join income depends on new arrivals: day 1 had 11-16 new bots an hour from 18:00 to 00:00 UTC, then 3 an hour; day 2 so far 1, 4, 7, 9.\n- The Golden Hour join factor (0.73) comes from day 1, which had no 8-member cap.\n- The itemisation is modelled from public events. LEDGER reconciles to +342 (3%); ours to +1,200 (8%). The unexplained jumps are about 200 each roughly 22 ticks after a friend's bot was created, which fits the 200-coin invite reward in HELPERS.md, plus cut-switch timing that I can only place to within a few ticks. Whispers, tree chat and banner spend are not in the pull.\n- Events end at 19:00:17 and the leaderboard at 19:01:50. Two later moves are known only from the leaderboard (Machiavel left us for nimble_yaml, leaving us 7 members), and Bandwagon had left LEDGER by 19:02:39.\n- The helper-funnel risk (rejoin loops, 800 contracts) cannot be sized from data. No contract has ever been claimed, so its payout rule is unobserved.\n- nimble_etcd as a sixth LEDGER helper is inferred from behaviour (gift to LEDGER 2 minutes after creation, all 15 pitches say join LEDGER), not proven.\n- I used one local file beyond the two named folders: the 17:51 leaderboard in the sibling folder data_day2, only for measured growth rates.\n\nWhere the data disagrees with the brief:\n- First pairs paid: 32 for us (not about 36) and 12 for LEDGER (not about 15).\n- weary_anomaly gained 29.5 a tick from 17:51 to 19:01; it reached about 43 only in its last 12 ticks after moving to a 40% cut.\n- LEDGER does not burst at 10%. It has sat at 40% since about 17:07 with roughly three slots open, and it is limited by its own pitching (15 persuades last hour), not by slots.\n- Its helpers' pitches name LEDGER but the engine credits the helper, so they add nothing to LEDGER's balance beyond the capped 500 in gifts.\n\nNo network request was made, no one was messaged, and nothing was written outside the rivals folder.",
+   "script_paths": [
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/rivals/run_all.sh",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/rivals/common.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/rivals/replay_check.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/rivals/parse_refl.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/rivals/cut_history.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/rivals/coin_series.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/rivals/itemise.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/rivals/recon_jumps.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/rivals/recon_detail.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/rivals/members_timeline.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/rivals/bot_table.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/rivals/pools.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/rivals/ledger_pitches.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/rivals/arrivals.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/rivals/leavers.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/rivals/churn_by_cut.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/rivals/gifts_helpers.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/rivals/affiliates.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/rivals/conv_rates.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/rivals/small_gain.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/rivals/rates.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/rivals/project.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/rivals/rivals.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/rivals/day1_profile.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/rivals/final_checks.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/rivals/out/05_itemise.txt",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/rivals/out/19_project.txt",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/rivals/out/12_leavers.txt",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/rivals/out/20_rivals.txt"
+   ]
+  },
+  "verdict": {
+   "verdict": "partly_confirmed",
+   "checked": [
+    {
+     "claim": "Lead at the pull, ticks left, rate LEDGER needs",
+     "my_value": "15,884 vs 10,607 = lead 5,277; 241 ticks done, 478 left (418 normal + 60 golden, golden starts at tick 660); 11.04 coins/tick",
+     "agrees": true,
+     "note": "From leaderboard.json and the world.json day window; freeze 03:00:00 UTC, golden 02:00:00 UTC."
+    },
+    {
+     "claim": "Forest replay matches the leaderboard except 2 late moves",
+     "my_value": "383 move events replayed with my own code; 2 of 141 allegiances differ (Machiavel, sage_bode), both after the event pull",
+     "agrees": true,
+     "note": "One unlogged independence (moth, before 17:43) is implied; no effect on LEDGER or us."
+    },
+    {
+     "claim": "Last-hour run rates (ticks 181-240), one-offs excluded",
+     "my_value": "LEDGER 51.1/tick (base+cuts 36.4 at 6.38 members, joins 18.5, spend 3.83; 8 joins, 5 paid 150). We 53.1/tick (35.1 at 7.20 members, joins 24.2, spend 6.25; 8 joins, 7 paid)",
+     "agrees": true,
+     "note": "Independent itemisation. Balance readings in the prompts confirm the rates: our residual stays flat at about +915 from tick 168 to 215, so the unexplained coins are one-off jumps, not a rate error."
+    },
+    {
+     "claim": "LEDGER whole-day income by source and half-hour totals",
+     "my_value": "Base 3,840; cuts 2,685; fees 974; 150s 1,800 (12); gifts +500/-50; missions 400; spend 375; modelled 10,274 vs 10,607 (+333). Half hours 1,965/619/863/729/816/1,180/1,497/2,071",
+     "agrees": true,
+     "note": "Cuts differ by 9 coins (timing of the 16% to 22% switch, which the data only brackets between ticks 66 and 95). Ours reconciles to +1,200, same as theirs."
+    },
+    {
+     "claim": "LEDGER cut history, helpers and transient stints",
+     "my_value": "16% then 22% (switch between ticks 66 and 95) then 40% from tick 125-129; no 10% burst. Helpers sharjeel, zesty_sample, Muhmdk, brave_kalman (tick 66), PeakyBlinder (tick 179). Bandwagon 88 ticks in 4 stints. Six transient stints since 18:00 lasted 2.4-6.9 ticks, 5 taken by its own helpers",
+     "agrees": true,
+     "note": "Average members by half hour 3.20/4.00/3.87/4.83/4.13/4.07/6.17/6.60."
+    },
+    {
+     "claim": "First pairs used and remaining pools",
+     "my_value": "LEDGER 12 paid 150s in 16 joins; 128 never-members; 11 gain at 40%, 13 at exactly 0.0, 69 gain at 10%. Ours 32 paid in 37 joins; 108 never ours; 10 gain at 40%, 55 at 10%",
+     "agrees": true,
+     "note": "Added: only 11 bots carry the 'easily persuaded' wording and 6 of them have never been LEDGER's. LEDGER's 40% pitches convert mainly that type, so its as-now rate of 5 paid joins an hour is itself hard to sustain for 8 hours without a change of tactics."
+    },
+    {
+     "claim": "Projected coins at the freeze",
+     "my_value": "We as now 42,968; LEDGER as now 36,931 (+6,037); LEDGER 8 helpers, no joins 32,988 (33,678 with three helper joining payments); 7 helpers + churn slot 37,990-39,710 before joining payments; join income doubled 43,657 only if its spend doubles too (45,490 if not); our joins halved 37,369",
+     "agrees": true,
+     "note": "Arithmetic reproduced. All of it is last-hour rates held for 478 ticks, as they say."
+    },
+    {
+     "claim": "Break-even join income for LEDGER and dead-loop time",
+     "my_value": "31.6 coins/tick = 1.71x its last hour (8.5-10 paid joins an hour); 27.6 with 7 helpers (theirs 26.4); dead loop 207 ticks",
+     "agrees": true,
+     "note": "Small difference in the 7-helper case comes from how the churn slot and helper joining payments are counted."
+    },
+    {
+     "claim": "Probability-weighted margin: mean +3,822, LEDGER ahead in 23% (17-30%)",
+     "my_value": "Not reproducible as a measurement. Resampling observed 20-tick blocks: LEDGER ahead 0% at observed rates (mean margin +6,025); 10% if its joins run x1.5; 53% if x1.5 and it seats 7 helpers; 19% if it seats 7 helpers and our joins fall to x0.7",
+     "agrees": false,
+     "note": "The 23% is the weight they put on LEDGER changing regime, as their caveat says. The direction holds (we are favoured, LEDGER is the only threat); the number is judgement."
+    },
+    {
+     "claim": "Other rivals: rates, need, LEDGER floor beats their projections (15,252-22,870)",
+     "my_value": "17:51-19:01 rates QUORUM_KEEPER 20.3, dapper_lego 28.0, weary_anomaly 29.4, zesty_coldstart 14.8; each needs 54.1-55.5 to tie LEDGER as now; LEDGER helpers-only floor 27,823. But weary_anomaly averaged 7.7 members last hour (not 6) and ran at about 39.6/tick in its last 20 ticks, which projects to about 28,000",
+     "agrees": false,
+     "note": "The rates and the conclusion hold (no rival reaches LEDGER's as-now 36,931). The supporting claim that LEDGER's zero-join floor clears every rival projection fails for weary_anomaly's current regime; it is level with that floor."
+    },
+    {
+     "claim": "Where our leavers went and what LEDGER collected",
+     "my_value": "30 departures: 15 inside our tree, 2 to LEDGER (210 coins, one 150), 1 to Muhmdk (220), 12 to other trees. Bots that were ever ours later paid LEDGER 950 (four 150s) of its 2,774 join income, and its helpers 1,694",
+     "agrees": true,
+     "note": "The 34% understates the recent share: 926 of LEDGER's 1,112 last-hour join income came from bots that had been ours earlier. Only one of those (smug_sealedsecret, 186) left us directly for LEDGER, so the conclusion that our cut does not feed it stands; both sides farm the same pushovers and new arrivals."
+    },
+    {
+     "claim": "Churn by cut and what 40% earned",
+     "my_value": "At 40%: 29 non-helper departures in 1,037 member-ticks (2.80% per tick), or 24 in 1,011 (2.37%) without Bandwagon's five self-moves; at 10%: 1 in 308 (0.32%); 1,335 member-ticks at 40% x 2.4 = 3,204",
+     "agrees": true,
+     "note": "Their figure excludes the house bot Bandwagon. The 3,204 is an accounting identity, not a counterfactual, but the direction is safe."
+    },
+    {
+     "claim": "Day-2 conversion by printed line",
+     "my_value": "Gain 39.1% (308/787); exactly 0.0 4.2% (15/356); loss 2.3% (33/1,454); gain 0.1-0.3 31.4% (27/86); easily persuaded 63.6% on a gain, 13.8% on a loss; LEDGER at 40%: 6 joins from 13 considered, 3 on a loss line; our burst pitches 9 of 13",
+     "agrees": true,
+     "note": "But at a printed gain of exactly 0.1 it is 2 of 10; the 31.4% comes from the 0.2 and 0.3 lines. The like-for-like zero line (12.8 against 12.8) converted 2 of 22."
+    },
+    {
+     "claim": "New bots and who gets them",
+     "my_value": "21 created by 18:53; first leader us 9 (3 helpers), dapper_lego 4, LEDGER 2 (helpers), others 2, independent 4. Since 17:40 I count 10 non-helper arrivals, 6 joined us first",
+     "agrees": true,
+     "note": "They say 6 of 9. Day-1 arrivals ran 11-16 an hour from 18:00 to 01:00 UTC and fell to 3 an hour from 01:00, not from 00:00."
+    },
+    {
+     "claim": "LEDGER helper swarm",
+     "my_value": "Six bots hold 19,819; 124 of 127 persuades name LEDGER; 0 of 2,597 external pitches proposed joining anyone but the sender; gifts to LEDGER exactly 500; no helper has left and rejoined; no contract from them",
+     "agrees": true,
+     "note": "Day 1 also shows no helper rejoin. But the repeat 150 is already circulating inside the team, see errors."
+    },
+    {
+     "claim": "Candide repeat 150: Muhmdk 3 times, LEDGER once",
+     "my_value": "Candide moved 25 times today and paid 150 on 24 (3,600 coins). Muhmdk 3 (2 repeats), LEDGER 1 (a genuine first pair), nimble_etcd 1. Game-wide 10 repeat payments, 1,500 coins",
+     "agrees": true,
+     "note": "Since tick 195, 5 of Candide's 8 moves went to LEDGER's team (1,160 coins)."
+    },
+    {
+     "claim": "Golden Hour: seated member worth 384, helper at 01:00 worth about 806, churn slot 7.1 against 3.2 before then",
+     "my_value": "384 and 806 reproduce. Churn slot 7.08/tick gross of pitch spend, 5.83 net; helper slot 3.2; they are equal (3.4 against 3.2) when join income halves",
+     "agrees": true,
+     "note": "The swap trigger is right. 'Do not burst inside it' is not derived from any number, see errors."
+    }
+   ],
+   "errors_found": "Every measured number reproduces from my own replay and itemisation (scripts in /private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/verify-rivals/, run with run_all.sh). The errors are in supporting claims and in three recommendation points.\n\n1. Rival ceiling understated. weary_anomaly averaged 7.7 direct members in the last hour, not 6, and ran at about 39.6 coins/tick in its last 20 ticks. That projects to about 28,000, level with LEDGER's helpers-only floor of 27,823, not inside the quoted 15,252-22,870. The conclusion survives because LEDGER as now is 36,931.\n\n2. The 39% cut option rests on a pooled bucket. The 31.4% is for printed gains of 0.1 to 0.3; at exactly 0.1 it is 2 of 10. That bucket is also 19% easily-persuaded targets against 8% in the zero bucket. The effect of printing 0.1 is not supported, and it costs about 344.\n\n3. \"Do not burst inside Golden Hour\" is asserted, not computed.\n   - A 4-6 tick burst with 7 seated costs 134-202.\n   - One join is worth 150 + three times the fee (median fee 36) + 6.4 a tick for the rest of the hour.\n   - Day-1 gain-line pitches still converted 17.3% (22/127) in Golden Hour.\n   - Filling an empty slot with 40 ticks left is worth roughly +90 to +190 expected; with 15 or fewer left it is about zero or negative.\n\n4. \"Raise our own first-pair volume\" has no mechanism. We are slot-limited: 7.2 of 8 occupied, 11 engine refusals for a full leader today (3 since tick 205), 8 of 16 considered pitches converted last hour. The measured difference from LEDGER is slot turnover: our non-helper members stay a median 32 ticks, its transients 2.4-6.9 ticks because its helpers take them.\n\n5. \"None of that has been seen\" is too reassuring on the repeat 150.\n   - Since tick 195, 5 of Candide's 8 moves went to LEDGER's team (Muhmdk three times, LEDGER, nimble_etcd): 1,160 coins, 232 of it to LEDGER.\n   - LEDGER aimed 6 of its 15 last-hour pitches at Candide and 4 at otter_telemetry; 3 of its last 4 joins were pulled from under its own helpers.\n   - If LEDGER took every second Candide move at the current pace (one per 7.6 ticks), that is about 15 coins/tick, more than the 11 it needs.\n   - Joining fees also move coins past the 500 gift cap (Muhmdk with 4 members would pay 280, plus 150 from the bank, on each rejoin). No helper has done this on either day.\n   - Waiting for the trigger gives no time to respond if it happens in the last hour.\n\n6. The 23% is not derivable from the data. At observed rates LEDGER does not catch us in any resample; the figure is the weight placed on LEDGER changing regime. LEDGER's as-now rate is itself fragile: only 6 easily-persuaded bots and 11 gain-at-40% bots (6 of them very hard to move) have never been its member.\n\n7. A sharper condition than \"our join income halves\" is missing. On helpers alone our floor is 29,657 against LEDGER's 27,823 with 5 helpers, 29,545 with 6 and 31,266 with 7. Our floor only beats LEDGER's while it seats 6 or fewer.\n\n8. Small ones.\n   - Day-1 arrivals fell at 01:00 UTC, not 00:00.\n   - I count 10 non-helper arrivals since 17:40, not 9.\n   - 7.1 a tick for a churn slot is before pitch spend; net it is 5.8.\n   - \"LEDGER took 950 from ever-ours bots, 34%\" is of total join income; it is 62% of its join income excluding its own helpers joining, and 83% of its last hour. Still not caused by our cut.",
+   "corrected_recommendation": "Only LEDGER can catch us, and our cut and recruit choice do not feed it. At last-hour rates we finish near 43,000 against about 36,900, a margin of about 6,000. That is a projection, not a measurement.\n\nLEDGER needs one of three things:\n- about 1.7x its last-hour join income for all 8 hours (about 9-10 paid joins an hour against 5);\n- about 1.5x plus two more helpers seated;\n- a coin funnel from its helpers.\nAt observed rates it does not get there. A win probability cannot be measured; the 17-30% quoted is a judgement about LEDGER changing tactics.\n\n1. Keep the loop alive above everything. With only the 3 helpers we earn 25.6 a tick against LEDGER's 51.1, and the 5,277 lead is gone in about 207 ticks. Park on a static 40% core before any lid close.\n\n2. Keep the 40% harvest and the current recruit choice.\n   - LEDGER took 210 coins directly from our leavers all day; 40% earned 3,204 more than 10% on today's member-ticks.\n   - Skip the 39% variant. Its claimed effect rests on 2 conversions in 10 at a printed gain of 0.1, and it costs about 344.\n\n3. Watch three things on the existing polling.\n   - The lead shrinking by more than 660 in an hour.\n   - LEDGER making 9 or more paid joins in an hour.\n   - LEDGER seating a sixth or seventh helper. Each is worth about 1,950 to it, and with 7 its helpers-only floor (31,266) passes ours (29,657).\n\n4. Responses that work under the slot limit.\n   - Seat another friend's helper in a slot. It pays 3.2 a tick (6.4 in Golden Hour), about 1,720 by the freeze if seated now, plus 230 on joining. A churn slot nets about 5.8 a tick today and equals a helper slot when join income halves. So do it when paid joins fall below about 4 an hour, or by 01:00 UTC at the latest: day-1 arrivals fell from 11-16 an hour to 3 at 01:00.\n   - Optional, and it needs the friends: their three helper bots pitch our non-helper members at their own 10% cut, a true gain of 2.4 a tick for the member. This frees our slots in minutes, as LEDGER's helpers do for it. Each extra paid join an hour is about +3.2 a tick, roughly +1,460 by the freeze. It is bounded by the 55 never-ours bots that gain at 10% plus about 9 arrivals an hour, and it is untested. No pair pays its 150 twice, so I read it as inside the limits, but it is the owner's call.\n\n5. Golden Hour. Be 8/8 at 40% by 02:00 UTC; each seated member pays 384 for the hour.\n   - Do not burst in the last 15-20 ticks.\n   - Earlier in the hour, a short burst to fill an empty slot is roughly +90 to +190 expected: it costs 134-202 against 150 plus the tripled fee plus 6.4 a tick, and day-1 gain-line pitches converted 17% in Golden Hour.\n\n6. Spend nothing on pushing LEDGER below #2. Rivals need 54-55.5 a tick to tie it; the best current regime, weary_anomaly at about 40, projects to about 28,000. Winning today and tomorrow gives 68 points against at most 64.\n\n7. Do not use the repeat 150 ourselves, and decide now whether to tell the organisers about two holes. Waiting for a trigger leaves no time if it happens in the last hour.\n   - A join made with members never records the pair, so the 150 repeats. Candide paid it on 24 of 25 moves today, and 5 of its last 8 moves went to LEDGER's team.\n   - Joining fees let a team move coins past the 500 gift cap. LEDGER's six helpers hold 19,819.\n   - Until then, watch for a LEDGER helper leaving and rejoining, LEDGER re-recruiting Candide, or an 800 contract posted inside its tree."
+  }
+ },
+ {
+  "key": "mechanics",
+  "finding": {
+   "answer": "Inside the game, no unused mechanic paid anyone measurably today. Broadcast, tagline, pledges and reputation, spy, contracts, banner, ticker, streak, tree chat and whisper all came out flat or negative. The money came from first-pair 150s (53,400 coins), joining fees (22,674), missions (19,250), capped gifts and cuts. We already hold the only two missions a root can claim (Recruiter, Poach the giant) and hit the 500 gift cap at 17:21.\n\nSelf-initiated joins are 28 of 382 (7.3%): 12 are the Bandwagon house bot and 9 are owner-directed helpers. Only 1 of 28 followed a broadcast by the chosen leader. With the Arithmetic gain held constant, proposer rank, tree size, reputation, spying, pledges and broadcasts do not move P(change); the one-off cost and the target's disposition do.\n\nTwo things do pay that we are not fully using:\n\n- **Slot turnover.** In the last hour a direct slot held by a non-helper earned 7.4 coins a tick (4.7 from joins, 2.7 from cut) against 3.2 for a slot a helper sits in. All 14 non-helper departures since 17:00 were refilled by a bot that paid the 150. LEDGER's helpers run 10% cuts and take its fresh members off it after about 5 minutes; our non-helpers stay 16 minutes (median) and our three helpers sent 4 pitches all day.\n- **Human-side income.** At least 609 coins of our income today is not in the public feeds, which fits three 200-coin referral credits for the three helpers created today. LEDGER shows +364 the same way (two helpers created today). Booth codes paid us 250 twice on day 1.",
+   "recommendation": "Ranked by expected coins from tick 245 to 720. Steps 1 and 2 overlap; together about +2,000 to +5,000 (4 to 10 coins a tick), not additive.\n\n1. Free two helper-held slots (the friends edit their helper bots; nothing changes in our core or dials). dapper_grafana and rowdy_baseline set allegiance to leosharkpark, who stays direct and sets greedy 0. Expected +3.0 to +4.2 coins a tick per freed slot, about +1,200 to +3,500 by Golden Hour. Condition: only while freed slots refill within minutes, as now. If direct slots are empty at about 01:50 UTC, the two return once (normal fee, no 150) so all 8 slots pay 6.4 a tick in Golden Hour.\n\n2. Helpers pull our paid-up members down, as LEDGER's do (friends' bots again). Helpers at 10% pitch our non-helper direct members with the true numbers: 15.2 with the helper against 12.8 with us, same tree. Each pull-down costs about 15 coins of cut and reopens a slot worth 150 plus a fee of about 55. Expected +3 to +5 extra joins an hour while new bots keep arriving at 9 or more an hour. Condition: stop when a freed slot stays empty over 10 minutes, and by 01:30 UTC. Every pair forms once, so this is not a rejoin loop, but it is coordinated play; your call.\n\n3. Human-side, no bot change. Each booth code is +250; ask whoever is at the booth for every current code. Check the Invite page: each unused invite is +200 after 10 wakes, plus 150 and up to 80 when the new bot joins us, so about +430 each and up to +1,290 if three remain. Keep the trivia watcher on (0 questions today; 200 to 500 each).\n\n4. Loop: when a slot is free and no gainer is waiting, pitch never-paired \"easily persuaded\" bots at zero or small loss. Expected +9 to +16 coins per 15-coin pitch, about +200 to +500 in all (4 such bots now). It needs a second pitch text without \"beats what you earn now\", which would be false for them.\n\n5. Loop: order TARGETS by never-paired, gain above 0, then lowest move cost. Expected +100 to +400, mostly in Golden Hour when costs triple.\n\n6. Loop: send no pitch while we hold 8 of 8. Saves 15 coins per refused pitch (11 so far), about +50 to +150.\n\nNot supported by the data, do not spend on: broadcasts, tagline changes, pledges, spy, tree chat, whispers, contracts, banner, ticker.\n\nOff-limits although they would pay: the 150 that is paid again when a bot returns with members, a Regicide swap with a helper (300), and a helper-posted contract used to get round the gift cap.",
+   "key_numbers": [
+    {
+     "claim": "Share of today's joins that were self-initiated, and what preceded them",
+     "value": "28 of 382 (7.3%): 12 Bandwagon (house bot), 9 owner-directed helpers, 7 others. Destinations: LEDGER 9, sullen_nyquist 8. 0 of 28 had a pitch from that leader in the prior 30 min; 1 of 28 followed a broadcast by that leader",
+     "how_computed": "02_self_joins.py: conversion, schism and coup payloads with self_initiated true, joined to msg.persuade and msg.broadcast in the 30 minutes before each"
+    },
+    {
+     "claim": "P(change) by the Arithmetic line, day 2 external pitches",
+     "value": "gain above 0: 308/787 = 39.1%; loss: 33/1454 = 2.3%; zero: 15/356 = 4.2%",
+     "how_computed": "03_pchange.py: 2,597 reflections with an Arithmetic line, parsed by parse_refl.py"
+    },
+    {
+     "claim": "Proposer attributes with gain, cost and disposition held constant (logistic regression, day 2 n=2,597, day 1 n=3,679)",
+     "value": "rank in top 5: z = -1.0 (day 2), +0.8 (day 1). Quoted tree of 16 or more: z = -1.1, -4.2. Reputation above 0: z = +2.8, +1.0; below 0: z = +0.9, +2.4 (no consistent sign). log10 of one-off cost: z = -5.6, -10.3",
+     "how_computed": "03_pchange.py: pure-Python Newton logistic fit; reputation from leader_profiles.json (day 2) and bots.json (day 1)"
+    },
+    {
+     "claim": "Effect of the one-off cost when the gain is positive (day 2, by gain bucket)",
+     "value": "cost 40 or less: 50.0% to 70.1% changed; cost above 40: 23.5% to 35.6%",
+     "how_computed": "03_pchange.py: stratified tables for the four positive-gain buckets"
+    },
+    {
+     "claim": "Broadcast, spy and pledge against conversion at gain above 0",
+     "value": "Proposer broadcast in prior 15 min: 34/78 = 43.6% vs 274/709 = 38.6%. Proposer spied on target in prior 60 min: 5/18 = 27.8% vs 39.4%. Target holding a live pledge: 26/82 = 31.7% vs 40.0%. Spent today: 229 broadcasts 5,725 coins, 202 spies 1,010, pledge break fees 6,000. sullen_nyquist and LEDGER sent 0 broadcasts",
+     "how_computed": "05_pledge_spy_broadcast.py"
+    },
+    {
+     "claim": "Missions and contracts today",
+     "value": "144 claims, 19,250 coins: Recruiter 100, Poach the giant 25, Regicide 17, First to three 1, First to five 1. sullen_nyquist already holds Recruiter (15:03) and Poach the giant (16:57). 3 contracts posted, all 800 on TheOutdoorProgrammer, 0 claimed",
+     "how_computed": "04_missions_contracts_gifts.py: bounty.claimed and bounty.posted"
+    },
+    {
+     "claim": "Gift cap",
+     "value": "sullen_nyquist received 500 (one gift from rowdy_baseline at 17:21); LEDGER 500; no receiver above 500 among 113 gifts totalling 6,562 coins",
+     "how_computed": "04_missions_contracts_gifts.py: gift feed summed by receiver"
+    },
+    {
+     "claim": "Yield of one of our direct slots, non-helper against helper-held",
+     "value": "18:00-19:01: 4.71 (joins) + 2.70 (cut at 0.85 occupancy) = 7.41 coins per slot-tick. 17:00-19:01: 6.19. A helper-held slot: 3.20",
+     "how_computed": "16_recycle.py: replay of our direct members; fees and bounties from non-helper arrivals divided by non-helper slot-minutes"
+    },
+    {
+     "claim": "Refill after a departure, sullen_nyquist since 17:00",
+     "value": "14 of 14 non-helper departures were followed by an arrival that paid the 150; median wait 2.2 min after leaving the tree, 6.1 min after a move inside the tree. Last hour: full (8 of 8) for 21 of 60 minutes, mean occupancy 7.20",
+     "how_computed": "16_recycle.py and 06_slots.py"
+    },
+    {
+     "claim": "How long a non-helper stays a direct member",
+     "value": "sullen_nyquist median 16.0 min (n=30, mean 37.0); LEDGER median 4.9 min (n=10). LEDGER's helpers took 5 members off LEDGER 2.4 to 6.9 min after they joined it (Muhmdk 4, sharjeel 1); our helpers took 0 and sent 4 pitches all day",
+     "how_computed": "06_slots.py and 11_helpers.py"
+    },
+    {
+     "claim": "Pitches refused by the engine because the leader was full",
+     "value": "25 game-wide, 11 of them ours (3 in the last hour)",
+     "how_computed": "08_rejections.py: allegiance.rejected reasons classified"
+    },
+    {
+     "claim": "Income not visible in the public feeds, whole day to 19:01",
+     "value": "sullen_nyquist at least +609 coins (three 200-coin referral credits fit; three helpers were created today). LEDGER +364 (two helpers created today). Median over all bots -440",
+     "how_computed": "17_hidden_income_bounds.py and 10_day_accounting.py: coins minus 500 minus itemised public flows minus replayed tick income; for us the income is an upper bound (10% until 15:29, 40% in every tick after)"
+    },
+    {
+     "claim": "Booth codes redeemed by sullen_nyquist on day 1",
+     "value": "2 codes, 250 coins each, 17.3 minutes apart (00:46 and 01:03 UTC, Nov 11)",
+     "how_computed": "17_hidden_income_bounds.py: boost.redeemed events in the operator's saved day-1 feed (my_events.jsonl)"
+    },
+    {
+     "claim": "New bots and who gets them",
+     "value": "21 created today (4, 7, 9 in the last three hours); sullen_nyquist took the first join of 9, dapper_lego 4, LEDGER 2. Of the 9 created after 18:00, 5 joined us and 4 had joined nobody. Day 1 had 11 to 16 new bots an hour from 18:00 to 01:00 UTC, then 3",
+     "how_computed": "15_arrivals.py: bot.created joined to first move; day-1 created_at in bots.json"
+    },
+    {
+     "claim": "Bots left that could still pay us a first-pair 150",
+     "value": "111 never paired with us. Outside our tree and gaining now: 10 at 40% (4 not 'very hard'), 54 at 10% (36 not 'very hard')",
+     "how_computed": "06_slots.py and 07_pool.py: map.json and leader cuts give each bot's current income against 12.8 and 15.2"
+    },
+    {
+     "claim": "Top earners between the two real leaderboard snapshots, 17:51-19:01 (71 ticks)",
+     "value": "LEDGER 60.3 coins a tick (7.7 of it one-offs: 400 gifts and a 150 mission), sullen_nyquist 55.1, Muhmdk 29.6, weary_anomaly 29.4. Lead at 19:01: 5,277 coins, so LEDGER must out-earn us by 11.0 a tick to catch up",
+     "how_computed": "01_flows.py (coin deltas, itemised by event) and 19_rule_checks.py"
+    }
+   ],
+   "confidence": "medium",
+   "caveats": "- The helper steps (1 and 2) need the three friends to edit their bots. The ranges assume an extra open slot refills like the current ones; that held for 14 of 14 departures since 17:00 but is not proven for more slots. Only 10 never-paired bots gain at 40% right now, so the pipeline leans on new arrivals, which fell to 3 an hour after 01:00 UTC on day 1.\n- Hidden income is inferred, not observed. boost.redeemed, referral.credited and whisper events are not in the 19:00 pull. The method's resolution is about 150 coins (it did detect a returned 800 contract stake as +656). I cannot tell whether booth codes were redeemed today, how often the code rotates, or whether anyone is at the booth.\n- \"Last 90 minutes\" is measured over 71 minutes, the only window with two real leaderboards (17:51 and 19:01). The 90-minute table in out_13.txt is modelled and understates our cut income.\n- Tree chat comes from the 17:50 pull, capped at 500 events; whispers come from the day-1 partial pull.\n- Where the data disagrees with the brief:\n  - Paid first pairs to 19:01 are 32 for us and 12 for LEDGER (37 and 16 joins), not about 36 and 15.\n  - The 150 is not strictly first-time-only: it was paid again on 10 returns by bots carrying members, 3 of them to LEDGER's helper Muhmdk. That is the bug we must not use.\n  - LEDGER's helpers do not recruit into LEDGER's slots. They recruit to themselves (Muhmdk 11 joins, sharjeel 3) and gift LEDGER 400.\n  - Fifth place at 19:01 is zesty_coldstart (7,194), ahead of weary_anomaly (7,065).\n- No idle penalty is visible: our three helpers had zero public actions in 71 ticks and still earned 866 to 879 against 909 expected.\n- No network request, browser or message was used; data folders were only read.",
+   "script_paths": [
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/mechanics/common.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/mechanics/replay.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/mechanics/parse_refl.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/mechanics/01_flows.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/mechanics/02_self_joins.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/mechanics/03_pchange.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/mechanics/04_missions_contracts_gifts.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/mechanics/05_pledge_spy_broadcast.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/mechanics/06_slots.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/mechanics/07_pool.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/mechanics/08_rejections.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/mechanics/09_income_replay.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/mechanics/10_day_accounting.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/mechanics/11_helpers.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/mechanics/12_loss_pitch_ev.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/mechanics/13_top_earners_90min.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/mechanics/14_idle.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/mechanics/15_arrivals.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/mechanics/16_recycle.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/mechanics/17_hidden_income_bounds.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/mechanics/18_treechat_whisper.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/mechanics/19_rule_checks.py",
+    "/private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/mechanics/20_day1_golden.py"
+   ]
+  },
+  "verdict": {
+   "verdict": "partly_confirmed",
+   "checked": [
+    {
+     "claim": "Self-initiated joins: 28 of 382 (7.3%), 12 by Bandwagon, destinations LEDGER 9 and sullen_nyquist 8; 0 followed a pitch and 1 a broadcast by the chosen leader",
+     "my_value": "28 of 382 (7.3%); Bandwagon 12; LEDGER 9, sullen_nyquist 8; 0 with a pitch and 1 with a broadcast from that leader in the prior 30 min",
+     "agrees": true,
+     "note": "I count 8 owner-directed helpers by the brief's helper list, the analyst 9 (probably dapper_lego). No effect on the conclusion."
+    },
+    {
+     "claim": "Money today: first-pair 150s 53,400, joining fees 22,674, missions 19,250 from 144 claims (Recruiter 100, Poach the giant 25, Regicide 17, First to three 1, First to five 1); we hold Recruiter and Poach the giant",
+     "my_value": "356 bounties of 150 = 53,400; fees 22,674; 144 claims = 19,250 with the same split; ours at 15:03 and 16:57",
+     "agrees": true,
+     "note": "3 contracts, all 800 on TheOutdoorProgrammer, none claimed. Gift cap: we received 500 at 17:21, LEDGER 500, nobody above 500 (113 gifts, 6,562 coins)."
+    },
+    {
+     "claim": "P(change) by the Arithmetic line: gain 308/787 = 39.1%, loss 33/1454 = 2.3%, zero 15/356 = 4.2%",
+     "my_value": "308/787, 33/1454, 15/356 (2,597 external reflections, own parser)",
+     "agrees": true,
+     "note": "Exact match."
+    },
+    {
+     "claim": "One-off cost lowers conversion at a gain (40 or less: 50-70%; above 40: 23.5-35.6%); proposer rank, tree size and reputation do not matter",
+     "my_value": "Cost 40 or less: 51-69% by gain bucket; above 40: 25-36%. Logistic (numpy): rank top 5 z = -1.0, tree 16+ z = -0.1, reputation above 0 z = +2.9, log cost z = -5.1",
+     "agrees": true,
+     "note": "Not monotone in finer bands (cost 61-80: 21%, 81-120: 48%) because cost 80 marks the loyal dial. The reflection prompt does not show reputation, so its z is confounding."
+    },
+    {
+     "claim": "Broadcast, spy and pledge do not raise conversion at a gain (43.6% vs 38.6%; 27.8% vs 39.4%; 31.7% vs 40.0%); 229 broadcasts cost 5,725, 202 spies 1,010, pledge breaks 6,000",
+     "my_value": "34/78 vs 274/709; 5/18 vs 303/769; 26/82 vs 282/705; same spend totals; we and LEDGER sent 0 broadcasts",
+     "agrees": true,
+     "note": "Exact match."
+    },
+    {
+     "claim": "A non-helper direct slot earned 7.41 coins per slot-tick in the last hour (4.71 joins + 2.70 cut) against 3.20 for a helper-held slot",
+     "my_value": "Receipts 1,455 from 8 non-helper arrivals over 5 slots and 61 minutes = 4.77, occupancy 0.84, so about 7.4 as an average",
+     "agrees": true,
+     "note": "The arithmetic reproduces, but it is an average over existing slots. 5 of the 7 first-pair joins in that hour were brand-new bots, which do not multiply with slots."
+    },
+    {
+     "claim": "Freeing a helper slot is worth +3.0 to +4.2 coins a tick (+1,200 to +3,500 for two by Golden Hour)",
+     "my_value": "Not supported. Two freed slots give up about 2,300 coins of sure cut by Golden Hour. Break-even needs about 8 extra first-pair recruits; the analyst's range needs 12 to 19. The cap blocked 4 of our pitches in two hours, worth about 1.5 joins",
+     "agrees": false,
+     "note": "Evidence against slots being the limit: below 8 of 8 for 39 of the last 60 minutes; all 9 bots created after 18:00 were pitched, 5 joined, 4 refused on their own reasoning, none was lost to the cap; only 4 never-paired gainers at 40% are not 'very hard'. LEDGER had 1.7 to 4 free slots plus pull-downs and got 5 first pairs in the last hour against our 7."
+    },
+    {
+     "claim": "All 14 non-helper departures since 17:00 were refilled by a bot that paid the 150; median wait 2.2 min",
+     "my_value": "Matched one to one: 13 of 14 refills paid 150, 2 of those were our own helpers self-joining, 1 was a repeat pair paying 0 (curious_namespace). 11 organic first pairs. Organic vacancy: median 4.2 min, mean 6.3 min",
+     "agrees": false,
+     "note": "Their script takes the next arrival after each departure, so three departures in a row all point at the same arrival and helper arrivals count as refills."
+    },
+    {
+     "claim": "Last hour: full for 21 of 60 minutes, mean occupancy 7.20",
+     "my_value": "Full 21.2 of 60 min, mean 7.20; since 17:00 mean 7.36",
+     "agrees": true,
+     "note": "This number itself argues against a slot shortage."
+    },
+    {
+     "claim": "Our non-helpers stay 16.0 min (median, n=30); LEDGER's 4.9 min (n=10); LEDGER's helpers took 5 members off it after 2.4 to 6.9 min; our helpers sent 4 pitches all day",
+     "my_value": "Ours 14.9 min (n=30 completed), but 5 of those are the house bot Bandwagon; without it 31.9 min (n=25), mean 43 min. LEDGER 4.8 min. Pull-downs: Muhmdk 4, sharjeel 1, 2.4 to 6.9 min. Helper pitches 4",
+     "agrees": false,
+     "note": "LEDGER figures and helper counts agree. Our median is roughly doubled once the house bot is removed; five long stays still running are also left out."
+    },
+    {
+     "claim": "A helper pull-down costs about 15 coins of cut and would add 3 to 5 joins an hour",
+     "my_value": "A member pulled at 5 minutes would otherwise stay a further 44 to 47 min on average: up to about 140 coins of cut at 40%, unless a new first pair fills the slot at once. No sign of 3 to 5 more candidates an hour",
+     "agrees": false,
+     "note": "The 150 and fee from a pull-down go to the helper and cannot be passed on (gift cap used). 4 of LEDGER's 5 first pairs in the last hour were bots that had just left us; Muhmdk's income includes three repeat 150s from Candide and otter_telemetry."
+    },
+    {
+     "claim": "Engine refusals for a full leader: 25 game-wide, 11 ours, 3 in the last hour; so send no pitch at 8 of 8",
+     "my_value": "14 game-wide with the engine's wording (ours 11, zesty_coldstart 2, weary_anomaly 1); 3 ours in the last hour. 0 of our 97 pitches today were sent at 8 of 8",
+     "agrees": false,
+     "note": "Their classifier also counts target-written reasons. All 11 of ours were sent with 1 or 2 slots free and lost a race: 4 to our own helpers self-joining seconds later, the rest to several pitches chasing one slot in a burst."
+    },
+    {
+     "claim": "Pitching never-paired 'easily persuaded' bots at zero or small loss returns +9 to +16 coins per pitch",
+     "my_value": "24/165 = 14.5% reproduces, but from 12 bots; 22 of the 24 changes come from six bots already paired with us or house. The four never-paired ones changed 4 of 54 times (7.4%): about -1 coin per pitch",
+     "agrees": false,
+     "note": "Selection effect. moth and olive_setpoint gain at 10% anyway, so they are ordinary burst targets with the normal true text."
+    },
+    {
+     "claim": "Income not in the public feeds: sullen_nyquist at least +609 (fits three 200-coin referrals); LEDGER +364",
+     "my_value": "Ours at least +614 by the same upper-bound method; it all arrived before 17:50 (17:50-19:01 leaves +30 unexplained). LEDGER: between -329 and +661, cannot confirm +364",
+     "agrees": true,
+     "note": "Timing fits referral credits for helpers created 15:52, 17:08, 17:16, but referral events are not in any pull; still an inference. Day-1 booth codes confirmed: 250 at 00:46 and 01:03 UTC."
+    },
+    {
+     "claim": "New bots: 21 created today (4, 7, 9 in the last three hours); first join to us 9, dapper_lego 4, LEDGER 2; day 1 had 11 to 16 an hour until 01:00 UTC, then 3",
+     "my_value": "21 (1, 4, 7, 9 by hour); us 9, dapper_lego 4, LEDGER 2, nobody 4; day 1: 15, 11, 16, 14, 13, 11, 11, then 3, 3",
+     "agrees": true,
+     "note": "3 of our 9 and both of LEDGER's are own helpers. nimble_etcd (joined nobody) gifted LEDGER 100 two minutes after creation, so it is probably another LEDGER helper."
+    },
+    {
+     "claim": "Pool: 111 bots never paired with us; outside our tree and gaining now 10 at 40% (4 not 'very hard'), 54 at 10% (36 not 'very hard')",
+     "my_value": "111; 10 at 40% (4 not very hard: zesty_retry, karimsa, cobalt_oncall, brave_karpenter); 53 at 10% (35 not very hard, 14 carry members, 4 house)",
+     "agrees": true,
+     "note": "Those 35 converted 65 of 170 gainful pitches today (38%). At today's pace we already draw about 2.5 an hour from this pool."
+    },
+    {
+     "claim": "Top earners 17:51-19:01 (71 ticks): LEDGER 60.3 a tick, us 55.1, Muhmdk 29.6, weary_anomaly 29.4; lead 5,277, so LEDGER needs +11.0 a tick",
+     "my_value": "60.3, 55.1, 29.6, 29.4; lead 5,277; 11.0",
+     "agrees": true,
+     "note": "Our 55.1 is at most 39.4 tick income plus 20.5 from joins minus 5.3 on pitches."
+    }
+   ],
+   "errors_found": "The negative findings hold; the two headline recommendations do not.\n\n1. Average used as marginal (central). The 7.4 against 3.2 per slot-tick is an average. The data do not show slots as the limit: we were below 8 of 8 for 39 of the last 60 minutes; every bot created after 18:00 was pitched and none was lost to the cap; the cap blocked 4 pitches in two hours. Of 11 organic first pairs since 17:00, 6 were brand-new bots and 5 came from 10% bursts. The +1,200 to +3,500 (and +2,000 to +5,000 combined) is unsupported.\n\n2. \"14 of 14 refilled by a bot that paid the 150\" is a matching artefact: 13 of 14 paid, 2 of those were our own helpers, 1 was a repeat pair paying 0. The \"2.2 min wait\" is time to the next arrival of any kind; organic vacancy is median 4.2, mean 6.3 minutes.\n\n3. \"Non-helpers stay 16 minutes\" includes five short stays of the house bot Bandwagon. Without it the median is about 32 minutes.\n\n4. \"A pull-down costs about 15 coins\" assumes an instant refill. Without one it forgoes up to about 140 coins of cut. The \"+3 to +5 joins an hour\" has no supply behind it.\n\n5. LEDGER as a model is misread. With more free slots and helper pull-downs it got fewer first pairs than we did. 4 of its 5 first pairs in the last hour were our ex-members, three taken at a loss (15.2 to 12.8). Muhmdk's take includes three repeat 150s, the bug we must not use.\n\n6. Item 4 (loss pitches to \"easily persuaded\" bots) is a selection effect: the four bots still unpaired changed 4 of 54 times, about -1 coin per pitch.\n\n7. Item 6 (no pitch at 8 of 8) saves nothing: none of our 97 pitches was sent at 8 of 8.\n\n8. Smaller points:\n   - Engine full-leader refusals are 14 game-wide, not 25.\n   - The 10 repeat 150s are 8 schisms plus 2 member-less conversions whose earlier pairing was a schism.\n   - LEDGER's hidden +364 cannot be reproduced (bounds -329 to +661).\n\n9. Where the data disagree with the brief: \"limited by free slots, not by conversions\" is only partly true. In the last hour 16 pitch decisions gave 8 joins, 3 pitches hit the cap, and a slot stood open most of the time. The tighter limits are candidates who gain at 40% and how often the loop bursts.\n\n10. Not flagged by the analyst: the helpers' move to leosharkpark would mint two bank-paid 150s for a friend's bot that cannot reach us. A helper returning inside Golden Hour would pay us a tripled fee, which is the same kind of gift-cap workaround as the contract idea.\n\nMy scripts (v02 to v21, re-runnable): /private/tmp/claude-501/-Users-tooming-Projects-assistant/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/evening/verify-mechanics/",
+   "corrected_recommendation": "No unused in-game mechanic pays, and the slot-turnover plan should be dropped. Ranked by what the data support for tick 245 to 720:\n\n1. Keep all three helpers in their direct slots, and do not have helpers pull our members down.\n   - Each helper slot is a sure 3.2 coins a tick at 40% (about 2.7 allowing for bursts) and 6.4 in Golden Hour. Freeing two gives up about 2,300 coins by 02:00 UTC.\n   - To break even the two slots would need about 8 extra first-pair recruits (about 300 coins each with their cut). The data support about 5 at most: the cap blocked 4 pitches in two hours.\n   - Expected result of freeing two: a loss of several hundred coins, range about -2,300 to +1,200.\n   - If you still want to test it: one helper only, for 45 minutes, not after 01:00 UTC. Keep it only if the freed slot brought at least one new 150 and was occupied at least half the time. The helper returns with no members, before 02:00 UTC.\n\n2. Human-side, no bot change. This is the only item with a clear positive expectation.\n   - Booth codes: +250 each (two were redeemed on day 1). Ask at the booth for every current code.\n   - Invites: +200 once a new person's bot has woken 10 times. If it then joins us while a slot is free, add 150 plus up to 80, and 3.2 a tick as a permanent member. Real, separate people only. Today's roughly 600 unexplained coins fit three such credits, but that is inferred.\n   - Keep the trivia watcher on (0 questions today).\n\n3. Loop: order TARGETS by evidence. Worth roughly 70 coins per pitch redirected, a few hundred over the evening.\n   - Never-paired bots first.\n   - Then brand-new bots and bots that already changed at a gain today (49%, 198/405), ahead of bots that refused three or more gainful pitches today (11%, 14/130).\n   - Then lower one-off cost (40 or less: 51-69%; above 40: 25-36%).\n   - In 10% bursts lead with moth (7 of 7 at a gain today), olive_setpoint (10 of 15), brave_crd (5 of 7), wily_backlog (2 of 2).\n   - Drop karimsa (0 of 8), cobalt_oncall (0 of 9), sage_toil (0 of 7).\n\n4. Loop: leave pitch volume as it is. The loop already sends nothing at 8 of 8. In a burst keep sending more pitches than free slots: a refused pitch costs 15, a join brings about 196.\n\n5. Golden Hour: enter 02:00 UTC with 8 of 8 at 40% and no bursts, subject to the owner's daily go-ahead. Each member then pays 6.4 a tick (384 for the hour). On day 1 gainful pitches converted only 17% in Golden Hour (22/127, median cost 230).\n\n6. Do not spend on: broadcasts, tagline changes, pledges, spy, tree chat, whispers, contracts, banner, ticker, or loss and zero-gain pitches to \"easily persuaded\" bots (4 of 54 for the ones left, about -1 coin a pitch).\n\n7. Off-limits: the 150 paid again when a bot returns after a schism, a Regicide swap with a helper, a helper-posted contract, and timing a helper's return into Golden Hour for the tripled fee.\n\nOverall: public flows explain our last 71 ticks to within 30 coins, so nothing hidden is running now. The lead is 5,277; LEDGER must out-earn us by 11 a tick and has done so by about 5."
+  }
+ }
+]
