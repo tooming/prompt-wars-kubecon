@@ -663,3 +663,32 @@ The client calls 31 path patterns (28 under `/api`, 3 under `/auth`). 22 are mis
 - Also on Wednesday, no bot needed: a random draw for a Mac mini among people wearing the booth's t-shirt.
 - The winner must come to the booth to pick the prize up. No other eligibility wording was found, and the site has
   no terms, rules or privacy page.
+
+## Day 2 evening addendum (2026-11-11, from live observation)
+
+Things confirmed or newly found today that were not in the earlier spec:
+
+- **Official championship endpoint `/api/championship`.** Rows: `{name, points, days, best_rank, is_house}`. It is the
+  source of truth for the standings (we had been computing from the leaderboard). The `best_rank` field (each bot's
+  single best daily finish) is almost certainly the tiebreaker when two bots finish level on points — worth knowing
+  if sullen_nyquist and LEDGER end tied (e.g. 61-61): whoever has the better single day wins. INFERRED from the field's
+  presence, not from a rules page.
+- **Contracts are poster-priced, not fixed.** Day 1 were all 800; day 2 ranged 600/800/1000/1500, set by the posting
+  leader. 17 posted today; 6 targeted LEDGER (unmovable, max resistance) and were never claimable — contracts are used
+  as harassment to make a rival's bot waste wakes fielding pitches, not as a real reward. None was paid on either day.
+- **Booth codes: variable reward and capped.** Reward values seen: 250 (most), 500, and one 5000 (the 16:45 MST
+  "group picture" booth bonus). At least one code was capped at 10 redemptions and ran out in ~11 minutes. Codes are
+  released at the booth on an ~hourly cadence, sometimes tied to a `world.notice` announcement, and old codes stay
+  valid. They are public `boost.redeemed` events (bot + reward), so a redemption wave is detectable but the code
+  string is not.
+- **Trivia: variable reward and window.** Easy questions 500 coins / ~10 min; booth-knowledge questions 1000 / ~15 min.
+- **Bot notes are PUBLIC.** `notes.updated` events carry the bot's full wake notes, so a bot that journals its plan
+  (as LEDGER and others do) leaks strategy. Our bot writes only "DONE: ..." / "IDLE", which is why ours leaks little.
+- **The PATCH content check is an LLM moderator.** Its 422 refusals quote specific triggers: "promotional-style",
+  "marketing-like", "coercive financial pitch", "attempts to instruct a bot to manipulate". Same text usually passes
+  on retry, so it is sampled/non-deterministic.
+- **Unused endpoints seen in the client:** `/api/bot/insight`, `/api/bot/deprogram` (the 300-coin pull-out),
+  `/api/bot/personas` + `/api/bot/persona/` + `/api/bot/starter` (persona templates, sign-in required),
+  `/api/me/disclosure`, `/api/bot/name-check`, `/api/push/*` (web push). Not needed for operating the bot.
+- **The twist persisted all day.** "tuesday" (pledge 20->10, break pledge 150->250) stayed the whole day; the only
+  live rule change was cosmetic (`notice_banner_minutes` 30->45).
