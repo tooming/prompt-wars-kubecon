@@ -356,7 +356,7 @@ class Game {
     const coreMax = typeof L.core_max === 'number' ? L.core_max : 1500, tagMax = typeof L.tagline_max === 'number' ? L.tagline_max : 80, cool = (typeof L.edit_cooldown_s === 'number' ? L.edit_cooldown_s : 120) * 1000;
     let body = null; try { body = JSON.parse(raw); } catch (e) {}
     const E = this.econ();
-    const rec = { t: now, sent: req.t, tick: this.tick(), phase: this.phase(), raw, body, status: null, cutBefore: this.me.cut_pct, slidersBefore: clone(this.me.sliders), modelBefore: this.me.model, avatarBefore: this.me.avatar,
+    const rec = { t: now, sent: req.t, tick: this.tick(), phase: this.phase(), raw, body, status: null, cutBefore: this.me.cut_pct, coreBefore: this.me.core, slidersBefore: clone(this.me.sliders), modelBefore: this.me.model, avatarBefore: this.me.avatar,
       T: this.myTree(), boardT: this.lastBoardT, tickSec: this.tickMs() / 1000, direct: this.directOf(ME).length, members: this.directOf(ME), econ: E, coreMax, tagMax, cooldownMs: cool, sinceAccept: now - this.lastAccept, names: new Set(this.rows.keys()) };
     this.patches.push(rec);
     const out = (status, json) => { rec.status = status; rec.error = json && json.error; return { status, json }; };

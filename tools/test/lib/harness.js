@@ -53,7 +53,7 @@ function mkSim(o) {
   const game = new Game(clock, DATA, Object.assign({
     schedOpen: SCHED_OPEN, openAt: SCHED_OPEN + (o.openOffsetMs != null ? o.openOffsetMs : 9400),
     schedGolden, schedFreeze, goldenAt: schedGolden + lag, freezeAt: schedFreeze + lag,
-    botStart: { core: STATIC_CORE, greedy: 0, tagline: 'Cut is 10% right now, the lowest a leader can set. Each joiner lifts your pay.' }
+    botStart: { core: STATIC_CORE, greedy: 0, tagline: 'Cut is 10% right now, the lowest a leader can set (the most is 40%).' }
   }, o.game || {}));
   const sim = { o, clock, game, storage: o.storage || {}, log: [], learned: {}, unhandled: [], openAt: game.openAt, schedOpen: SCHED_OPEN, schedGolden, schedFreeze, pastes: [] };
   sim.newWindow = extra => { sim.win = makeWindow(clock, { fetchImpl: game.fetch, storage: sim.storage, extra: extra || o.extra }); return sim.win; };
@@ -98,7 +98,9 @@ function pitchProblems(text, ctx) {
   for (const re of [/cut is (\d+)% right now/g, /takes (\d+)%/g]) while ((m = re.exec(text))) cutClaims.push(+m[1]);
   if (!cutClaims.length) out.push('the pitch names no cut');
   for (const c of cutClaims) if (c !== ctx.cut) out.push('says the cut is ' + c + '% but the save sets ' + ctx.cut + '%');
-  if (ctx.cut <= 10 && !/moves between 10% and 40%/.test(text)) out.push('a 10% pitch that does not say the cut moves between 10% and 40%');
+  // ctx.fallback: the hand-saved fallback core, left in place by the loop's save before the open. Its pitch is written for a
+  // day at a fixed 10% (it names the 10% to 40% range a leader can set, see cores/day3_static_core.md), so it cannot say "moves".
+  if (ctx.cut <= 10 && !ctx.fallback && !/moves between 10% and 40%/.test(text)) out.push('a 10% pitch that does not say the cut moves between 10% and 40%');
   if ((m = /moves between (\d+)% and (\d+)%/.exec(text)) && ctx.range && (+m[1] !== ctx.range[0] || +m[2] !== ctx.range[1])) out.push('says the cut moves between ' + m[1] + '% and ' + m[2] + '% but the dial gives ' + ctx.range[0] + '% to ' + ctx.range[1] + '%');
   if ((m = /base income is (\d+(?:\.\d+)?) a tick/.exec(text)) && m[1] !== fmt1(E.base)) out.push('base income ' + m[1] + ' but the rules say ' + fmt1(E.base));
   if ((m = /With me you earn (\d+(?:\.\d+)?) at once/.exec(text))) { const want = Ts.map(T => fmt1(E.base * (1 + Math.min(E.max, E.per * T)) - E.base * ctx.cut / 100)); if (!want.includes(m[1])) out.push('"earn ' + m[1] + ' at once" but a joiner would earn ' + want.join(' or ') + ' (tree of ' + Ts.join(' or ') + ')'); }
@@ -148,6 +150,9 @@ async function commonChecks(sim, A, opt) {
   const at = p => hhmmss(p.sent) + ' tick ' + p.tick + ' HTTP ' + p.status;
   for (const p of g.patches) {
     const b = p.body || {}, core = coreOf(p), c = parsed(p), tl = typeof b.tagline === 'string' ? b.tagline : '';
+    // The save before the open may leave the hand-saved fallback core on the bot exactly as it is (only the dial and the
+    // tagline change). That core has no CALLS or EXPIRES line by design: it keeps its progress in the bot's notes.
+    const kept = c.isStatic && p.t < g.openAt && core === p.coreBefore;
     if (!(core.length <= 1500) || core.length > p.coreMax) bad.len.push(at(p) + ': core ' + core.length + ' characters (limit ' + Math.min(1500, p.coreMax) + ')');
     if (!core.includes(DEFENCE) || !core.startsWith('You are ' + ME + '.')) bad.defence.push(at(p) + ': defence section missing or changed');
     if (c.pitch == null) bad.pitch.push(at(p) + ': no quoted pitch found'); else if (c.pitch.length > 500) bad.pitch.push(at(p) + ': pitch ' + c.pitch.length + ' characters');
@@ -160,8 +165,8 @@ async function commonChecks(sim, A, opt) {
       if (sim.learned[n] != null && p.sent > sim.learned[n] + 1000) bad.learned.push(at(p) + ': ' + n + ' (learned never at ' + hhmmss(sim.learned[n]) + ')');
     }
     if (new Set(c.targets).size !== c.targets.length) bad.dup.push(at(p) + ': ' + c.targets.join(', '));
-    if (c.targets.length ? c.calls !== Math.min(3, c.targets.length) : c.calls !== null) bad.calls.push(at(p) + ': ' + c.targets.length + ' targets, CALLS ' + c.calls);
-    if (c.targets.length ? (c.exp === null || c.exp > p.tick + Math.ceil(360 / p.tickSec) + 1) : c.exp !== null) bad.expires.push(at(p) + ': ' + c.targets.length + ' targets, EXPIRES ' + c.exp + ' at tick ' + p.tick);
+    if (kept ? c.calls !== null : c.targets.length ? c.calls !== Math.min(3, c.targets.length) : c.calls !== null) bad.calls.push(at(p) + ': ' + c.targets.length + ' targets, CALLS ' + c.calls);
+    if (kept ? c.exp !== null : c.targets.length ? (c.exp === null || c.exp > p.tick + Math.ceil(360 / p.tickSec) + 1) : c.exp !== null) bad.expires.push(at(p) + ': ' + c.targets.length + ' targets, EXPIRES ' + c.exp + ' at tick ' + p.tick);
     if (!c.hasTargetsLine) bad.expires.push(at(p) + ': no TARGETS line');
     const keys = Object.keys(b).sort().join();
     if (keys !== 'avatar,core,core_public,model,sliders,tagline') bad.body.push(at(p) + ': body keys ' + keys);
@@ -173,7 +178,7 @@ async function commonChecks(sim, A, opt) {
     if (s.greedy !== 0 && s.greedy !== 100) bad.dial.push(at(p) + ': greedy ' + s.greedy);
     const steps = core.split('\n').filter(l => /^[12]\. /.test(l)).join('\n').replace(/"[^"]*"/g, '""');
     if (/\b(whisper|tree_chat|broadcast|gift|pledge|spy|update_creed|lookup|fund_banner|deprogram)\b/i.test(steps) || !/persuade/.test(steps) || !/remember/.test(steps)) bad.tools.push(at(p) + ': step lines ask for something else than persuade and remember');
-    const cutSet = g.cutFor(Number(s.greedy) || 0), ctx = { cut: cutSet, econ: p.econ, Ts: p.t < g.openAt ? [1] : [p.T, p.boardT], range: [g.cutFor(0), g.cutFor(100)] };
+    const cutSet = g.cutFor(Number(s.greedy) || 0), ctx = { cut: cutSet, econ: p.econ, Ts: p.t < g.openAt ? [1] : [p.T, p.boardT], range: [g.cutFor(0), g.cutFor(100)], fallback: kept };
     const superseded = p.t < g.openAt && g.patches.some(q => q.status === 200 && q.t > p.t && q.t < g.openAt);
     if (!superseded) {
       if (c.pitch != null) for (const x of pitchProblems(c.pitch, ctx)) bad.truth.push(at(p) + ': ' + x);

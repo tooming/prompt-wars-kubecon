@@ -80,7 +80,7 @@ function preconditions(A, sim, what) {
 scenario('1a', 'paste while day 2 is frozen, then roll over into day 3: coins 500, empty tree, unknown twist', async A => {
   const sim = mkSim({ pasteBeforeMin: 30, game: { twist: 'thursday-fog', rules: r => { r.econ.streak_tax_pct = 3; r.econ.twist_rule = 'Leaders pay <b>3%</b> of their streak bonus.'; r.costs.pledge = 5; r.costs.spy = 2; r.limits.name_max = 24; } } });
   const g = sim.game, o = sim.openAt, T = sim.schedOpen, pasteT = sim.pastes[0].t;
-  A.ok(/^pw3 day3-bundle-1 loaded/.test(sim.pastes[0].result), 'the paste answers "pw3 day3-bundle-1 loaded"', sim.pastes[0].result);
+  A.ok(/^pw3 day3-bundle-2 loaded/.test(sim.pastes[0].result), 'the paste answers "pw3 day3-bundle-2 loaded"', sim.pastes[0].result);
   sim.pw().never('sage_bode');                                    // learned by hand before the day changes
   await sim.run(1000);
   A.ok(g.patches.length === 0, 'nothing is saved at paste time', g.patches.length + ' saves');
@@ -101,8 +101,8 @@ scenario('1a', 'paste while day 2 is frozen, then roll over into day 3: coins 50
   A.ok(pre.length === 1 && pre[0].status === 200 && pre[0].sent >= T - 172000 && pre[0].sent <= T - 140000, 'exactly one save before the open, about 170 s before the announced time', pre.map(p => hhmmss(p.sent) + ' HTTP ' + p.status).join(', '));
   const c = pre.length ? parsed(pre[0]) : { targets: [], pitch: '' };
   A.ok(pre.length && greedyOf(pre[0]) === 0 && g.me.cut_pct === 10, 'the opening core sets greedy 0: the bot is at 10% before the open', 'greedy ' + (pre[0] && greedyOf(pre[0])) + ', cut ' + g.me.cut_pct);
-  A.ok(/^Alone, base income is 8 a tick\. With me you earn 9\.2 at once: my cut is 10% right now; it moves between 10% and 40% during the day\./.test(c.pitch || ''), 'the opening pitch is the cold-start text for a tree of one and says the cut moves between 10% and 40%', c.pitch);
-  A.ok(c.targets.length >= 3 && c.targets.length <= 4 && c.calls === 3 && c.exp === 8, 'opening core: three or four targets, CALLS: 3, EXPIRES: tick 8', c.targets.join(', ') + ' / CALLS ' + c.calls + ' / EXPIRES ' + c.exp);
+  A.ok(/^The arithmetic line shows what you would earn with me: my cut is 10% right now; it moves between 10% and 40% during the day\./.test(c.pitch || '') && !/earn \d|adds \d|up to \d|\d\.\d/.test(c.pitch || ''), 'the opening pitch says the cut is 10% right now and moves between 10% and 40%, and carries no figure that depends on a rule value (the day\'s values are not served before the open)', c.pitch);
+  A.ok(c.targets.length >= 3 && c.targets.length <= 5 && c.calls === 3 && c.exp === 8, 'opening core: three to five targets, CALLS: 3, EXPIRES: tick 8', c.targets.join(', ') + ' / CALLS ' + c.calls + ' / EXPIRES ' + c.exp);
   A.ok(!c.targets.includes('sage_bode'), 'a bot added with __pw3.never() is not in the opening core', c.targets.join(', '));
   A.ok(sim.status().openingCore === 'saved', 'status now reports the opening core as saved', sim.status().openingCore);
 
@@ -203,8 +203,9 @@ scenario('2', 'the opening: tree of 1, helpers join by themselves at ticks 1 to 
   A.ok(tooMany.length === 0, 'no list is longer than the free slots (minus one per awaited helper) plus the slack of three', tooMany.map(p => hhmmss(p.sent) + ' ' + parsed(p).targets.length + ' names').join(', '));
   const first = g.patches.find(p => p.status === 200 && p.sent > o);
   A.ok(first && first.sent - o <= 25000 && first.direct === 0 && /With me you earn 9\.2 at once/.test(parsed(first).pitch), 'the first save after the open comes within 25 s and still pitches a tree of one (earn 9.2 at once)', first ? hhmmss(first.sent) + ' ' + parsed(first).pitch.slice(0, 90) : 'none');
-  const alone = g.pitches.filter(x => x.T < 4);
-  A.ok(g.pitches.length >= 6 && alone.length >= 3 && alone.every(x => /^Alone, base income is 8 a tick/.test(x.text)), 'while the tree is small the bot sends the cold-start pitch', alone.length + ' of ' + g.pitches.length + ' pitches below a tree of four');
+  const staticPitch = Game.parseCore(H.STATIC_CORE).pitch, alone = g.pitches.filter(x => x.T < 4);
+  // the first wake still plays the hand-saved core, which the opening save leaves in place; every later pitch to a small tree is the loop's cold-start text
+  A.ok(g.pitches.length >= 6 && alone.length >= 3 && alone.every(x => x.text === staticPitch || /^Alone, base income is 8 a tick/.test(x.text)) && g.wakes[0].sent.length === 3 && g.pitches.slice(0, 3).every(x => x.text === staticPitch && x.cut === 10), 'while the tree is small the bot sends the hand-saved core\'s pitch (first wake, at 10%) or the loop\'s cold-start pitch', alone.length + ' of ' + g.pitches.length + ' pitches below a tree of four; first: ' + (g.pitches[0] || {}).text);
   const fullPitch = g.pitches.filter(x => x.cut === 10 && /in a tree paying the full x2\.00/.test(x.text));
   A.ok(fullPitch.length >= 1 && fullPitch.every(x => /cut is 10% right now: at this cut you keep 15\.2/.test(x.text) && /moves between 10% and 40%/.test(x.text)), 'once the tree pays the full bonus the 10% pitch says so: keep 15.2 now, the cut moves between 10% and 40%', (fullPitch[0] || {}).text);
   A.ok(pw.S.day.n.recruits === g.joins.length && pw.S.day.n.bounties === g.joins.reduce((a, j) => a + j.bounty, 0) && pw.S.day.n.fees === g.joins.reduce((a, j) => a + j.fee, 0), 'the loop counted every join, fee and bounty', JSON.stringify(pw.S.day.n) + ' vs ' + g.joins.length + ' joins');
@@ -744,9 +745,9 @@ scenario('0', 'static checks: CONFIG lists, the hand-saved fallback core, the ru
   A.ok(all.every(n => nameOk.test(n)), 'every configured name is a plain bot name', all.filter(n => !nameOk.test(n)).join());
   const ovl = cfg.openingOrder.concat(cfg.burstOrder).filter(n => nv.has(n) || cfg.helpers.includes(n));
   A.ok(ovl.length === 0, 'no name is both in a target order and on a never or helper list', ovl.join(', '));
-  const core = H.STATIC_CORE, c = Game.parseCore(core), tag = 'Cut is 10% right now, the lowest a leader can set. Each joiner lifts your pay.';
+  const core = H.STATIC_CORE, c = Game.parseCore(core), tag = 'Cut is 10% right now, the lowest a leader can set (the most is 40%).';
   A.ok(core.length <= 1500 && core.includes(H.DEFENCE) && c.pitch && c.pitch.length <= 500 && tag.length <= 80, 'cores/day3_static_core.txt: at most 1500 characters, defence section, pitch at most 500; runbook tagline at most 80', core.length + ' / ' + (c.pitch || '').length + ' / ' + tag.length);
-  A.ok(c.targets.length === 25 && c.targets.every(n => !nv.has(n) && !cfg.helpers.includes(n)) && new Set(c.targets).size === 25, 'its 25 targets: none on a never list, none a helper, no duplicate', c.targets.filter(n => nv.has(n) || cfg.helpers.includes(n)).join());
+  A.ok(c.targets.length === 24 && c.targets.every(n => !nv.has(n) && !cfg.helpers.includes(n)) && new Set(c.targets).size === 24, 'its 24 targets: none on a never list, none a helper, no duplicate', c.targets.filter(n => nv.has(n) || cfg.helpers.includes(n)).join());
   A.ok(/My cut is 10% right now, the lowest a leader can set \(the most is 40%\)/.test(c.pitch) && !/\d+\.\d/.test(c.pitch), 'its pitch states the 10% cut and the 10-40% range and promises no income figure', c.pitch);
   const steps = core.split('\n').filter(l => /^[12]\. /.test(l)).join('\n').replace(/"[^"]*"/g, '""');
   A.ok(/persuade/.test(steps) && /remember/.test(steps) && !/\b(whisper|tree_chat|broadcast|gift|pledge|spy|update_creed)\b/.test(steps), 'it asks for persuade and remember only', steps);
@@ -985,7 +986,7 @@ scenario('19a', 'a twist moves the dial: greedy 0 gives 15%, greedy 100 gives 40
   helpersJoin(g); acceptFirst(g, 5);
   await sim.until(o - 500);
   const pre = sim.accepted();
-  A.ok(pre.length === 2 && /my cut is 15% right now; it moves between 15% and 40%/.test(parsed(pre[1]).pitch), 'the opening core is saved a second time with the real 15% in the pitch, still before the open', pre.map(p => hhmmss(p.sent) + ': ' + (parsed(p).pitch || '').slice(60, 130)).join(' | '));
+  A.ok(pre.length === 2 && /my cut is 15% right now\./.test(parsed(pre[1]).pitch) && !/moves between/.test(parsed(pre[1]).pitch), 'the opening core is saved a second time with the real 15% in the pitch, still before the open, and states no range while the top of today\'s dial is unknown', pre.map(p => hhmmss(p.sent) + ': ' + (parsed(p).pitch || '').slice(60, 130)).join(' | '));
   await sim.untilOpen(12 * 60);
   A.ok(sim.status().direct === '8/8' && sim.status().cut === 40 && g.pitches.every(x => /15% right now/.test(x.text)), 'the opening runs at 15% with true pitches and ends at 40%', JSON.stringify({ direct: sim.status().direct, cut: sim.status().cut }));
   await commonChecks(sim, A);
