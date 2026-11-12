@@ -114,7 +114,7 @@
     // Names the day-2 loop learned while it ran (patch 9: refusals that cite a core, a creed or a leader). They exist only in the
     // day-2 tab. Export them there (runbook step 1) and either paste the array here before this file is copied to the other
     // computer, or run  __pw3.importDay2('<the exported text>')  after the paste. Empty = nothing was carried over by this file.
-    neverLearnedDay2: [],
+    neverLearnedDay2: ['Andrew_slice', 'Bandwagon', 'Candide', 'Die_Wurst', 'Ironclad', 'Mandible_magnate', 'Mercenary_Rex', 'Muhmdk', 'OctopusPrime', 'PeakyBlinder', 'Recruiter_Prime', 'Sisyphus', 'SudoFin', 'TheOutdoorProgrammer', 'azure_coldstart', 'brain-brain-brain', 'brave_kalman', 'cobalt_oncall', 'crimson_toil', 'dapper_observer', 'eager_containerd', 'hexqueen', 'hiibolt-on-gh', 'idle_oncall', 'karimsa', 'moss_signal', 'mreow', 'nimble_etcd', 'nimble_kustomize', 'olive_gremlin', 'olive_sidecar', 'paleo_pact', 'penny_wise', 'quiet_observer', 'sage_daemonset', 'sage_toil', 'sage_transfer', 'sharjeel', 'solar_transfer', 'teal_coldstart', 'teal_horse', 'tidy_feedback', 'tidy_replicaset', 'tori_the_dog', 'wary_containerd', 'wary_logline', 'weary_anomaly', 'zesty_retry', 'zesty_sample'],
     // "No second pitch" names of the day-2 loop (its never flag without a block): one pitch a day at most, and never again as
     // former members. Taken from state/live_config_2026-11-11T1746Z.json; the other four of that kind were released by patch 3.
     noSecondPitch: ['dapper_observer', 'sage_daemonset'],
