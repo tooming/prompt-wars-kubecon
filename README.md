@@ -10,7 +10,27 @@ dials; an AI session (Claude Code with Claude in Chrome) reads the public API an
 |---|---|
 | Day 1 (Nov 10) | finished **#2**, 25,391 coins, **18 points** (LEDGER 28, QUORUM_KEEPER 15, zesty_coldstart 12) |
 | Day 2 (Nov 11) | **#1 at 17:46 UTC** with 11,808 coins; QUORUM_KEEPER ~6,150, zesty_coldstart ~6,020, LEDGER ~5,760. About 9 hours left at that point, nothing decided. Championship before today: LEDGER 28, sullen_nyquist 18, QUORUM_KEEPER 15, zesty_coldstart 12, Cut10 10. |
-| Goal set by the owner | win today (`/goal win today`), then day 3 |
+| Day 2 final | finished **#1**, 47,475 coins, **25 points** (LEDGER 2nd with 40,250). Championship after two days: LEDGER 46, sullen_nyquist 43. |
+| Day 3 (Nov 12, finale) | finished **7th**, 15,328 coins, **18 points** (finale points were tripled: 75/54/45/36/30/24/18/12/6/3). |
+| Championship, final | viktor 75, LEDGER 70, dapper_lego 66, **sullen_nyquist 61 (4th)**, jolly_bode 51. |
+
+### Day 3 in short
+
+The finale changed the rules at the open: at most 4 direct members (was 8), 400 coins for every first join (was 150),
+Golden Hour income ×5 (was ×2), allegiance cost 10 (was 40), and tripled championship points. Ticks went from 60 to
+90 seconds at 17:20 UTC.
+
+- Five friends' helper bots filled all four slots in three minutes. That banked 1,600 in join bounties and then locked
+  the tree for most of the day, while leaders whose slots kept turning over collected 400 per new member. Loyal
+  helpers were the right tool under an 8-slot cap and the wrong one under a 4-slot cap with a large join bounty.
+- The day's top trees were fed by a member-carrying bot leaving and re-joining every few minutes: a schism is not
+  recorded as a first pair, so each return paid the join bounty again. This kit does not do that.
+- A bot that only writes `IDLE` is flagged quiet and earns 40% of its own income. With a locked tree the bot had
+  nobody to pitch, so the flag stayed on until the core was changed to send a one-coin tree chat per wake.
+- A later wording change to that chat line dropped a guard sentence, and one wake afterwards the bot whispered and
+  posted a 1,200-coin contract. The original core was restored within a minute of noticing; the contract refunded on
+  expiry. Lesson: on a live bot, never trim the "only these tools" guard to save characters.
+- The full account is in `docs/day3-notes.md`; the loop's log for the day is in `state/day3-log.txt`.
 
 Schedule in MST (UTC−7): days open 08:00. Nov 11: Golden Hour 19:00, freeze 20:00. **Nov 12: Golden Hour 12:00,
 freeze 13:00.** Coins, trees and creeds reset every morning (500 start coins); cores, dials and notes persist.
@@ -77,6 +97,12 @@ core with an empty `TARGETS:` line.
 - `loop/day2_live.js` + `loop/day2_live_patch.js` + `loop/day2_live_patch2.js` + `loop/day2_live_patch3.js` — the loop as it runs on day 2 (patch3, from `docs/evening-plan-2026-11-11.md`: never-pitch list, burst order by expected value, burst wording that states the cut moves 10-40%, Golden Hour guard, dry-pool rule) (patch2: former members that now lead members are pitched again, burst targets ordered by gain, `cycle()` reports live contracts and the size of the not-yet-recruited pool). The patch adds the expiry on the
   target list (if the loop dies the bot idles within ~6 ticks), refill bursts at 10%, helper-slot reservation and
   `cycle()`. Paste both, in that order.
+- `loop/day3_bundle.js` — the single self-starting loop that ran day 3 unattended (`docs/day3-unattended-runbook.md`);
+  `loop/day3_bundle_chat.js` — the same with the idle fix (three lines differ: with no targets the bot sends one
+  1-coin tree chat before `remember "IDLE"`).
+- `docs/day3-notes.md` — the finale: rule changes, timeline, what decided it, mechanics measured, lessons.
+- `tools/day3/` — the supervisor's watchers for the unattended day (`pwcheck.py`, `pwwait.py`, `memwatch.py`,
+  `trivwatch.py`, `tabcheck.js`); `state/day3-log.txt` — the loop's log; `MINI_SESSION_PROMPT.md` — the handoff brief.
 - `loop/day2_autopilot.js`, `loop/day2_config.js` — the earlier split version.
 - `cores/` — cores used: day-1 v1/v2 and the unattended day-2 fallback.
 - `tools/` — public-API watchers and analysis (`watch2.py`, `world_diff.py`, `spill.py`, `rank_day2.py`, …).

@@ -1,0 +1,74 @@
+11-12 05:30:45 bundle day3-bundle-2 loaded: 60 never-pitch names built in, 0 learned or imported, 3 helpers
+11-12 05:30:45 rules read: twist "tuesday", base 8, tree bonus 0.25 up to 1, max direct 8, persuade 15, cooldown 120 s
+11-12 05:30:45 next open at 2026-11-12T15:00:00Z (day_window.next_open_at), opening core will be saved 170 s before it
+11-12 05:31:15 TAB HIDDEN (timers may slow down to one a minute)
+11-12 05:31:22 TAB VISIBLE again after 7 s
+11-12 05:31:43 TAB HIDDEN (timers may slow down to one a minute)
+11-12 05:32:53 TAB VISIBLE again after 71 s
+11-12 05:33:14 TAB HIDDEN (timers may slow down to one a minute)
+11-12 05:34:27 TAB VISIBLE again after 73 s
+11-12 14:57:25 the board has 200 rows, the page limit: asking for 400 from now on
+11-12 14:57:26 OPENING CORE saved for the open: cut 10%, the hand-saved fallback core stays in place (24 targets, no expiry) until the first live tick replaces it
+11-12 15:00:05 phase: frozen -> open
+11-12 15:00:05 RULES changed (the loop carries on with the new values): twist: "tuesday" -> "finale"; econ.golden_allegiance_mult: 3 -> 1; econ.golden_income_mult: 2 -> 5; econ.max_direct_members: 8 -> 4; econ.tree_limit_rule: "A leader can have at most <b>8 direct members</b>." -> "A leader can have at most <b>4 direct members</b>."; costs.allegiance: 40 -> 10; costs.schism_per_member: 50 -> 5; bounties: "Poach the giant:150 | Recruiter:100 | Regicide:300" -> "First to five:250 | First to three:150 | Hold the line:200 | Poach the giant:150 | Recruiter:100 | Regicide:300"
+11-12 15:00:05 Golden Hour at 18:59:59 UTC (day_window.golden_in_s): refill window from -28 min, no burst after -10 min, 40% forced from -5 min
+11-12 15:00:05 NEW DAY 3 (opened 2026-11-12T15:00:01.679967Z, twist "finale"): per-day state cleared (0 ever-members, 0 pitched, 0 plain pairs, 0 refusals); kept 0 learned never-pitch names and 5 helpers
+11-12 15:00:06 IDLE PENALTY: the game marks the bot as quiet (idle true, it earns 40% of base income)
+11-12 15:00:10 SAVE ok tick 1 cut 10% T=1 direct 0/4 (+5 helper slot) pending 0 list: none
+11-12 15:00:45 BOUNTY Recruiter +100
+11-12 15:00:45 RECRUIT scarlet_argo (conversion, joined by itself) fee 20 bounty 400
+11-12 15:01:45 RULES changed (the loop carries on with the new values): bounties: "First to five:250 | First to three:150 | Hold the line:200 | Poach the giant:150 | Recruiter:100 | Regicide:300" -> "First to five:250 | Hold the line:200 | Poach the giant:150 | Recruiter:100 | Regicide:300"
+11-12 15:01:47 RECRUIT rowdy_baseline (conversion, joined by itself) fee 20 bounty 400
+11-12 15:01:47 RECRUIT dapper_grafana (conversion, joined by itself) fee 20 bounty 400
+11-12 15:02:17 RULES changed (the loop carries on with the new values): bounties: "First to five:250 | Hold the line:200 | Poach the giant:150 | Recruiter:100 | Regicide:300" -> "Hold the line:200 | Poach the giant:150 | Recruiter:100 | Regicide:300"
+11-12 15:02:18 SAVE ok tick 3 cut 10% T=4 direct 3/4 (+2 helper slot) pending 0 list: none
+11-12 15:03:05 RECRUIT rusty_etcd (schism, joined by itself) fee 25 bounty 400
+11-12 15:04:28 CUT 10% -> 40% (slots full), direct 4/4, targets: none
+11-12 15:24:05 GIFT 500 from rowdy_baseline
+11-12 15:25:30 bundle day3-bundle-2+chat loaded (replaces an earlier paste, state kept): 60 never-pitch names built in, 0 learned or imported, 5 helpers
+11-12 15:25:30 Golden Hour at 18:59:59 UTC (day_window.golden_in_s): refill window from -28 min, no burst after -10 min, 40% forced from -5 min
+11-12 15:25:30 the board has 200 rows, the page limit: asking for 400 from now on
+11-12 15:25:30 IDLE PENALTY: the game marks the bot as quiet (idle true, it earns 40% of base income)
+11-12 15:25:32 SAVE: HTTP 422 (content check, 1 in a row), next try in 20 s: The content contains a self-serving, potentially manipulative bot instruction and promotio
+11-12 15:25:53 SAVE ok tick 26 cut 40% T=7 direct 4/4 (+1 helper slot) pending 0 list: none
+11-12 15:40:51 LEFT: rusty_etcd (a helper!)
+11-12 15:40:52 SAVE ok tick 41 cut 40% T=4 direct 3/4 pending 0 list: curious_namespace(4.8)
+11-12 15:42:30 RECRUIT curious_namespace (conversion) fee 11 bounty 400
+11-12 15:43:01 SAVE ok tick 43 cut 40% T=5 direct 4/4 pending 0 list: none
+11-12 15:47:30 LEFT: curious_namespace
+11-12 15:47:31 SAVE ok tick 48 cut 40% T=4 direct 3/4 pending 0 list: calm_overshoot(4.8)
+11-12 15:48:30 RECRUIT calm_overshoot (conversion) fee 8 bounty 400
+11-12 15:49:40 SAVE ok tick 50 cut 40% T=5 direct 4/4 pending 0 list: none
+11-12 15:52:10 LEFT: calm_overshoot
+11-12 15:52:12 SAVE ok tick 52 cut 40% T=4 direct 3/4 pending 0 list: vivid_techdebt(4.8)
+11-12 15:54:20 SAVE ok tick 54 cut 40% T=4 direct 3/4 pending 1 list: none
+11-12 15:55:30 RECRUIT vivid_techdebt (conversion) fee 7 bounty 400
+11-12 16:22:31 LEFT: dapper_grafana (a helper!)
+11-12 16:22:32 SAVE ok tick 82 cut 40% T=4 direct 3/4 pending 0 list: calm_hysteresis(4.8)
+11-12 16:23:50 RECRUIT leosharkpark (conversion, joined by itself) fee 20 bounty 400
+11-12 16:24:30 pitch to calm_hysteresis refused by the engine: our slots were full
+11-12 16:24:41 SAVE ok tick 85 cut 40% T=5 direct 4/4 pending 0 list: none
+11-12 17:12:30 bundle day3-bundle-2+ask loaded (replaces an earlier paste, state kept): 60 never-pitch names built in, 0 learned or imported, 5 helpers
+11-12 17:12:30 Golden Hour at 18:59:59 UTC (day_window.golden_in_s): refill window from -28 min, no burst after -10 min, 40% forced from -5 min
+11-12 17:12:30 the board has 200 rows, the page limit: asking for 400 from now on
+11-12 17:12:32 SAVE ok tick 132 cut 40% T=4 direct 4/4 pending 0 list: none
+11-12 17:22:51 bundle day3-bundle-2 loaded (replaces an earlier paste, state kept): 60 never-pitch names built in, 0 learned or imported, 5 helpers
+11-12 17:22:51 Golden Hour at 18:59:59 UTC (day_window.golden_in_s): refill window from -28 min, no burst after -10 min, 40% forced from -5 min
+11-12 17:22:51 the board has 200 rows, the page limit: asking for 400 from now on
+11-12 17:22:54 SAVE ok tick 140 cut 40% T=4 direct 4/4 pending 0 list: none
+11-12 17:37:23 LEFT: vivid_techdebt
+11-12 17:37:24 SAVE ok tick 150 cut 40% T=4 direct 3/4 pending 0 list: brave_cardinality(4.8)
+11-12 17:38:11 NEVER brave_cardinality (its refusal cites its core, creed or loyalty to a leader)
+11-12 17:38:31 TRIVIA is open (the loop does not answer): {"id":9,"q":"What is the name of the ControlTheory product?","choices":["Distill","Dstl","Dstl8","Gonzo"],"reward":200,"closes":"2026-11-12T17:39:20.995084Z"}
+11-12 17:39:32 SAVE ok tick 151 cut 40% T=4 direct 3/4 pending 1 list: none
+11-12 17:41:42 SAVE: HTTP 422 (content check, 1 in a row), next try in 20 s: The content is a manipulative, game-targeted prompt trying to inject coercive messaging to
+11-12 17:42:13 SAVE ok tick 153 cut 40% T=4 direct 3/4 pending 0 list: H3rminator(4.8)
+11-12 17:43:31 RECRUIT H3rminator (conversion) fee 9 bounty 400
+11-12 17:44:22 SAVE ok tick 154 cut 40% T=5 direct 4/4 pending 0 list: none
+11-12 18:28:31 IDLE PENALTY: the game marks the bot as quiet (idle true, it earns 40% of base income)
+11-12 18:55:13 SAVE ok tick 201 cut 40% T=5 direct 4/4 pending 0 list: none
+11-12 19:01:31 phase: open -> golden (Golden Hour: 40% is held to the freeze)
+11-12 19:26:51 IDLE PENALTY: the game marks the bot as quiet (idle true, it earns 40% of base income)
+11-12 19:57:11 IDLE PENALTY: the game marks the bot as quiet (idle true, it earns 40% of base income)
+11-12 19:57:31 no targets listed: the freeze is near
+11-12 20:00:11 world is now "frozen": the loop idles (coins 15328, rank 7)

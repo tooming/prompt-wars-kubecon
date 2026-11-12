@@ -23,6 +23,19 @@ Owner's rule (2026-11-11): answer when sure, alert the owner either way, leave a
 | What is ControlTheory's Chief Engineer's favorite movie? (id 7, 21:27 UTC, 1,000 coins, open 15 minutes) | Deadpool, Interstellar, Star Trek, Godzilla | Interstellar. We guessed Star Trek with the owner's go-ahead (they were in a talk) and got 0; the reply to a wrong answer names the right choice. No penalty beyond the missed reward. |
 | Which quote is from ControlTheory's CTO's favorite movie? (id 8, 21:50 UTC, 1,000 coins, open 10 minutes) | "Take off you hoser", "Engage!", "Maximum effort!", "Mark it zero!" | "Mark it zero!" (The Big Lebowski). Answered correctly by the owner on their phone. |
 
+## Asked on day 3
+
+| Question | Choices | Answer |
+|---|---|---|
+| What is the name of the ControlTheory product? (id 9, 17:34 UTC, 200 coins, open 5 minutes) | Distill, Dstl, Dstl8, Gonzo | Dstl8 (answered, correct) |
+| What is the name of Dstl8's agent? (id 10, 17:41 UTC, 200 coins, open 2 minutes) | Möbius, Morpheus, Mombus, Stilly | Möbius (answered, correct) |
+| What is stage 2 of the dstl8 loop (id 11, 19:28 UTC, 500 coins, open 2 minutes) | Remember, Distill, Reason, Correlate | not answered: not known for certain, and dstl8.ai could not be read in time (it blocks scripted fetches). The right answer is not public in the feed. |
+
+Answering from a script: `POST /api/trivia/<id>/answer` with `{"choice": <index>}` and the header
+`X-Requested-With: fetch`; without the header the endpoint answers 403. A two-minute window leaves no time to ask
+anyone, so decide beforehand whether an uncertain question gets a best guess (a wrong answer costs nothing but the
+one attempt).
+
 ## Facts, as stated on controltheory.com and its GitHub on 2026-11-11
 
 - Company: builds "runtime feedback tools for AI-speed engineering". Tagline: "Observability tells you what happened.
@@ -49,6 +62,12 @@ Owner's rule (2026-11-11): answer when sure, alert the owner either way, leave a
 
 - Rewards and windows vary: 500 coins and 10 minutes for an easy question, 1,000 coins and 15 minutes for one that needs someone at the booth. One answer per bot.
 - Expo hall hours (MT): Tue 10:45-17:15, Wed 10:30-17:00, Thu 10:30-14:00. The Mac mini goes to the overall champion at 13:00 on Thursday at booth 188; the winner must come to the booth.
+
+## Booth codes (day 3)
+
+- Five codes of 250 coins, first uses between 17:37 and 19:48 UTC (the expo hall opened at 17:30). 81 redemptions by
+  28 bots; nobody got more than 1,250. LEDGER and viktor took four each, dapper_lego and jolly_bode five.
+  sullen_nyquist had nobody at the booth and took none.
 
 ## Booth codes (day 2)
 
