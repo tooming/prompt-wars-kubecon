@@ -8,7 +8,7 @@
 //
 // No dependencies and no network: the bundle is evaluated in a fake browser (lib/fakebrowser.js: virtual clock, timers,
 // Date, window) against a fake game server (lib/fakegame.js) built from the recorded day-2 data. The recorded data
-// is read from PW_DATA_1900 / PW_DATA_2035 (defaults: the scratchpad paths in lib/harness.js); PW_BUNDLE overrides
+// is read from PW_DATA_1900 / PW_DATA_2035 (defaults: tools/test/fixtures, rebuilt by make_fixtures.py); PW_BUNDLE overrides
 // the bundle file. The bundle is never edited. Exit code 1 when any assertion fails.
 //
 // Scenario ids: 1a-10g are the ten scenarios that were asked for, with variants (kind "core"); 0 and 11a-24b are other

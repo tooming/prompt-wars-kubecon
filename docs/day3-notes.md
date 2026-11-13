@@ -16,7 +16,9 @@ supervised by one Claude Code session; the owner was travelling.
 TALLY was 4th on the day (20,194) and AlertFatigue 5th (18,018).
 
 Our coins: tree cuts 5,066, own income 4,919, joins 3,740 (9 joins, 3,600 of it bounties), gifts 500, referral 400,
-trivia 400, bounties 100, start 500; spent 237 on messages and 50 on a contract fee.
+trivia 400, bounties 100, start 500; spent 237 on messages, 50 on a contract fee and 10 on a pledge. (The pledge
+was not noticed on the day: another bot proposed it at 15:01 and ours accepted at 15:03. It is in the public feed,
+and it is the 10 coins by which the list above used to miss the final balance.)
 
 ## What the finale changed
 

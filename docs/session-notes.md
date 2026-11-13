@@ -1,12 +1,9 @@
----
-name: project-prompt-wars-kubecon-2026-11
-description: "Prompt Wars (ControlTheory booth game at KubeCon, kubecon.dstl8.ai), bot sullen_nyquist, Nov 10-12 2026; how the operator loop works, day-1 result, what to do at each day's open, Golden Hour and freeze"
-metadata:
-  node_type: memory
-  type: project
-  originSessionId: ae3d54f0-6723-4467-8ecd-e3d0403559ee
-  modified: 2026-11-11T18:02:50.181Z
----
+# Session notes, as written during the event
+
+The running notes of the AI session that operated the bot, as they stood on the afternoon of day 2 (2026-11-11).
+They are kept as written, apart from the header, which replaces the note's metadata block, the two passages
+marked "[edited]" and the path of the game spec in the same paragraph, which pointed at folders that no longer
+exist. For the final account see [`retrospective.md`](retrospective.md).
 
 Owner's bot **sullen_nyquist** in "Prompt Wars" (https://kubecon.dstl8.ai, signed in with Google in the owner's Chrome; drive it with Claude in Chrome, never handle the password). Goal: most championship points over 3 days (prize: a Mac mini). Day 1 (2026-11-10) finished **#2, 25,391 coins, 18 pts** (LEDGER 31,901 / 28 pts incl. rookie bonus; QUORUM_KEEPER 15; zesty_coldstart 12).
 
@@ -31,9 +28,9 @@ Schedule (MST, UTC-7): days open 08:00; Nov 11 Golden Hour 19:00, freeze 20:00; 
 
 **Lesson (cost ~300 coins):** the owner closes the laptop without much warning; a sleeping Mac freezes my loop mid-call. Before any lid close, park the bot on a static core (TARGETS empty -> IDLE, or the static day core). Never leave an experiment live.
 
-**Private repo with the whole kit (runbook, loop, tools, cores, helper message), pushed 2026-11-11 at the owner's request so another laptop can take over: https://github.com/tooming/prompt-wars-kubecon** — re-push after each day's freeze.
+**Repo with the whole kit (runbook, loop, tools, cores, helper message), pushed 2026-11-11 at the owner's request so another laptop can take over: https://github.com/tooming/prompt-wars-kubecon** — re-push after each day's freeze. [edited: the repository was private when this was written and is public now]
 
-**Files** (session scratchpad, may not survive a reboot): `/private/tmp/claude-501/-Users-tooming--claude-spares-spare-Qkme8T/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/pw/` -> `day2_autopilot.js` (opening loop, `window.__ap2`, starts dry; needs `window.__origFetch = window.fetch` first), `day2_config.js` (prio order + block list), `core_day2_static.txt` (saved on the bot 03:19 UTC Nov 11 as the unattended fallback), `refresh.py`/`poll.py`/`watch.py`/`rivals.py` (public-API watchers), `rank_day2.py`. Reverse-engineered game spec: `/Users/tooming/Projects/assistant/prompt-wars-reverse-engineered-prompt.md` (untracked).
+**Files** [edited: these were in a session temp folder at the time; what survived is in this repository under `loop/`, `cores/` and `tools/`]: `day2_autopilot.js` (opening loop, `window.__ap2`, starts dry; needs `window.__origFetch = window.fetch` first), `day2_config.js` (prio order + block list), `core_day2_static.txt` (saved on the bot 03:19 UTC Nov 11 as the unattended fallback), `refresh.py`/`poll.py`/`watch.py`/`rivals.py` (public-API watchers), `rank_day2.py`. Reverse-engineered game spec: `docs/reverse-engineered-game-spec.md`.
 
 **How to apply:** at ~07:50 MST open the game tab, set `__origFetch`, inject both day-2 files, check `__ap2.status()` in dry mode, set `__ap2.dry=false` at the open, read the first wake's pitches in the feed. Report real ranks from the leaderboard, never claim a win it does not show.
 
