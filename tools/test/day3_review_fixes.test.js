@@ -165,16 +165,22 @@ scenario('E11', 'importDay2 classification', async A => {
   return sim;
 });
 
+// Both built-in "no second pitch" names (dapper_observer, sage_daemonset) have also been never-pitch names since the
+// bundle took in the 49 names learned on day 2, so the loop no longer pitches them at all. The rule itself is still
+// live for names that importDay2 classifies that way, which is how this scenario gets one.
+const ONCE_NAME = 'glum_replicaset';
 scenario('E12', 'a dapper_observer-like "no second pitch" name: one pitch a day, never as a former member', async A => {
   const sim = mkSim({ goldenMin: 80, freezeMin: 140 }), g = sim.game, o = sim.openAt, G = sim.schedGolden;
+  const imp = JSON.parse(sim.pw().importDay2(JSON.stringify({ never: { [ONCE_NAME]: 1 }, block: {}, everMine: {} })));
+  A.ok(imp.noSecondPitchAdded.join() === ONCE_NAME && sim.status().noSecondPitch.includes(ONCE_NAME), 'scenario: ' + ONCE_NAME + ' is imported as a "no second pitch" name', JSON.stringify(imp));
   helpersJoin(g);
-  g.policy = n => (n === 'dapper_observer' ? 'accept' : 'reject');
+  g.policy = n => (n === ONCE_NAME ? 'accept' : 'reject');
   await sim.untilOpen(30 * 60);
-  const j = g.joins.find(x => x.name === 'dapper_observer');
-  A.ok(j && j.type === 'conversion', 'scenario: dapper_observer was pitched once and joined', JSON.stringify(j));
-  g.leave('dapper_observer', '');
+  const j = g.joins.find(x => x.name === ONCE_NAME);
+  A.ok(j && j.type === 'conversion', 'scenario: ' + ONCE_NAME + ' was pitched once and joined', JSON.stringify(j));
+  g.leave(ONCE_NAME, '');
   await sim.until(G + 2 * MIN);
-  const n = g.pitches.filter(x => x.to === 'dapper_observer').length;
+  const n = g.pitches.filter(x => x.to === ONCE_NAME).length;
   A.ok(n === 1, 'it is not pitched again as an independent former member (not even in the pre-golden window)', n + ' pitches');
   return sim;
 });

@@ -10,9 +10,10 @@ const REPO = path.resolve(__dirname, '..', '..', '..');
 const BUNDLE_PATH = process.env.PW_BUNDLE || path.join(REPO, 'loop', 'day3_bundle.js');
 const BUNDLE = fs.readFileSync(BUNDLE_PATH, 'utf8');
 const STATIC_CORE = fs.readFileSync(path.join(REPO, 'cores', 'day3_static_core.txt'), 'utf8');
-const PW = '/private/tmp/claude-501/-Users-tooming--claude-spares-spare-Qkme8T/ae3d54f0-6723-4467-8ecd-e3d0403559ee/scratchpad/pw';
-const D1900 = process.env.PW_DATA_1900 || path.join(PW, 'data_day2_1900');
-const D2035 = process.env.PW_DATA_2035 || path.join(PW, 'data_day2_2035');
+// The recorded day-2 snapshots (19:00 and 20:35 UTC). tools/test/make_fixtures.py rebuilds them from the archive.
+const FIXTURES = path.join(__dirname, '..', 'fixtures');
+const D1900 = process.env.PW_DATA_1900 || path.join(FIXTURES, 'day2_1900');
+const D2035 = process.env.PW_DATA_2035 || path.join(FIXTURES, 'day2_2035');
 const DATA = loadData(D1900, D2035);
 
 const SCHED_OPEN = Date.parse('2026-11-12T15:00:00Z');       // the announced day-3 open (08:00 MST)
@@ -180,8 +181,12 @@ async function commonChecks(sim, A, opt) {
     if (/\b(whisper|tree_chat|broadcast|gift|pledge|spy|update_creed|lookup|fund_banner|deprogram)\b/i.test(steps) || !/persuade/.test(steps) || !/remember/.test(steps)) bad.tools.push(at(p) + ': step lines ask for something else than persuade and remember');
     const cutSet = g.cutFor(Number(s.greedy) || 0), ctx = { cut: cutSet, econ: p.econ, Ts: p.t < g.openAt ? [1] : [p.T, p.boardT], range: [g.cutFor(0), g.cutFor(100)], fallback: kept };
     const superseded = p.t < g.openAt && g.patches.some(q => q.status === 200 && q.t > p.t && q.t < g.openAt);
+    // On a day when the dial maps differently, the first rise of the cut is a probe (loop/day3_bundle.js, "probe"): that
+    // save lists no targets on purpose, so the pitch text it carries cannot be sent, and the next save corrects it. Its
+    // tagline is still checked. Only scenarios that set cutMap are affected.
+    const unsendable = !!g.o.cutMap && c.targets.length === 0;
     if (!superseded) {
-      if (c.pitch != null) for (const x of pitchProblems(c.pitch, ctx)) bad.truth.push(at(p) + ': ' + x);
+      if (c.pitch != null && !unsendable) for (const x of pitchProblems(c.pitch, ctx)) bad.truth.push(at(p) + ': ' + x);
       for (const x of taglineProblems(tl, ctx)) bad.truth.push(at(p) + ': ' + x);
     }
   }

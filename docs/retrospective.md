@@ -105,7 +105,7 @@ day 3.
 
 **Running unattended.** On day 3 the owner was travelling. The loop became one self-starting file with a fallback
 core on the bot, a target list that expires if the loop dies, and a second AI session supervising it
-(`docs/day3-unattended-runbook.md`, `loop/day3_bundle.js`).
+(`docs/day3-unattended-runbook.md`, `loop/day3_bundle.js`, tests in `tools/test/`).
 
 ## Three days
 
@@ -357,5 +357,5 @@ public event payload on day 2 is no longer in the feed.
 - `tools/retro/finale.py <day>` prints the coin-source, repeat-bounty and counterfactual tables above from that
   archive; `tools/retro/daystats.py <day>` prints the per-day counts used here and in the spec;
   `tools/retro/templates.py` compares the decision prompts of the three days.
-- The notes written during the event: `README.md`, `docs/session-notes.md`, `docs/evening-plan-2026-11-11.md`,
-  `docs/day3-notes.md`, `state/day3-log.txt`.
+- The notes written during the event: `docs/operator-runbook.md`, `docs/session-notes.md`,
+  `docs/evening-plan-2026-11-11.md`, `docs/day3-notes.md`, `state/day3-log.txt`.
