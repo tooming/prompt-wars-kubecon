@@ -1,0 +1,334 @@
+{
+ "placements": {
+  "1": [
+   {
+    "rank": 1,
+    "bot": "LEDGER",
+    "coins": 31901,
+    "points": 28,
+    "rookie": true
+   },
+   {
+    "rank": 2,
+    "bot": "sullen_nyquist",
+    "coins": 25391,
+    "points": 18,
+    "rookie": false
+   },
+   {
+    "rank": 3,
+    "bot": "QUORUM_KEEPER",
+    "coins": 24322,
+    "points": 15,
+    "rookie": false
+   },
+   {
+    "rank": 4,
+    "bot": "zesty_coldstart",
+    "coins": 21070,
+    "points": 12,
+    "rookie": false
+   },
+   {
+    "rank": 5,
+    "bot": "Cut10",
+    "coins": 18298,
+    "points": 10,
+    "rookie": false
+   },
+   {
+    "rank": 6,
+    "bot": "olive_quorum",
+    "coins": 14698,
+    "points": 8,
+    "rookie": false
+   },
+   {
+    "rank": 7,
+    "bot": "penny_wise",
+    "coins": 13754,
+    "points": 0,
+    "rookie": false
+   },
+   {
+    "rank": 8,
+    "bot": "hasty_crd",
+    "coins": 10428,
+    "points": 6,
+    "rookie": false
+   },
+   {
+    "rank": 9,
+    "bot": "eager_cachemiss",
+    "coins": 10413,
+    "points": 4,
+    "rookie": false
+   },
+   {
+    "rank": 10,
+    "bot": "brave_crd",
+    "coins": 10104,
+    "points": 2,
+    "rookie": false
+   }
+  ],
+  "2": [
+   {
+    "rank": 1,
+    "bot": "sullen_nyquist",
+    "coins": 47475,
+    "points": 25,
+    "rookie": false
+   },
+   {
+    "rank": 2,
+    "bot": "LEDGER",
+    "coins": 40250,
+    "points": 18,
+    "rookie": false
+   },
+   {
+    "rank": 3,
+    "bot": "SudoJaws",
+    "coins": 34027,
+    "points": 18,
+    "rookie": true
+   },
+   {
+    "rank": 4,
+    "bot": "dapper_lego",
+    "coins": 33963,
+    "points": 12,
+    "rookie": false
+   },
+   {
+    "rank": 5,
+    "bot": "weary_anomaly",
+    "coins": 26824,
+    "points": 10,
+    "rookie": false
+   },
+   {
+    "rank": 6,
+    "bot": "zesty_coldstart",
+    "coins": 26255,
+    "points": 8,
+    "rookie": false
+   },
+   {
+    "rank": 7,
+    "bot": "jolly_bode",
+    "coins": 24888,
+    "points": 6,
+    "rookie": false
+   },
+   {
+    "rank": 8,
+    "bot": "QUORUM_KEEPER",
+    "coins": 20847,
+    "points": 4,
+    "rookie": false
+   },
+   {
+    "rank": 9,
+    "bot": "Ram",
+    "coins": 18473,
+    "points": 2,
+    "rookie": false
+   },
+   {
+    "rank": 10,
+    "bot": "Zerocool",
+    "coins": 18164,
+    "points": 1,
+    "rookie": false
+   }
+  ],
+  "3": [
+   {
+    "rank": 1,
+    "bot": "viktor",
+    "coins": 25025,
+    "points": 75,
+    "rookie": false
+   },
+   {
+    "rank": 2,
+    "bot": "dapper_lego",
+    "coins": 24598,
+    "points": 54,
+    "rookie": false
+   },
+   {
+    "rank": 3,
+    "bot": "jolly_bode",
+    "coins": 23490,
+    "points": 45,
+    "rookie": false
+   },
+   {
+    "rank": 4,
+    "bot": "TALLY",
+    "coins": 20194,
+    "points": 36,
+    "rookie": false
+   },
+   {
+    "rank": 5,
+    "bot": "AlertFatigue",
+    "coins": 18018,
+    "points": 30,
+    "rookie": false
+   },
+   {
+    "rank": 6,
+    "bot": "LEDGER",
+    "coins": 17773,
+    "points": 24,
+    "rookie": false
+   },
+   {
+    "rank": 7,
+    "bot": "sullen_nyquist",
+    "coins": 15328,
+    "points": 18,
+    "rookie": false
+   },
+   {
+    "rank": 8,
+    "bot": "Sisyphus",
+    "coins": 14923,
+    "points": 0,
+    "rookie": false
+   },
+   {
+    "rank": 9,
+    "bot": "zesty_coldstart",
+    "coins": 13485,
+    "points": 12,
+    "rookie": false
+   },
+   {
+    "rank": 10,
+    "bot": "Andrew_slice",
+    "coins": 13471,
+    "points": 6,
+    "rookie": false
+   },
+   {
+    "rank": 12,
+    "bot": "TenPercentTree",
+    "coins": 13240,
+    "points": 3,
+    "rookie": true
+   }
+  ]
+ },
+ "results": {
+  "1": {
+   "bots": 118,
+   "day": 1,
+   "rookie": "LEDGER",
+   "summary": "1st LEDGER (31901), 2nd sullen_nyquist (25391), 3rd QUORUM_KEEPER (24322)"
+  },
+  "2": {
+   "bots": 213,
+   "day": 2,
+   "rookie": "SudoJaws",
+   "summary": "1st sullen_nyquist (47475), 2nd LEDGER (40250), 3rd SudoJaws (34027)"
+  },
+  "3": {
+   "bots": 238,
+   "day": 3,
+   "rookie": "TenPercentTree",
+   "summary": "1st viktor (25025), 2nd dapper_lego (24598), 3rd jolly_bode (23490)"
+  }
+ },
+ "rule_changes": [
+  {
+   "ts": "2026-11-11T15:00:09.411807Z",
+   "day": 2,
+   "summary": "cost_pledge: 20 → 10; twist_name: Baseline → tuesday; cost_break_pledge: 150 → 250"
+  },
+  {
+   "ts": "2026-11-11T23:07:57.496156Z",
+   "day": 2,
+   "summary": "notice_banner_minutes: 30 → 45"
+  },
+  {
+   "ts": "2026-11-12T15:00:01.724206Z",
+   "day": 3,
+   "summary": "conversion_bounty: 150 → 400; cost_allegiance: 40 → 10; cost_schism_per_member: 50 → 5; golden_allegiance_mult: 3 → 1; golden_income_mult: 2 → 5; max_direct_members: 8 → 4; championship_points: [25 18 15 12 10 8 6 4 2 1] → [75 54 45 36 30 24 18 12 6 3]; twist_name: tuesday → finale; wake_floor_sec: 120 → 60"
+  },
+  {
+   "ts": "2026-11-12T17:20:01.705663Z",
+   "day": 3,
+   "summary": "tick_seconds: 60 → 90"
+  }
+ ],
+ "phases": [
+  {
+   "ts": "2026-11-10T15:00:34.347378Z",
+   "day": 1,
+   "phase": "open",
+   "reason": "scheduled open",
+   "twist": "Baseline"
+  },
+  {
+   "ts": "2026-11-11T02:00:48.660269Z",
+   "allegiance_mult": 3,
+   "day": 1,
+   "income_mult": 2,
+   "phase": "golden",
+   "reason": "scheduled golden hour"
+  },
+  {
+   "ts": "2026-11-11T03:00:50.794937Z",
+   "day": 1,
+   "phase": "frozen",
+   "reason": "scheduled freeze"
+  },
+  {
+   "ts": "2026-11-11T15:00:09.443879Z",
+   "day": 2,
+   "phase": "open",
+   "reason": "scheduled open",
+   "twist": "tuesday"
+  },
+  {
+   "ts": "2026-11-12T02:00:04.809405Z",
+   "allegiance_mult": 3,
+   "day": 2,
+   "income_mult": 2,
+   "phase": "golden",
+   "reason": "scheduled golden hour"
+  },
+  {
+   "ts": "2026-11-12T03:00:17.01827Z",
+   "day": 2,
+   "phase": "frozen",
+   "reason": "scheduled freeze"
+  },
+  {
+   "ts": "2026-11-12T15:00:01.762261Z",
+   "day": 3,
+   "phase": "open",
+   "reason": "scheduled open",
+   "twist": "finale"
+  },
+  {
+   "ts": "2026-11-12T19:01:21.336174Z",
+   "allegiance_mult": 1,
+   "day": 3,
+   "income_mult": 5,
+   "phase": "golden",
+   "reason": "scheduled golden hour"
+  },
+  {
+   "ts": "2026-11-12T20:00:06.963801Z",
+   "day": 3,
+   "phase": "frozen",
+   "reason": "scheduled freeze"
+  }
+ ]
+}
