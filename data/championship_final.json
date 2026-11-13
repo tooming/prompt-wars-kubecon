@@ -1,0 +1,158 @@
+{
+ "rows": [
+  {
+   "name": "viktor",
+   "points": 75,
+   "days": 2,
+   "best_rank": 1,
+   "is_house": false
+  },
+  {
+   "name": "LEDGER",
+   "points": 70,
+   "days": 3,
+   "best_rank": 1,
+   "is_house": false
+  },
+  {
+   "name": "dapper_lego",
+   "points": 66,
+   "days": 3,
+   "best_rank": 2,
+   "is_house": false
+  },
+  {
+   "name": "sullen_nyquist",
+   "points": 61,
+   "days": 3,
+   "best_rank": 1,
+   "is_house": false
+  },
+  {
+   "name": "jolly_bode",
+   "points": 51,
+   "days": 3,
+   "best_rank": 3,
+   "is_house": false
+  },
+  {
+   "name": "TALLY",
+   "points": 36,
+   "days": 2,
+   "best_rank": 4,
+   "is_house": false
+  },
+  {
+   "name": "zesty_coldstart",
+   "points": 32,
+   "days": 3,
+   "best_rank": 4,
+   "is_house": false
+  },
+  {
+   "name": "AlertFatigue",
+   "points": 30,
+   "days": 2,
+   "best_rank": 5,
+   "is_house": false
+  },
+  {
+   "name": "QUORUM_KEEPER",
+   "points": 19,
+   "days": 3,
+   "best_rank": 3,
+   "is_house": false
+  },
+  {
+   "name": "SudoJaws",
+   "points": 18,
+   "days": 2,
+   "best_rank": 3,
+   "is_house": false
+  },
+  {
+   "name": "weary_anomaly",
+   "points": 10,
+   "days": 3,
+   "best_rank": 5,
+   "is_house": false
+  },
+  {
+   "name": "Cut10",
+   "points": 10,
+   "days": 3,
+   "best_rank": 5,
+   "is_house": false
+  },
+  {
+   "name": "olive_quorum",
+   "points": 8,
+   "days": 3,
+   "best_rank": 6,
+   "is_house": false
+  },
+  {
+   "name": "hasty_crd",
+   "points": 6,
+   "days": 3,
+   "best_rank": 8,
+   "is_house": false
+  },
+  {
+   "name": "Andrew_slice",
+   "points": 6,
+   "days": 2,
+   "best_rank": 10,
+   "is_house": false
+  },
+  {
+   "name": "eager_cachemiss",
+   "points": 4,
+   "days": 3,
+   "best_rank": 9,
+   "is_house": false
+  },
+  {
+   "name": "sage_transfer",
+   "points": 3,
+   "days": 2,
+   "best_rank": 11,
+   "is_house": false
+  },
+  {
+   "name": "TenPercentTree",
+   "points": 3,
+   "days": 1,
+   "best_rank": 12,
+   "is_house": false
+  },
+  {
+   "name": "Ram",
+   "points": 2,
+   "days": 3,
+   "best_rank": 9,
+   "is_house": false
+  },
+  {
+   "name": "brave_crd",
+   "points": 2,
+   "days": 3,
+   "best_rank": 10,
+   "is_house": false
+  },
+  {
+   "name": "Zerocool",
+   "points": 1,
+   "days": 3,
+   "best_rank": 10,
+   "is_house": false
+  },
+  {
+   "name": "jolly_argo",
+   "points": 1,
+   "days": 3,
+   "best_rank": 11,
+   "is_house": false
+  }
+ ]
+}

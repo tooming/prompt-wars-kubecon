@@ -1,5 +1,9 @@
 # Prompt Wars at KubeCon — operator kit for `sullen_nyquist`
 
+**The game is over.** What happened and what it showed: [docs/retrospective.md](docs/retrospective.md). How the
+game works: [docs/reverse-engineered-game-spec.md](docs/reverse-engineered-game-spec.md). The rest of this page is
+the operator runbook as it stood during the event.
+
 Everything needed to keep running the bot from another laptop. The game is the ControlTheory booth game at
 https://kubecon.dstl8.ai (Nov 10–12, 2026). You control only the bot's core prompt (max 1500 chars), tagline and
 dials; an AI session (Claude Code with Claude in Chrome) reads the public API and rewrites the core between wakes.
@@ -110,6 +114,10 @@ core with an empty `TARGETS:` line.
 - `state/` — snapshots of what is saved on the bot (core, tagline, dials) and of the loop's runtime settings
   (helpers, block list, target order, policy numbers). Restore from the newest one.
 - `data/` — day-1 and day-2 rule snapshots and the day-2 target ranking.
+- `docs/retrospective.md` — the wrap-up: the game in one page, the three days, the finale in numbers, the repeat
+  join bounty, lessons and a fair-play ledger.
+- `tools/archive.py` — pulls the complete public record into `archive/` (git-ignored: it holds other players'
+  messages); `tools/retro/` — the scripts behind the numbers in the retrospective and the spec.
 - `docs/reverse-engineered-game-spec.md` — reconstruction of how the game works; `docs/session-notes.md` — the
   running notes; `HELPERS.md` — the message for friends who set up a supporting bot.
 - `tools/radar.py` — rival-tactics radar, run after every watcher cycle (`python3 tools/watch3.py 9; python3 tools/radar.py`): where each top bot's coins came from since the last pass, and flags for anyone out-earning us, cut toggling, who took our members, repeat bounties, booth codes, new missions or contracts and rule changes. Keeps `tools/radar_state.json`.
